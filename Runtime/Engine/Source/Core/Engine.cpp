@@ -1,5 +1,5 @@
 #include "Engine.h"
-#include "bgfx.h"
+#include "bgfx/bgfx.h"
 #include "Graphics/VertexDeclarations.h"
 #include <vector>
 

@@ -74,14 +74,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Build\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)Source;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bgfx\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\bgfx\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>bgfxDebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -92,6 +98,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -148,10 +155,11 @@
     <ClInclude Include="Source\Core\BasicTypes\String.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\Engine.h" />
-    <ClInclude Include="Source\Core\Math\Point.h" />
-    <ClInclude Include="Source\Core\Math\Vector3.h" />
+    <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\Math\Matrix.h" />
     <ClInclude Include="Source\Graphics\RenderWindow.h" />
     <ClInclude Include="Source\Graphics\VertexDeclarations.h" />
+    <ClInclude Include="Source\Input\IInputDevice.h" />
     <ClInclude Include="Source\Platform\DisplayInfo.h" />
     <ClInclude Include="Source\Platform\IWindow.h" />
     <ClInclude Include="Source\Platform\PlatformSpecific.h" />

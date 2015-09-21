@@ -1,6 +1,6 @@
 #include "RenderWindow.h"
 #include "Core/Engine.h"
-#include "bgfx.h"
+#include "bgfx/bgfx.h"
 
 RenderWindow::RenderWindow(uint32_t Width, uint32_t Height)
 	: Window(Width, Height, true), view_width(Width), view_height(Height)

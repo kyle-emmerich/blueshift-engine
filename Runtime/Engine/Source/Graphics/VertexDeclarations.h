@@ -1,5 +1,5 @@
 #pragma once
-#include "bgfx.h"
+#include "bgfx/bgfx.h"
 #include "Core/Math/Vector.h"
 
 struct PositionOnlyVertex {

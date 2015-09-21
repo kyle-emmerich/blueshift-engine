@@ -2,7 +2,7 @@
 #include "Window_WIN.h"
 #include "Core/Engine.h"
 #include "Platform/DisplayInfo.h"
-#include "bgfxplatform.h"
+#include "bgfx/bgfxplatform.h"
 #include <string>
 #include <clocale>
 

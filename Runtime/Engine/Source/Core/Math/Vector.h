@@ -1,17 +1,21 @@
 #pragma once
 #include <cmath>
+#include <ostream>
 
 template<size_t n, typename T = double>
 struct Vector {
 public:
 	T data[n];
+	constexpr explicit Vector(T s) {
+		for (size_t i = 0; i < n; i++) { data[i] = s; }
+	}
 
 	constexpr T Length() const {
-		T x; for (size_t i = 0; i < n; i++) { x += data[n] * data[n]; }
+		T x; for (size_t i = 0; i < n; i++) { x += data[i] * data[i]; }
 		return sqrt(x);
 	}
 	constexpr T SquaredLength() const {
-		T x; for (size_t i = 0; i < n; i++) { x += data[n] * data[n]; }
+		T x; for (size_t i = 0; i < n; i++) { x += data[i] * data[i]; }
 		return x;
 	}
 };
@@ -83,49 +87,49 @@ struct Vector<4, T> {
 };
 
 template<size_t n, typename T>
-constexpr Vector<n, T> operator+(const Vector<n, T>& a, const Vector<n, T>& b) {
+inline Vector<n, T> operator+(const Vector<n, T>& a, const Vector<n, T>& b) {
 	Vector<n, T> rv;
-	for (size_t i = 0; i < n; i++) { rv.data[n] = a.data[n] + b.data[n]; }
+	for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] + b.data[i]; }
 	return rv;
 }
 template<size_t n, typename T>
-constexpr Vector<n, T> operator-(const Vector<n, T>& a, const Vector<n, T>& b) {
+inline Vector<n, T> operator-(const Vector<n, T>& a, const Vector<n, T>& b) {
 	Vector<n, T> rv;
-	for (size_t i = 0; i < n; i++) { rv.data[n] = a.data[n] - b.data[n]; }
+	for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] - b.data[i]; }
 	return rv;
 }
 template<size_t n, typename T>
-constexpr Vector<n, T> operator*(const Vector<n, T>& a, const Vector<n, T>& b) {
+inline Vector<n, T> operator*(const Vector<n, T>& a, const Vector<n, T>& b) {
 	Vector<n, T> rv;
-	for (size_t i = 0; i < n; i++) { rv.data[n] = a.data[n] * b.data[n]; }
+	for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] * b.data[i]; }
 	return rv;
 }
 template<size_t n, typename T>
-constexpr Vector<n, T> operator/(const Vector<n, T>& a, const Vector<n, T>& b) {
+inline Vector<n, T> operator/(const Vector<n, T>& a, const Vector<n, T>& b) {
 	Vector<n, T> rv;
-	for (size_t i = 0; i < n; i++) { rv.data[n] = a.data[n] / b.data[n]; }
+	for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] / b.data[i]; }
 	return rv;
 }
 
 //For future consideration: should operator+= return an lvalue or rvalue?
 template<size_t n, typename T>
-constexpr Vector<n, T> operator+=(Vector<n, T>& a, const Vector<n, T>& b) {
-	for (size_t i = 0; i < n; i++) { a.data[n] += b.data[n]; } 
+inline Vector<n, T> operator+=(Vector<n, T>& a, const Vector<n, T>& b) {
+	for (size_t i = 0; i < n; i++) { a.data[i] += b.data[i]; } 
 	return a;
 }
 template<size_t n, typename T>
-constexpr Vector<n, T> operator-=(Vector<n, T>& a, const Vector<n, T>& b) {
-	for (size_t i = 0; i < n; i++) { a.data[n] -= b.data[n]; }
+inline Vector<n, T> operator-=(Vector<n, T>& a, const Vector<n, T>& b) {
+	for (size_t i = 0; i < n; i++) { a.data[i] -= b.data[i]; }
 	return a;
 }
 template<size_t n, typename T>
-constexpr Vector<n, T> operator*=(Vector<n, T>& a, const Vector<n, T>& b) {
-	for (size_t i = 0; i < n; i++) { a.data[n] += b.data[n]; }
+inline Vector<n, T> operator*=(Vector<n, T>& a, const Vector<n, T>& b) {
+	for (size_t i = 0; i < n; i++) { a.data[i] += b.data[i]; }
 	return a;
 }
 template<size_t n, typename T>
-constexpr Vector<n, T> operator/=(Vector<n, T>& a, const Vector<n, T>& b) {
-	for (size_t i = 0; i < n; i++) { a.data[n] /= b.data[n]; }
+inline Vector<n, T> operator/=(Vector<n, T>& a, const Vector<n, T>& b) {
+	for (size_t i = 0; i < n; i++) { a.data[i] /= b.data[i]; }
 	return a;
 }
 
@@ -134,12 +138,34 @@ typedef Vector<3, double> Vector3; typedef Vector<3, float> Vector3f;
 typedef Vector<4, double> Vector4; typedef Vector<4, float> Vector4f;
 
 template<size_t n, typename T>
-constexpr T DotProduct(const Vector<n, T>& a, const Vector<n, T>& b) {
-	T x; for (size_t i = 0; i < n; i++) { x += a.data[n] * b.data[n]; }
+inline T DotProduct(const Vector<n, T>& a, const Vector<n, T>& b) {
+	T x; for (size_t i = 0; i < n; i++) { x += a.data[i] * b.data[i]; }
 	return x;
+}
+template<size_t n, typename T>
+inline T AngleBetween(const Vector<n, T>& a, const Vector<n, T>& b) {
+	T x; for (size_t i = 0; i < n; i++) { x += a.data[i] * b.data[i]; }
+	return acos(x);
+}
+
+template<typename T>
+constexpr Vector<3, T> CrossProduct(const Vector<3, T>& a, const Vector<3, T>& b) {
+	return Vector<3, T>(
+		lhs.Y * rhs.Z - lhs.Z * rhs.Y,
+		lhs.Z * rhs.X - lhs.X * rhs.Z,
+		lhs.X * rhs.Y - lhs.Y * rhs.X
+	);
 }
 
 template<size_t n, typename T>
-constexpr Vector<n, T> CrossProduct(const Vector<n, T>& a, const Vector<n, T>& b) {
-
+inline std::ostream& operator<<(std::ostream& os, const Vector<n, T>& rhs) {
+	os << "(" << n << "-vec: ";
+	for (size_t i = 0; i < n; i++) {
+		os << rhs.data[i];
+		if (i < n - 1) {
+			os << ", ";
+		}
+	}
+	os << ")";
+	return os;
 }
