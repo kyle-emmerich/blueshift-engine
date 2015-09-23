@@ -3,22 +3,30 @@
 
 #include "Core/BasicTypes/BaseString.h"
 
-class String : public BaseString {
-private:
-	//temporary
-	//TODO: Finish this!
-	std::string _internal;
-public:
-	String();
-	String(const char* Buffer);
-	String(char* Buffer);
-	String(String&);
+namespace Blueshift {
+	namespace Core {
+		namespace BasicTypes {
 
-	~String();
+			class String : public BaseString {
+			private:
+				//temporary
+				//TODO: Finish this!
+				std::string _internal;
+			public:
+				String();
+				String(const char* Buffer);
+				String(char* Buffer);
+				String(String&);
 
-	const char* GetBuffer() const;
-	uint32_t GetLength() const;
+				~String();
 
-	String& operator= (const char Buffer[]);
-	String& operator= (char* Buffer);
-};
+				const char* GetBuffer() const;
+				uint32_t GetLength() const;
+
+				String& operator= (const char Buffer[]);
+				String& operator= (char* Buffer);
+			};
+
+		}
+	}
+}

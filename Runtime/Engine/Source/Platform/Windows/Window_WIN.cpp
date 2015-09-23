@@ -6,6 +6,10 @@
 #include <string>
 #include <clocale>
 
+using namespace Blueshift;
+using namespace Blueshift::Core;
+using namespace Blueshift::Platform;
+
 Window::Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement) {
 	Window::_RegisterClass();
 
@@ -13,7 +17,7 @@ Window::Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement) {
 	DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 
 	//Get the primary display's left/top
-	DisplayInfo& primary = Engine::Get().GetPrimaryDisplay();
+	const DisplayInfo& primary = Engine::Get().GetPrimaryDisplay();
 
 	//Make a RECT out of our measurements
 	RECT size = { primary.X, primary.Y, primary.X + (LONG)Width, primary.Y + (LONG)Height };
@@ -43,6 +47,15 @@ Window::Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement) {
 
 	//And show it.
 	ShowWindow(handle, SW_SHOWNORMAL);
+
+	//Register the mouse input device
+	//for our high-res mouse input.
+	RAWINPUTDEVICE mouse[1];
+	mouse[0].usUsagePage = (USHORT)0x01;
+	mouse[0].usUsage = (USHORT)0x02;
+	mouse[0].dwFlags = RIDEV_INPUTSINK;
+	mouse[0].hwndTarget = handle;
+	RegisterRawInputDevices(mouse, 1, sizeof(mouse[0]));
 }
 
 Window::~Window() {
@@ -132,8 +145,8 @@ void Window::SetFullscreenDesktop(bool IsFullscreen, bool SpanAllDisplays) {
 	if (IsFullscreen) {
 		RECT rc;
 		if (SpanAllDisplays) {
-			const Array<DisplayInfo>& displays = Engine::Get().GetDisplays();
-			for (DisplayInfo& display : displays) {
+			const std::vector<DisplayInfo>& displays = Engine::Get().GetDisplays();
+			for (const auto& display : displays) {
 				//We need to span all displays,
 				//so figure out each one's size.
 				RECT subrect;
@@ -147,7 +160,7 @@ void Window::SetFullscreenDesktop(bool IsFullscreen, bool SpanAllDisplays) {
 			}
 		} else {
 			//We just need to span the primary display
-			DisplayInfo& primary = Engine::Get().GetPrimaryDisplay();
+			const DisplayInfo& primary = Engine::Get().GetPrimaryDisplay();
 			rc.left = primary.X;
 			rc.top = primary.Y;
 			rc.right = rc.left + primary.Width;
@@ -168,14 +181,14 @@ bool Window::IsFullscreenDesktop() const {
 	return fullscreen_desktop;
 }
 
-void Window::SetTitle(String Title) {
-	SetWindowText(handle, Title.GetBuffer());
+void Window::SetTitle(std::string Title) {
+	SetWindowText(handle, Title.c_str());
 }
-String Window::GetTitle() const {
+std::string Window::GetTitle() const {
 	std::string str; str.resize(256);
 	GetWindowText(handle, &str[0], 256);
 
-	return String(str.c_str());
+	return str;
 }
 
 bool Window::ProcessEvents() {
@@ -215,7 +228,7 @@ void Window::_RegisterClass() {
 
 	//TODO: Set icon?
 
-	//Finish up.
+	//Finish up the class.
 	RegisterClassEx(&wc);
 }
 
@@ -245,6 +258,16 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 		case WM_SETFOCUS:
 			if (window->fullscreen && window->fullscreen_desktop) {
 				SetWindowPos(handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOREPOSITION | SWP_NOSIZE);
+			}
+			break;
+		case WM_INPUT:
+			UINT size = 40;
+			static char lpb[40];
+			
+			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &size, sizeof(RAWINPUTHEADER));
+			RAWINPUT* raw = (RAWINPUT*)lpb;
+			if (raw->header.dwType == RIM_TYPEMOUSE) {
+				//send data to input system!
 			}
 			break;
 	}

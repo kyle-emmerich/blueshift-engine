@@ -143,6 +143,7 @@
     <ClCompile Include="Source\Core\BasicTypes\String.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
+    <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
     <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
     <ClCompile Include="Source\Graphics\VertexDeclarations.cpp" />
     <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
@@ -156,7 +157,10 @@
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\Math\Coordinate.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
+    <ClInclude Include="Source\Core\Math\Quaternion.h" />
+    <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
     <ClInclude Include="Source\Graphics\RenderWindow.h" />
     <ClInclude Include="Source\Graphics\VertexDeclarations.h" />
     <ClInclude Include="Source\Input\IInputDevice.h" />
@@ -167,6 +171,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Core\Math\Vector.h" />
+    <Text Include="Source\Core\Utility\application.cfg">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

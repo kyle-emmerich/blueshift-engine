@@ -2,9 +2,11 @@
 
 #include "Platform/DisplayInfo.h"
 #include "Core/Engine.h"
-
-
 #include <Windows.h>
+
+using namespace Blueshift;
+using namespace Blueshift::Core;
+using namespace Blueshift::Platform;
 
 bool CALLBACK MonitorEnumCallback(HMONITOR monitor, HDC device, RECT* rc, LPARAM engine);
 

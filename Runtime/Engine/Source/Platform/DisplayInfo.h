@@ -1,29 +1,30 @@
 #pragma once
-#include "Core/BasicTypes/String.h"
+#include <string>
 
-class Engine;
+namespace Blueshift {
 
-struct DisplayInfo {
-	DisplayInfo() {}
-	DisplayInfo(DisplayInfo& other) {
-		AdapterName = other.AdapterName;
-		X = other.X;
-		Y = other.Y;
-		Width = other.Width;
-		Height = other.Height;
-		NativeHandle = other.NativeHandle;
+	namespace Core {
+		class Engine;
 	}
-	uint32_t Index;
-	String AdapterName;
 
-	int32_t X;
-	int32_t Y;
+	namespace Platform {
 
-	int32_t Width;
-	int32_t Height;
+		struct DisplayInfo {
+			DisplayInfo() {}
 
-	void* NativeHandle;
+			uint32_t Index;
+			std::string AdapterName;
 
-	static void EnumerateDisplays(Engine* engine);
-};
+			int32_t X;
+			int32_t Y;
 
+			int32_t Width;
+			int32_t Height;
+
+			void* NativeHandle;
+
+			static void EnumerateDisplays(Blueshift::Core::Engine* engine);
+		};
+
+	}
+}

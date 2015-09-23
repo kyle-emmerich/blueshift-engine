@@ -2,18 +2,24 @@
 #include "Platform/PlatformSpecific.h"
 #include <thread>
 
-class RenderWindow : public Window {
-protected:
-	bool is_primary = false;
+namespace Blueshift {
+	namespace Graphics {
 
-	bool dirty_viewport = true;
-	uint32_t view_width;
-	uint32_t view_height;
-	virtual void resize_viewport(uint32_t width, uint32_t height);
-public:
-	RenderWindow(uint32_t Width = 1280, uint32_t Height = 720);
-	virtual ~RenderWindow();
+		class RenderWindow : public Platform::Window {
+		protected:
+			bool is_primary = false;
 
-	void PreRender();
-	void PostRender();
-};
+			bool dirty_viewport = true;
+			uint32_t view_width;
+			uint32_t view_height;
+			virtual void resize_viewport(uint32_t width, uint32_t height);
+		public:
+			RenderWindow(uint32_t Width = 1280, uint32_t Height = 720);
+			virtual ~RenderWindow();
+
+			void PreRender();
+			void PostRender();
+		};
+
+	}
+}

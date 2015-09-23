@@ -1,5 +1,8 @@
 #include "StaticString.h"
 
+using namespace Blueshift;
+using namespace Blueshift::Core::BasicTypes;
+
 StaticString::StaticString() {
 
 }

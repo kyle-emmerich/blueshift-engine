@@ -4,51 +4,57 @@
 #include "Platform/IWindow.h"
 #include <Windows.h>
 
-class Window : public IWindow {
-protected:
-	HWND handle;
+namespace Blueshift {
+	namespace Platform {
 
-	bool fullscreen = false;
-	bool fullscreen_desktop = true;
+		class Window : public IWindow {
+		protected:
+			HWND handle;
 
-	uint32_t last_width = 0;
-	uint32_t last_height = 0;
+			bool fullscreen = false;
+			bool fullscreen_desktop = true;
 
-	virtual void setup_platform();
-	virtual void resize_viewport(uint32_t width, uint32_t height);
-public:
-	Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement = true);
-	virtual ~Window();
+			uint32_t last_width = 0;
+			uint32_t last_height = 0;
 
-	void Resize(uint32_t Width, uint32_t Height, bool IsInnerMeasurement = true);
-	void Position(uint32_t X, uint32_t Y);
+			virtual void setup_platform();
+			virtual void resize_viewport(uint32_t width, uint32_t height);
+		public:
+			Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement = true);
+			virtual ~Window();
 
-	void Close();
-	bool IsClosed() const;
+			void Resize(uint32_t Width, uint32_t Height, bool IsInnerMeasurement = true);
+			void Position(uint32_t X, uint32_t Y);
 
-	void SetMaximized(bool IsMaximized);
-	bool IsMaximized() const;
+			void Close();
+			bool IsClosed() const;
 
-	void SetMinimized(bool IsMinimized);
-	bool IsMinimized() const;
+			void SetMaximized(bool IsMaximized);
+			bool IsMaximized() const;
 
-	void SetFullscreen(bool IsFullscreen);
-	bool IsFullscreen() const;
+			void SetMinimized(bool IsMinimized);
+			bool IsMinimized() const;
 
-	void SetFullscreenDesktop(bool IsFullscreen, bool SpanAllDisplays = false);
-	bool IsFullscreenDesktop() const;
+			void SetFullscreen(bool IsFullscreen);
+			bool IsFullscreen() const;
 
-	void SetTitle(String Title);
-	String GetTitle() const;
+			void SetFullscreenDesktop(bool IsFullscreen, bool SpanAllDisplays = false);
+			bool IsFullscreenDesktop() const;
 
-	bool ProcessEvents();
+			void SetTitle(std::string Title);
+			std::string GetTitle() const;
 
-	inline HWND GetHWND() const {
-		return handle;
+			bool ProcessEvents();
+
+			inline HWND GetHWND() const {
+				return handle;
+			}
+
+			static void _RegisterClass();
+			static LRESULT CALLBACK WindowCallback(HWND, UINT, WPARAM, LPARAM);
+		};
+
 	}
-
-	static void _RegisterClass();
-	static LRESULT CALLBACK WindowCallback(HWND, UINT, WPARAM, LPARAM);
-};
+}
 
 #endif

@@ -1,5 +1,8 @@
 #include "String.h"
 
+using namespace Blueshift;
+using namespace Blueshift::Core::BasicTypes;
+
 String::String() {
 
 }

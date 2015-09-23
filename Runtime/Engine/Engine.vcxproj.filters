@@ -39,6 +39,9 @@
     <ClCompile Include="Source\Graphics\VertexDeclarations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Utility\ConfigFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Platform\IWindow.h">
@@ -86,8 +89,20 @@
     <ClInclude Include="Source\Input\IInputDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Math\Quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math\Coordinate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Utility\ConfigFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Core\Math\Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Source\Core\Utility\application.cfg" />
   </ItemGroup>
 </Project>

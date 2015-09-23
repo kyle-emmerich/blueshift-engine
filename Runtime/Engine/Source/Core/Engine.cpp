@@ -3,6 +3,11 @@
 #include "Graphics/VertexDeclarations.h"
 #include <vector>
 
+using namespace Blueshift;
+using namespace Blueshift::Core;
+using namespace Blueshift::Graphics;
+using namespace Blueshift::Platform;
+
 Engine* Engine::_instance = 0;
 
 Engine::Engine() {
@@ -13,23 +18,30 @@ Engine::Engine() {
 }
 
 Engine::~Engine() {
+	for (auto* window : render_windows) {
+		if (window != nullptr) {
+			window->Close();
+			delete window;
+		}
+	}
+	render_windows.clear();
 	if (render_thread.joinable()) {
 		render_thread.join();
 	}
 }
 
 void Engine::AddAvailableDisplayInfo(DisplayInfo&& Display) {
-	Display.Index = (uint32_t)displays.GetSize();
-	displays.Add(Display);
+	Display.Index = (uint32_t)displays.size();
+	displays.push_back(Display);
 }
 
-DisplayInfo& Engine::GetPrimaryDisplay() const {
+const DisplayInfo& Engine::GetPrimaryDisplay() const {
 	return displays[primary_display_index];
 }
-DisplayInfo& Engine::GetDisplay(size_t index) const {
+const DisplayInfo& Engine::GetDisplay(size_t index) const {
 	return displays[index];
 }
-const Array<DisplayInfo>& Engine::GetDisplays() const {
+const std::vector<DisplayInfo>& Engine::GetDisplays() const {
 	return displays;
 }
 
@@ -40,27 +52,38 @@ void Engine::SetPrimaryDisplay(size_t index) {
 	primary_display_index = index;
 }
 
-void Engine::AddRenderWindow(RenderWindow& Window) {
-	render_windows.Add(&Window);
+void Engine::AddRenderWindow(RenderWindow* Window) {
+	render_windows.push_back(Window);
 }
 
 RenderWindow& Engine::GetPrimaryRenderWindow() const {
 	return *render_windows[0];
 }
 
-const Array<RenderWindow*>& Engine::GetRenderWindows() const {
+const std::vector<RenderWindow*>& Engine::GetRenderWindows() const {
 	return render_windows;
 }
 
 int Engine::Run() {
-	
-	RenderWindow window(1280, 720);
-	window.SetTitle("Blueshift Engine");
-	//window.SetFullscreenDesktop(true, true);
+	ApplicationConfig.ReadFile("application.cfg");
+	RenderWindow* window = new RenderWindow(
+		ApplicationConfig.Get<uint32_t>("Window","Width",1280),
+		ApplicationConfig.Get<uint32_t>("Window","Height",720)
+	);
+	window->SetTitle("Blueshift Engine");
+
+	if (ApplicationConfig.Get<bool>("Window", "Fullscreen", false)) {
+		window->SetFullscreen(true);
+	}
+	if (ApplicationConfig.Get<bool>("Window", "FullscreenDesktop", false)) {
+		window->SetFullscreenDesktop(true,
+			ApplicationConfig.Get<bool>("Window", "SpanAllDisplays", false)
+			);
+	}
 	AddRenderWindow(window);
 
 	render_thread = std::thread(&Engine::render_thread_func, this);
-	while (window.ProcessEvents()) {
+	while (window->ProcessEvents()) {
 
 	}
 	stop = true;

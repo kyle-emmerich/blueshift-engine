@@ -2,10 +2,14 @@
 #include "Core/Engine.h"
 #include "bgfx/bgfx.h"
 
+using namespace Blueshift;
+using namespace Blueshift::Core;
+using namespace Blueshift::Graphics;
+
 RenderWindow::RenderWindow(uint32_t Width, uint32_t Height)
 	: Window(Width, Height, true), view_width(Width), view_height(Height)
 { 
-	if (Engine::Get().GetRenderWindows().GetSize() == 0) {
+	if (Engine::Get().GetRenderWindows().size() == 0) {
 		is_primary = true;
 		this->setup_platform();
 	}

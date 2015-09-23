@@ -1,24 +1,31 @@
 #pragma once
 #include <string>
-
 #include "Core/BasicTypes/BaseString.h"
 
-class StaticString : public BaseString {
-private:
-	//temporary
-	//TODO: Finish this!
-	std::string _internal;
-public:
-	StaticString();
-	StaticString(const char* Buffer);
-	StaticString(char* Buffer);
-	StaticString(StaticString&);
+namespace Blueshift {
+	namespace Core {
+		namespace BasicTypes {
 
-	~StaticString();
+			class StaticString : public BaseString {
+			private:
+				//temporary
+				//TODO: Finish this!
+				std::string _internal;
+			public:
+				StaticString();
+				StaticString(const char* Buffer);
+				StaticString(char* Buffer);
+				StaticString(StaticString&);
 
-	const char* GetBuffer() const;
-	uint32_t GetLength() const;
+				~StaticString();
 
-	StaticString& operator= (const char Buffer[]);
-	StaticString& operator= (char* Buffer);
-};
+				const char* GetBuffer() const;
+				uint32_t GetLength() const;
+
+				StaticString& operator= (const char Buffer[]);
+				StaticString& operator= (char* Buffer);
+			};
+
+		}
+	}
+}
