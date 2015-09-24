@@ -146,6 +146,7 @@
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
     <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
     <ClCompile Include="Source\Graphics\VertexDeclarations.cpp" />
+    <ClCompile Include="Source\Input\Devices\Keyboard.cpp" />
     <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
   </ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
     <ClInclude Include="Source\Graphics\RenderWindow.h" />
     <ClInclude Include="Source\Graphics\VertexDeclarations.h" />
+    <ClInclude Include="Source\Input\Devices\Keyboard.h" />
     <ClInclude Include="Source\Input\IInputDevice.h" />
     <ClInclude Include="Source\Platform\DisplayInfo.h" />
     <ClInclude Include="Source\Platform\IWindow.h" />
