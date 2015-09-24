@@ -143,6 +143,16 @@ namespace Blueshift {
 			virtual std::string GetName() = 0;
 		};
 
+		template<typename T>
+		T* OpenDevice() {
+			//non-functional
+			return nullptr;
+		}
+
+		template<typename T>
+		void CloseDevice(T* Device) {
+			//non-functional
+		}
 
 	}
 }
