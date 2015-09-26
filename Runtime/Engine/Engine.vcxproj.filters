@@ -42,10 +42,13 @@
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Input\Devices\Keyboard.cpp">
+    <ClCompile Include="Source\Input\Windows\Keyboard_WIN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Input\InputManager.cpp">
+    <ClCompile Include="Source\Input\Windows\Mouse_WIN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input\Windows\Joystick_WIN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,10 +107,13 @@
     <ClInclude Include="Source\Core\Utility\ConfigFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Input\Devices\Keyboard.h">
+    <ClInclude Include="Source\Input\Windows\Keyboard_WIN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Input\InputManager.h">
+    <ClInclude Include="Source\Input\Windows\Mouse_WIN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\Windows\Joystick_WIN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -33,7 +33,7 @@ namespace Blueshift {
 				}
 
 				template<typename T>
-				inline const T& Get(const std::string& section, const std::string& name, const T&& default = 0) const {
+				inline const T Get(const std::string& section, const std::string& name, const T&& default = 0) const {
 					T rv;
 					std::stringstream ss;
 					try {

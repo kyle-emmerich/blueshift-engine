@@ -103,7 +103,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>bgfxDebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;bgfxDebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,7 +135,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>bgfxRelease.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;bgfxRelease.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -146,8 +146,9 @@
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
     <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
     <ClCompile Include="Source\Graphics\VertexDeclarations.cpp" />
-    <ClCompile Include="Source\Input\Devices\Keyboard.cpp" />
-    <ClCompile Include="Source\Input\InputManager.cpp" />
+    <ClCompile Include="Source\Input\Windows\Joystick_WIN.cpp" />
+    <ClCompile Include="Source\Input\Windows\Keyboard_WIN.cpp" />
+    <ClCompile Include="Source\Input\Windows\Mouse_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
   </ItemGroup>
@@ -165,9 +166,10 @@
     <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
     <ClInclude Include="Source\Graphics\RenderWindow.h" />
     <ClInclude Include="Source\Graphics\VertexDeclarations.h" />
-    <ClInclude Include="Source\Input\Devices\Keyboard.h" />
+    <ClInclude Include="Source\Input\Windows\Joystick_WIN.h" />
+    <ClInclude Include="Source\Input\Windows\Keyboard_WIN.h" />
     <ClInclude Include="Source\Input\IInputDevice.h" />
-    <ClInclude Include="Source\Input\InputManager.h" />
+    <ClInclude Include="Source\Input\Windows\Mouse_WIN.h" />
     <ClInclude Include="Source\Platform\DisplayInfo.h" />
     <ClInclude Include="Source\Platform\IWindow.h" />
     <ClInclude Include="Source\Platform\PlatformSpecific.h" />

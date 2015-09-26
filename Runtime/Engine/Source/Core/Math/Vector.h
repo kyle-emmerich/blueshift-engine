@@ -97,9 +97,21 @@ namespace Blueshift {
 				return rv;
 			}
 			template<size_t n, typename T>
+			inline Vector<n, T> operator+(const Vector<n, T>& a, const T& b) {
+				Vector<n, T> rv;
+				for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] + b; }
+				return rv;
+			}
+			template<size_t n, typename T>
 			inline Vector<n, T> operator-(const Vector<n, T>& a, const Vector<n, T>& b) {
 				Vector<n, T> rv;
 				for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] - b.data[i]; }
+				return rv;
+			}
+			template<size_t n, typename T>
+			inline Vector<n, T> operator-(const Vector<n, T>& a, const T& b) {
+				Vector<n, T> rv;
+				for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] - b; }
 				return rv;
 			}
 			template<size_t n, typename T>
@@ -109,16 +121,32 @@ namespace Blueshift {
 				return rv;
 			}
 			template<size_t n, typename T>
+			inline Vector<n, T> operator*(const Vector<n, T>& a, const T& b) {
+				Vector<n, T> rv;
+				for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] * b; }
+				return rv;
+			}
+			template<size_t n, typename T>
 			inline Vector<n, T> operator/(const Vector<n, T>& a, const Vector<n, T>& b) {
 				Vector<n, T> rv;
 				for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] / b.data[i]; }
 				return rv;
 			}
+			template<size_t n, typename T>
+			inline Vector<n, T> operator/(const Vector<n, T>& a, const T& b) {
+				Vector<n, T> rv;
+				for (size_t i = 0; i < n; i++) { rv.data[i] = a.data[i] / b; }
+				return rv;
+			}
 
-			//For future consideration: should operator+= return an lvalue or rvalue?
 			template<size_t n, typename T>
 			inline Vector<n, T> operator+=(Vector<n, T>& a, const Vector<n, T>& b) {
 				for (size_t i = 0; i < n; i++) { a.data[i] += b.data[i]; }
+				return a;
+			}
+			template<size_t n, typename T>
+			inline Vector<n, T> operator+=(Vector<n, T>& a, const T& b) {
+				for (size_t i = 0; i < n; i++) { a.data[i] += b; }
 				return a;
 			}
 			template<size_t n, typename T>
@@ -127,13 +155,28 @@ namespace Blueshift {
 				return a;
 			}
 			template<size_t n, typename T>
+			inline Vector<n, T> operator-=(Vector<n, T>& a, const T& b) {
+				for (size_t i = 0; i < n; i++) { a.data[i] -= b; }
+				return a;
+			}
+			template<size_t n, typename T>
 			inline Vector<n, T> operator*=(Vector<n, T>& a, const Vector<n, T>& b) {
 				for (size_t i = 0; i < n; i++) { a.data[i] += b.data[i]; }
 				return a;
 			}
 			template<size_t n, typename T>
+			inline Vector<n, T> operator*=(Vector<n, T>& a, const T& b) {
+				for (size_t i = 0; i < n; i++) { a.data[i] *= b; }
+				return a;
+			}
+			template<size_t n, typename T>
 			inline Vector<n, T> operator/=(Vector<n, T>& a, const Vector<n, T>& b) {
 				for (size_t i = 0; i < n; i++) { a.data[i] /= b.data[i]; }
+				return a;
+			}
+			template<size_t n, typename T>
+			inline Vector<n, T> operator/=(Vector<n, T>& a, const T& b) {
+				for (size_t i = 0; i < n; i++) { a.data[i] /= b; }
 				return a;
 			}
 

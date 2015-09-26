@@ -65,6 +65,7 @@ void ConfigFile::read_line(std::string line) {
 
 	if (line[0] == '[') {
 		current_section = trim(line.substr(1, line.find(']') - 1));
+		return;
 	}
 
 	splitter_pos = line.find('=');

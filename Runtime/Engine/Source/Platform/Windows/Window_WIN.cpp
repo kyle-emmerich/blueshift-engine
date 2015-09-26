@@ -2,9 +2,18 @@
 #include "Window_WIN.h"
 #include "Core/Engine.h"
 #include "Platform/DisplayInfo.h"
+#include "Input/Windows/Mouse_WIN.h"
+#include "Input/Windows/Keyboard_WIN.h"
 #include "bgfx/bgfxplatform.h"
 #include <string>
 #include <clocale>
+#include <Windowsx.h>
+
+//Since Windows only has the macros we need in Windowsx.h, we need
+//to undef some others to get rid of errors
+//THIS IS FUCKING WRONG, MICROSOFT
+#undef IsMaximized
+#undef IsMinimized
 
 using namespace Blueshift;
 using namespace Blueshift::Core;
@@ -14,7 +23,7 @@ Window::Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement) {
 	Window::_RegisterClass();
 
 	//Choose a style
-	DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
+	DWORD style = WS_CAPTION | WS_BORDER | WS_VISIBLE;
 
 	//Get the primary display's left/top
 	const DisplayInfo& primary = Engine::Get().GetPrimaryDisplay();
@@ -47,15 +56,6 @@ Window::Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement) {
 
 	//And show it.
 	ShowWindow(handle, SW_SHOWNORMAL);
-
-	//Register the mouse input device
-	//for our high-res mouse input.
-	RAWINPUTDEVICE mouse[1];
-	mouse[0].usUsagePage = (USHORT)0x01;
-	mouse[0].usUsage = (USHORT)0x02;
-	mouse[0].dwFlags = RIDEV_INPUTSINK;
-	mouse[0].hwndTarget = handle;
-	RegisterRawInputDevices(mouse, 1, sizeof(mouse[0]));
 }
 
 Window::~Window() {
@@ -260,16 +260,36 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 				SetWindowPos(handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOREPOSITION | SWP_NOSIZE);
 			}
 			break;
+		case WM_MOUSEMOVE:
+			Input::Devices::Mouse::_set_last_position(
+				GET_X_LPARAM(lParam),
+				GET_Y_LPARAM(lParam)
+			);
+			break;
+		case WM_CHAR:
+			Input::Devices::Keyboard::TextInput((char)wParam);
+			break;
 		case WM_INPUT:
-			UINT size = 40;
-			static char lpb[40];
-			
-			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &size, sizeof(RAWINPUTHEADER));
-			RAWINPUT* raw = (RAWINPUT*)lpb;
-			if (raw->header.dwType == RIM_TYPEMOUSE) {
-				//send data to input system!
+			if (GetFocus() != handle) {
+				break;
+			}
+			RAWINPUT input;
+			UINT size = sizeof(input), size_header = sizeof(RAWINPUTHEADER);
+
+			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &input, &size, size_header);		
+			if (input.header.dwType == RIM_TYPEMOUSE) {
+				Input::Devices::Mouse* mouse = Input::Devices::Mouse::_get_from_handle(input.header.hDevice);
+				if (mouse != nullptr) {
+					mouse->_pass_event((RAWMOUSE*)&input.data);
+				}
+			} else if (input.header.dwType == RIM_TYPEKEYBOARD) {
+				Input::Devices::Keyboard* keyboard = Input::Devices::Keyboard::_get_from_handle(input.header.hDevice);
+				if (keyboard != nullptr) {
+					keyboard->_pass_event((RAWKEYBOARD*)&input.data);
+				}
 			}
 			break;
+		
 	}
 
 	return DefWindowProc(handle, msg, wParam, lParam);

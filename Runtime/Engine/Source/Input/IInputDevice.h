@@ -1,7 +1,10 @@
 #pragma once
+#ifdef _WIN32 //Windows platform
+
 #include <string>
 #include "Core/Event.h"
 #include "Core/Math/Vector.h"
+#include "Platform/IWindow.h"
 
 namespace Blueshift {
 	namespace Input {
@@ -36,11 +39,13 @@ namespace Blueshift {
 			Buttons,
 			HapticFeedback,
 			Positional,
+			Translational,
 		};
 
 		enum class ButtonName : size_t {
 			None = 0,
 			MouseLeft, MouseRight, MouseMiddle,
+			MouseMax,
 
 			Esc, Return, Tab, Space, Backspace,
 			
@@ -49,12 +54,12 @@ namespace Blueshift {
 			Insert, Delete, Home, End,
 			PageUp, PageDown,
 			
-			Print, 
+			PrintScreen, 
 			
 			Plus, Minus,
 			LeftBracket, RightBracket,
 			Semicolon, Quote, Comma, Period,
-			Slash, Backslash, Tilde,
+			Slash, Backslash, Tilde, Pipe,
 			
 			F1, F2, F3, F4, F5, F6,
 			F7, F8, F9, F10, F11, F12,
@@ -94,6 +99,12 @@ namespace Blueshift {
 			KeyY,
 			KeyZ,
 
+			LeftControl, RightControl,
+			LeftAlt, RightAlt,
+			LeftShift, RightShift,
+
+			KeyboardMax,
+
 			GamepadA, GamepadB, GamepadX, GamepadY,
 			GamepadThumbL, GamepadThumbR,
 			GamepadShoulderL, GamepadShoulderR,
@@ -101,58 +112,63 @@ namespace Blueshift {
 			GamepadLeft, GamepadRight,
 			GamepadBack, GamepadStart,
 			GamepadGuide,
+			GamepadMax,
 
 			PenErase,
 			PenSpecial0,
 			PenSpecial1,
 			PenSpecial2,
+			PenMax,
 
 			Max
 		};
 
 		typedef size_t AxisHandle;
+		struct AxisDescription {
+			int offset;
+			double scale;
 
-		class IInputDeviceCapability;
-		class IInputDeviceCapabilityAxes {
-		public:
-			virtual double GetAxis(AxisHandle Axis) = 0;
+			int raw_value;
+			double value;
 
-			virtual std::string GetAxisName(AxisHandle Axis) = 0;
-			virtual AxisHandle GetAxisHandle(std::string AxisName) = 0;
-		};
-		class IInputDeviceCapabilityButtons {
-		public:
-			virtual bool IsButtonDown(ButtonName Button) = 0;
-			
-			Core::Event<void(IInputDevice&, ButtonName)> ButtonPressed;
-			Core::Event<void(IInputDevice&, ButtonName)> ButtonReleased;
-		};
-		class IInputDeviceCapabilityHapticFeedback {
-		public:
-
-		};
-
-		template<size_t n, size_t dimensions>
-		class IInputDeviceCapabilityPositional {
-		public:
-			virtual Core::Math::Vector<dimensions, double> GetPosition(size_t index = 0) = 0;
+			double delta;
+			double deadzone = 0.05;
 		};
 
 		class IInputDevice {
 		public:
 			virtual std::string GetName() = 0;
+			virtual void Poll() = 0;
 		};
 
-		template<typename T>
-		T* OpenDevice() {
-			//non-functional
-			return nullptr;
-		}
+		namespace DeviceCapability {
+			class Axes {
+			public:
+				virtual double GetAxis(AxisHandle Axis, bool ignore_deadzone = false) const = 0;
+				virtual const AxisDescription& GetAxisDescription(AxisHandle Axis) const = 0;
+			};
+			class Buttons {
+			public:
+				virtual bool IsButtonDown(ButtonName Button) = 0;
+			};
+			class HapticFeedback {
+			public:
 
-		template<typename T>
-		void CloseDevice(T* Device) {
-			//non-functional
-		}
+			};
 
+			template<size_t dimensions, size_t n = 1>
+			class Positional {
+			public:
+				virtual Core::Math::Vector<dimensions, double> GetPosition(size_t index = 0) = 0;
+			};
+
+			template<size_t dimensions, size_t n = 1>
+			class Translational {
+			public:
+				virtual Core::Math::Vector<dimensions, double> GetDelta(size_t index = 0) = 0;
+			};
+		}
 	}
 }
+
+#endif

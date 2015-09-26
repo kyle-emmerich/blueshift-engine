@@ -1,7 +1,9 @@
 #include "Engine.h"
 #include "bgfx/bgfx.h"
 #include "Graphics/VertexDeclarations.h"
+#include "Platform/PlatformSpecific.h"
 #include <vector>
+#include <iostream>
 
 using namespace Blueshift;
 using namespace Blueshift::Core;
@@ -67,9 +69,9 @@ const std::vector<RenderWindow*>& Engine::GetRenderWindows() const {
 int Engine::Run() {
 	ApplicationConfig.ReadFile("application.cfg");
 	RenderWindow* window = new RenderWindow(
-		ApplicationConfig.Get<uint32_t>("Window","Width",1280),
-		ApplicationConfig.Get<uint32_t>("Window","Height",720)
-	);
+		ApplicationConfig.Get<uint32_t>("Window", "Width", 1280),
+		ApplicationConfig.Get<uint32_t>("Window", "Height", 720)
+		);
 	window->SetTitle("Blueshift Engine");
 
 	if (ApplicationConfig.Get<bool>("Window", "Fullscreen", false)) {
@@ -82,9 +84,14 @@ int Engine::Run() {
 	}
 	AddRenderWindow(window);
 
+	Input::Devices::Keyboard::Register(window);
+	Input::Devices::Mouse::Register(window);
+	Input::Devices::Joystick::Register(window);
+
 	render_thread = std::thread(&Engine::render_thread_func, this);
 	while (window->ProcessEvents()) {
-
+		Input::Devices::Joystick::Primary()->Poll();
+		std::cout << Input::Devices::Joystick::Primary()->GetAxisDescription(0).value << std::endl;
 	}
 	stop = true;
 
@@ -101,7 +108,14 @@ void Engine::render_thread_func() {
 	InitializeVertexDeclarations();
 
 	while (!stop) {
-		
+		if (Input::Devices::Mouse::Primary()->IsButtonDown(Input::ButtonName::MouseLeft)) {
+			bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
+				0x909090ff, 1.0f, 0);
+		}
+		else {
+			bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
+				0x303030ff, 1.0f, 0);
+		}
 
 		for (RenderWindow* window : render_windows) {
 			window->PreRender();
