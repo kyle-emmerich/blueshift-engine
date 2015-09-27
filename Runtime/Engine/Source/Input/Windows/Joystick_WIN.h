@@ -6,10 +6,12 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <map>
+#include <dinput.h>
 
 namespace Blueshift {
 	namespace Input {
 		namespace Devices {
+			BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE*, VOID*);
 
 			class Joystick
 				: public IInputDevice,
@@ -18,17 +20,20 @@ namespace Blueshift {
 				  public DeviceCapability::HapticFeedback {
 			protected:
 				static std::vector<Joystick*> all_joystick_devices;
-				static std::map<HANDLE, size_t> device_map;
+				static std::map<GUID, size_t> device_map;
 
 				static Joystick* primary;
 				static bool primary_found;
 
-				UINT id;
+				static LPDIRECTINPUT8 dinput;
+				LPDIRECTINPUTDEVICE8 input_device;
+				GUID guid;
 
-				JOYINFOEX info;
-				JOYCAPS caps;
+				std::string name;
+				
 				std::vector<AxisDescription> axes;
-				UINT num_axes;
+
+				
 			public:
 				static Joystick* Primary() { return primary; }
 
@@ -38,7 +43,7 @@ namespace Blueshift {
 					return axes[Axis];
 				}
 				virtual size_t NumAxes() const {
-					return num_axes;
+					return axes.size();
 				}
 
 				//Implement buttons
@@ -48,38 +53,10 @@ namespace Blueshift {
 				virtual std::string GetName() { return "Joystick"; }
 				virtual void Poll();
 
-				virtual void Initialize();
+				static void Register(Platform::IWindow* Window);
+				static void Shutdown();
 
-				static void Register(Platform::IWindow* Window) {
-					//Try all the joysticks!
-					UINT max_joysticks = joyGetNumDevs();
-					JOYINFOEX info;
-					JOYCAPS caps;
-					bool found_first = false;
-					for (UINT i = 0; i < max_joysticks; i++) {
-						info.dwSize = sizeof(JOYINFOEX);
-						info.dwFlags = JOY_RETURNALL;
-						if (joyGetPosEx(i, &info) == JOYERR_NOERROR) {
-							if (joyGetDevCaps(i, &caps, sizeof(JOYCAPS)) == JOYERR_NOERROR) {
-								Joystick* js = new Joystick;
-								js->info = info;
-								js->caps = caps;
-								js->Initialize();
-
-								if (!found_first) {
-									found_first = true;
-									primary = js;
-								}
-							}
-						}
-					}
-				}
-				static void Shutdown() {
-					for (auto* joystick : all_joystick_devices) {
-						delete joystick;
-					}
-					all_joystick_devices.clear();
-				}
+				virtual void initialize(const DIDEVICEINSTANCE* instance, Platform::IWindow* window);
 			};
 
 		}

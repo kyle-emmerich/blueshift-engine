@@ -78,9 +78,7 @@ int Engine::Run() {
 		window->SetFullscreen(true);
 	}
 	if (ApplicationConfig.Get<bool>("Window", "FullscreenDesktop", false)) {
-		window->SetFullscreenDesktop(true,
-			ApplicationConfig.Get<bool>("Window", "SpanAllDisplays", false)
-			);
+		window->SetFullscreenDesktop(true, ApplicationConfig.Get<bool>("Window", "SpanAllDisplays", false));
 	}
 	AddRenderWindow(window);
 
@@ -90,8 +88,7 @@ int Engine::Run() {
 
 	render_thread = std::thread(&Engine::render_thread_func, this);
 	while (window->ProcessEvents()) {
-		Input::Devices::Joystick::Primary()->Poll();
-		std::cout << Input::Devices::Joystick::Primary()->GetAxisDescription(0).value << std::endl;
+
 	}
 	stop = true;
 
