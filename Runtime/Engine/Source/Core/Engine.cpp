@@ -72,7 +72,7 @@ int Engine::Run() {
 		ApplicationConfig.Get<uint32_t>("Window", "Width", 1280),
 		ApplicationConfig.Get<uint32_t>("Window", "Height", 720)
 		);
-	window->SetTitle("Blueshift Engine");
+	window->SetTitle(ApplicationConfig.Get<std::string>("Game", "Title", "Blueshift Engine"));
 
 	if (ApplicationConfig.Get<bool>("Window", "Fullscreen", false)) {
 		window->SetFullscreen(true);
@@ -88,7 +88,7 @@ int Engine::Run() {
 
 	render_thread = std::thread(&Engine::render_thread_func, this);
 	while (window->ProcessEvents()) {
-
+		//run game specific things
 	}
 	stop = true;
 
