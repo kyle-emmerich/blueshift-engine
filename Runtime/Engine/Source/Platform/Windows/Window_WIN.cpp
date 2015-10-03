@@ -23,7 +23,7 @@ Window::Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement) {
 	Window::_RegisterClass();
 
 	//Choose a style
-	DWORD style = WS_CAPTION | WS_BORDER | WS_VISIBLE;
+	DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 
 	//Get the primary display's left/top
 	const DisplayInfo& primary = Engine::Get().GetPrimaryDisplay();
