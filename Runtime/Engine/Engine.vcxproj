@@ -165,6 +165,7 @@
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
     <ClInclude Include="Source\Core\Math\Quaternion.h" />
+    <ClInclude Include="Source\Core\Timing\Stopwatch.h" />
     <ClInclude Include="Source\Core\Timing\Timer.h" />
     <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
     <ClInclude Include="Source\Graphics\RenderSystem.h" />
