@@ -1,21 +1,21 @@
 #ifdef _WIN32 //Windows platform
 
 #include "Platform/DisplayInfo.h"
-#include "Core/Engine.h"
+#include "Graphics/RenderSystem.h"
 #include <Windows.h>
 
 using namespace Blueshift;
-using namespace Blueshift::Core;
+using namespace Blueshift::Graphics;
 using namespace Blueshift::Platform;
 
 bool CALLBACK MonitorEnumCallback(HMONITOR monitor, HDC device, RECT* rc, LPARAM engine);
 
-void DisplayInfo::EnumerateDisplays(Engine* engine) {
-	EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)MonitorEnumCallback, (LPARAM)engine);
+void DisplayInfo::EnumerateDisplays(RenderSystem* rendering) {
+	EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)MonitorEnumCallback, (LPARAM)rendering);
 }
 
 bool CALLBACK MonitorEnumCallback(HMONITOR monitor, HDC device, RECT* rc, LPARAM data) {
-	Engine* engine = (Engine*)data;
+	RenderSystem* rendering = (RenderSystem*)data;
 
 	MONITORINFOEX monitor_info;
 	monitor_info.cbSize = sizeof(MONITORINFOEX);
@@ -31,7 +31,7 @@ bool CALLBACK MonitorEnumCallback(HMONITOR monitor, HDC device, RECT* rc, LPARAM
 
 	info.NativeHandle = (void*)monitor;
 
-	engine->AddAvailableDisplayInfo(std::move(info));
+	rendering->AddAvailableDisplayInfo(std::move(info));
 
 	return TRUE;
 }

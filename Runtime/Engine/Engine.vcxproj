@@ -144,6 +144,7 @@
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
+    <ClCompile Include="Source\Graphics\RenderSystem.cpp" />
     <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
     <ClCompile Include="Source\Graphics\VertexDeclarations.cpp" />
     <ClCompile Include="Source\Input\Windows\Joystick_WIN.cpp" />
@@ -160,10 +161,13 @@
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\ISubsystem.h" />
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
     <ClInclude Include="Source\Core\Math\Quaternion.h" />
+    <ClInclude Include="Source\Core\Timing\Timer.h" />
     <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
+    <ClInclude Include="Source\Graphics\RenderSystem.h" />
     <ClInclude Include="Source\Graphics\RenderWindow.h" />
     <ClInclude Include="Source\Graphics\VertexDeclarations.h" />
     <ClInclude Include="Source\Input\Windows\Joystick_WIN.h" />

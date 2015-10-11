@@ -9,7 +9,7 @@ using namespace Blueshift::Graphics;
 RenderWindow::RenderWindow(uint32_t Width, uint32_t Height)
 	: Window(Width, Height, true), view_width(Width), view_height(Height)
 { 
-	if (Engine::Get().GetRenderWindows().size() == 0) {
+	if (Engine::Get().GetRenderSystem().GetRenderWindows().size() == 0) {
 		is_primary = true;
 		this->setup_platform();
 	}

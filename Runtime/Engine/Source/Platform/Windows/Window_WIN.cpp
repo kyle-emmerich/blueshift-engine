@@ -26,7 +26,7 @@ Window::Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement) {
 	DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 
 	//Get the primary display's left/top
-	const DisplayInfo& primary = Engine::Get().GetPrimaryDisplay();
+	const DisplayInfo& primary = Engine::Get().GetRenderSystem().GetPrimaryDisplay();
 
 	//Make a RECT out of our measurements
 	RECT size = { primary.X, primary.Y, primary.X + (LONG)Width, primary.Y + (LONG)Height };
@@ -145,7 +145,7 @@ void Window::SetFullscreenDesktop(bool IsFullscreen, bool SpanAllDisplays) {
 	if (IsFullscreen) {
 		RECT rc;
 		if (SpanAllDisplays) {
-			const std::vector<DisplayInfo>& displays = Engine::Get().GetDisplays();
+			const std::vector<DisplayInfo>& displays = Engine::Get().GetRenderSystem().GetDisplays();
 			for (const auto& display : displays) {
 				//We need to span all displays,
 				//so figure out each one's size.
@@ -160,7 +160,7 @@ void Window::SetFullscreenDesktop(bool IsFullscreen, bool SpanAllDisplays) {
 			}
 		} else {
 			//We just need to span the primary display
-			const DisplayInfo& primary = Engine::Get().GetPrimaryDisplay();
+			const DisplayInfo& primary = Engine::Get().GetRenderSystem().GetPrimaryDisplay();
 			rc.left = primary.X;
 			rc.top = primary.Y;
 			rc.right = rc.left + primary.Width;

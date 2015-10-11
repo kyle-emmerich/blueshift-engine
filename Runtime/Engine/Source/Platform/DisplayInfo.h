@@ -3,8 +3,8 @@
 
 namespace Blueshift {
 
-	namespace Core {
-		class Engine;
+	namespace Graphics {
+		class RenderSystem;
 	}
 
 	namespace Platform {
@@ -23,7 +23,7 @@ namespace Blueshift {
 
 			void* NativeHandle;
 
-			static void EnumerateDisplays(Blueshift::Core::Engine* engine);
+			static void EnumerateDisplays(Blueshift::Graphics::RenderSystem* engine);
 		};
 
 	}
