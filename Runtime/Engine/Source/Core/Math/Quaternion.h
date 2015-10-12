@@ -1,5 +1,6 @@
 #pragma once
-#include "Matrix.h"
+#include "Core/Math/Matrix.h"
+#include "Core/Math/Misc.h"
 
 namespace Blueshift {
 	namespace Core {
@@ -29,7 +30,12 @@ namespace Blueshift {
 			}
 
 			template<typename T>
-			inline Matrix<3, T> QuaternionToMatrix3(Quaternion& q) {
+			inline Vector<4, T> QuaternionToVector(const Quaternion& q) {
+				return Vector<4, T>(q.X, q.Y, q.Z, q.W);
+			}
+
+			template<typename T>
+			inline Matrix<3, T> QuaternionToMatrix3(const Quaternion& q) {
 				return Matrix<3, T> {
 					1 - 2 * (q.Y * q.Y - q.Z * q.Z),
 						2 * (q.X * q.Y - q.W * q.Z),
@@ -86,6 +92,32 @@ namespace Blueshift {
 					(m(0, 2) - m(2, 0)) / w4,
 					(m(1, 0) - m(0, 1)) / w4,
 					w4
+				);
+			}
+
+			template<typename T>
+			inline Quaternion SLerp(const Quaternion& q0, const Quaternion& q1, T alpha) {
+				T omega = std::acos(Clamp(
+					q0.X * q1.X +
+					q0.Y * q1.Y + 
+					q0.Z * q1.Z +
+					q0.W * q1.W,
+					-1.0, 1.0
+				));
+
+				//No divide-by-0 error!
+				if (Absolute(omega) < 1e-10) {
+					omega = 1e-10;
+				}
+				double s_m = sin(omega);
+				double st0 = sin((1 - alpha) * omega) / s_m;
+				double st1 = sin(alpha * omega) / s_m;
+
+				return Quaternion(
+					q0.X * st0 + q1.X * st1,
+					q0.Y * st0 + q1.Y * st1,
+					q0.Z * st0 + q1.Z * st1,
+					q0.W * st0 + q1.W * st1
 				);
 			}
 		}
