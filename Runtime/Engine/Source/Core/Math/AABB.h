@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Math/Vector.h"
 #include "Core/Math/Misc.h"
 #include "Core/Math/Ray.h"
 
@@ -31,40 +32,36 @@ namespace Blueshift {
 
 			template<typename T>
 			bool Intersection(const AABB& a, const AABB& b) {
-				bool x = Absolute(a.Center.X - b.Center.X) <= (a.HalfWidth.X + b.HalfWidth.X);
-				bool y = Absolute(a.Center.Y - b.Center.Y) <= (a.HalfWidth.Y + b.HalfWidth.Y);
-				bool z = Absolute(a.Center.Z - b.Center.Z) <= (a.HalfWidth.Z + b.HalfWidth.Z);
-				return x && y && z;
+				return	Absolute(a.Center.X - b.Center.X) <= (a.HalfWidth.X + b.HalfWidth.X) &&
+						Absolute(a.Center.Y - b.Center.Y) <= (a.HalfWidth.Y + b.HalfWidth.Y) &&
+						Absolute(a.Center.Z - b.Center.Z) <= (a.HalfWidth.Z + b.HalfWidth.Z);
+
 			}
 
-			template<size_t n, typename T>
-			bool Intersection(const Ray_<n, T>& ray, const AABB& a, T& Near, T& Far) {
-				T t0 = 0;
-				T t1 = ray.MaxDistance;
+			template<typename T>
+			bool Intersection(const Ray_<3, T>& ray, const AABB& a, T& NearOut, T& FarOut) {
+				Vector<3, T> bmin = a.Min();
+				Vector<3, T> bmax = a.Max();
 
-				Vector<3, T> min = a.Min();
-				Vector<3, T> max = a.Max();
+				T t0 = (bmin.data[0] - ray.Origin.data[0]) * ray.InvDirection.data[0];
+				T t1 = (bmax.data[0] - ray.Origin.data[0]) * ray.InvDirection.data[0];
+				T t2 = (bmin.data[1] - ray.Origin.data[1]) * ray.InvDirection.data[1];
+				T t3 = (bmax.data[1] - ray.Origin.data[1]) * ray.InvDirection.data[1];
+				T t4 = (bmin.data[2] - ray.Origin.data[2]) * ray.InvDirection.data[2];
+				T t5 = (bmax.data[2] - ray.Origin.data[2]) * ray.InvDirection.data[2];
 
-				for (size_t i = 0; i < 3; i++) {
-					T inv_dir = 1 / ray.Direction.data[i];
-					T near = (min.data[i] - ray.Origin.data[i]) * inv_dir;
-					T far = (max.data[i] - ray.Origin.data[i]) * inv_dir;
+				T tmin = max(max(min(t0, t1), min(t2, t3)), min(t4, t5));
+				T tmax = min(min(max(t0, t1), min(t2, t3)), max(t4, t5));
 
-					if (near > far) {
-						std::swap(near, far);
-					}
-
-					t0 = near > t0 ? near : t0;
-					t1 = far < t1 ? far : t1;
-
-					if (t0 > t1) {
-						return false;
-					}
+				if (tmax < 0) {
+					return false;
+				}
+				if (tmin > tmax) {
+					return false;
 				}
 
-				Near = t0;
-				Far = t1;
-				return true;
+				NearOut = tmin;
+				FarOut = tmax;
 			}
 		}
 	}
