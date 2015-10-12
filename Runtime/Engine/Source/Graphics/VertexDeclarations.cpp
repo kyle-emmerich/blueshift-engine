@@ -3,7 +3,5 @@
 using namespace Blueshift;
 using namespace Blueshift::Graphics;
 
-bgfx::VertexDecl PositionOnlyVertex::decl;
-bgfx::VertexDecl PositionTexCoordVertex::decl;
-bgfx::VertexDecl PositionTexCoordNormalTangentVertex::decl;
-bgfx::VertexDecl PositionTexCoordNormalTangentBitangentVertex::decl;
+bgfx::VertexDecl StaticVertex::decl;
+bgfx::VertexDecl SkeletalVertex::decl;

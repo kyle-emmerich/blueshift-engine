@@ -5,48 +5,9 @@
 namespace Blueshift {
 	namespace Graphics {
 
-		struct PositionOnlyVertex {
-			Blueshift::Core::Math::Vector3f Position;
+		struct BaseVertex {};
 
-			static void init() {
-				decl.begin()
-					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-					.end();
-			}
-			static bgfx::VertexDecl decl;
-		};
-
-		struct PositionTexCoordVertex {
-			Blueshift::Core::Math::Vector3f Position;
-			Blueshift::Core::Math::Vector2f TexCoord;
-
-			static void init() {
-				decl.begin()
-					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-					.end();
-			}
-			static bgfx::VertexDecl decl;
-		};
-
-		struct PositionTexCoordNormalTangentVertex {
-			Blueshift::Core::Math::Vector3f Position;
-			Blueshift::Core::Math::Vector2f TexCoord;
-			Blueshift::Core::Math::Vector3f Normal;
-			Blueshift::Core::Math::Vector3f Tangent;
-
-			static void init() {
-				decl.begin()
-					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float)
-					.end();
-			}
-			static bgfx::VertexDecl decl;
-		};
-
-		struct PositionTexCoordNormalTangentBitangentVertex {
+		struct StaticVertex : public BaseVertex {
 			Blueshift::Core::Math::Vector3f Position;
 			Blueshift::Core::Math::Vector2f TexCoord;
 			Blueshift::Core::Math::Vector3f Normal;
@@ -65,14 +26,32 @@ namespace Blueshift {
 			static bgfx::VertexDecl decl;
 		};
 
-		typedef PositionTexCoordNormalTangentBitangentVertex Vertex;
+		struct SkeletalVertex : public BaseVertex {
+			Blueshift::Core::Math::Vector3f Position;
+			Blueshift::Core::Math::Vector2f TexCoord;
+			Blueshift::Core::Math::Vector3f Normal;
+			Blueshift::Core::Math::Vector3f Tangent;
+			Blueshift::Core::Math::Vector3f Bitangent;
+			uint16_t Indices[8];
+			double Weights[8];
+
+			static void init() {
+				decl.begin()
+					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
+					.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float)
+					.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float)
+					.add(bgfx::Attrib::Indices, 8, bgfx::AttribType::Int16)
+					.add(bgfx::Attrib::Weight, 8, bgfx::AttribType::Float)
+					.end();
+			}
+			static bgfx::VertexDecl decl;
+		};
 
 		inline void InitializeVertexDeclarations() {
-			PositionOnlyVertex::init();
-			PositionTexCoordVertex::init();
-			PositionTexCoordNormalTangentVertex::init();
-			PositionTexCoordNormalTangentBitangentVertex::init();
+			StaticVertex::init();
+			SkeletalVertex::init();
 		}
-
 	}
 }
