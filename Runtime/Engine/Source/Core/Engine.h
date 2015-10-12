@@ -1,15 +1,39 @@
 #pragma once
+#include "Core/IApplication.h"
 #include "Core/Utility/ConfigFile.h"
 #include "Graphics/RenderSystem.h"
 
-
 namespace Blueshift {
 	namespace Core {
+
+		
+		struct EngineParameters {
+			ApplicationType Type;
+			std::string ApplicationName;
+
+			IApplication* Application;
+
+			Utility::ConfigFile EngineConfig;
+
+			struct {
+				bool Rendering;
+				bool Input;
+				bool Audio;
+				bool Physics;
+				bool Networking;
+				bool AI;
+				bool API;
+				bool Storage;
+				bool Database;
+			} Subsystems;
+		};
 
 		class Engine {
 		private:
 			Graphics::RenderSystem* render = nullptr;
 
+			EngineParameters* parameters;
+		
 			bool stop = false;
 
 			static Engine* _instance;
@@ -17,24 +41,20 @@ namespace Blueshift {
 			inline static Engine& Get() {
 				return *_instance;
 			}
-			Engine(bool WithRendering = true);
+			inline static void Destroy() {
+				delete _instance;
+			}
+			Engine(EngineParameters* Parameters);
 			~Engine();
 
-			bool HasRenderSystem() const {
-				return render != nullptr;
-			}
 			Graphics::RenderSystem& GetRenderSystem() const {
 				return *render;
 			}
 
-	
-
-			int Run();
-			inline void Stop() { stop = true; }
-			inline bool IsStopped() { return stop; }
-
-			Utility::ConfigFile EngineConfig;
-			Utility::ConfigFile ApplicationConfig;
+			const EngineParameters* GetParameters() const {
+				return parameters;
+			}
+			
 		};
 
 	}

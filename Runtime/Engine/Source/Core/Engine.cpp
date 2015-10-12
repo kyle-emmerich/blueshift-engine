@@ -12,24 +12,16 @@ using namespace Blueshift::Platform;
 
 Engine* Engine::_instance = 0;
 
-Engine::Engine(bool WithRendering) {
+Engine::Engine(EngineParameters* Parameters) {
 	Engine::_instance = this;
 
-	if (WithRendering) {
+	parameters = Parameters;
+
+	if (parameters->Subsystems.Rendering) {
 		render = new RenderSystem;
 	}
 }
 
 Engine::~Engine() {
-	
+	delete parameters;
 }
-
-
-
-int Engine::Run() {
-	if (render != nullptr) {
-
-	}
-	return 0;
-}
-
