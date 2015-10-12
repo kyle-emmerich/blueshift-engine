@@ -6,7 +6,8 @@ using namespace Blueshift;
 using namespace Blueshift::Graphics;
 using namespace Blueshift::Platform;
 
-RenderSystem::RenderSystem() {
+RenderSystem::RenderSystem() 
+	: render_thread(&RenderSystem::render_thread_func, this) {
 	DisplayInfo::EnumerateDisplays(this);
 	primary_display_index = 0;
 }
@@ -44,6 +45,10 @@ void RenderSystem::SetPrimaryDisplay(const DisplayInfo& display) {
 }
 void RenderSystem::SetPrimaryDisplay(size_t index) {
 	primary_display_index = index;
+
+	if (primary_display_index >= displays.size()) {
+		primary_display_index = 0;
+	}
 }
 
 void RenderSystem::AddRenderWindow(RenderWindow* Window) {
@@ -59,6 +64,9 @@ const std::vector<RenderWindow*>& RenderSystem::GetRenderWindows() const {
 }
 
 void RenderSystem::render_thread_func() {
+	while (render_windows.size() == 0) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
 	bgfx::init();
 	bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
 		0x303030ff, 1.0f, 0);
@@ -67,16 +75,9 @@ void RenderSystem::render_thread_func() {
 
 	InitializeVertexDeclarations();
 
-	while (!Core::Engine::Get().IsStopped()) {
-		if (Input::Devices::Mouse::Primary()->IsButtonDown(Input::ButtonName::MouseLeft)) {
-			bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
-				0x909090ff, 1.0f, 0);
-		}
-		else {
-			bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
-				0x303030ff, 1.0f, 0);
-		}
-
+	Core::IApplication* application = Core::Engine::Get().GetParameters()->Application;
+	while (application->IsRunning()) {
+		
 		for (RenderWindow* window : render_windows) {
 			window->PreRender();
 			window->PostRender();
