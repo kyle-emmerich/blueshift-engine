@@ -139,9 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\BaseApplication.cpp" />
     <ClCompile Include="Source\Core\BasicTypes\StaticString.cpp" />
     <ClCompile Include="Source\Core\BasicTypes\String.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
+    <ClCompile Include="Source\Core\GameClient.cpp" />
+    <ClCompile Include="Source\Core\GameServer.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
     <ClCompile Include="Source\Graphics\RenderSystem.cpp" />
@@ -154,6 +157,7 @@
     <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\BaseApplication.h" />
     <ClInclude Include="Source\Core\BasicTypes\Array.h" />
     <ClInclude Include="Source\Core\BasicTypes\BaseString.h" />
     <ClInclude Include="Source\Core\BasicTypes\StaticString.h" />
@@ -161,9 +165,14 @@
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\GameClient.h" />
+    <ClInclude Include="Source\Core\GameServer.h" />
+    <ClInclude Include="Source\Core\IApplication.h" />
     <ClInclude Include="Source\Core\ISubsystem.h" />
+    <ClInclude Include="Source\Core\Math\AABB.h" />
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
+    <ClInclude Include="Source\Core\Math\Misc.h" />
     <ClInclude Include="Source\Core\Math\Quaternion.h" />
     <ClInclude Include="Source\Core\Timing\Stopwatch.h" />
     <ClInclude Include="Source\Core\Timing\Timer.h" />
@@ -181,7 +190,9 @@
     <ClInclude Include="Source\Platform\Windows\Window_WIN.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.cfg" />
     <None Include="Source\Core\Math\Vector.h" />
+    <None Include="user.cfg" />
     <Text Include="Source\Core\Utility\application.cfg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <FileType>Document</FileType>
