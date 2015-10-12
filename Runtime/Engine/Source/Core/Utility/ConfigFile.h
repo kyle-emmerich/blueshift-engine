@@ -45,6 +45,22 @@ namespace Blueshift {
 					return rv;
 				}
 
+				template<>
+				inline const bool Get(const std::string& section, const std::string& name, const bool&& default) const {
+					try {
+						std::string val = Get(section, name);
+						if (val == "true" || val == "1") {
+							return true;
+						}
+						else if (val == "false" || val == "0") {
+							return false;
+						}
+					} catch (...) {
+						return default;
+					}
+					return default;
+				}
+
 				bool Has(const std::string& section, const std::string& name) const {
 					auto it = options.find(section + '/' + name);
 					return it != options.end();
