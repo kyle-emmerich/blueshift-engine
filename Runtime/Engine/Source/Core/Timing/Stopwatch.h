@@ -7,7 +7,7 @@
 namespace Blueshift {
 	namespace Core {
 		namespace Timing {
-
+			 
 			class IStopwatch {
 			public:
 				virtual void Start() = 0;

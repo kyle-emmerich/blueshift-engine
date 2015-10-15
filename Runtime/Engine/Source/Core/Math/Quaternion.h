@@ -6,7 +6,7 @@ namespace Blueshift {
 	namespace Core {
 		namespace Math {
 
-			template<typename T = float>
+			template<typename T = double>
 			struct Quaternion {
 				union {
 					T data[4];
@@ -30,6 +30,33 @@ namespace Blueshift {
 			}
 
 			template<typename T>
+			inline Quaternion<T> operator* (const Quaternion<T>& a, const T& s) {
+				return Quaternion<T>(a.X * s, a.Y * s, a.Z * s, a.W * s);
+			}
+			template<typename T>
+			inline Quaternion<T>& operator*=(const Quaternion<T>& a, const T& s) {
+				a.X *= s;
+				a.Y *= s;
+				a.Z *= s;
+				a.W *= s;
+				return a;
+			}
+
+			template<typename T>
+			inline Quaternion<T> operator+ (const Quaternion<T>& a, const Quaternion<T>& b) {
+				return Quaternion<T>(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+			}
+
+			template<typename T>
+			inline Quaternion<T>& operator+=(const Quaternion<T>& a, const Quaternion<T>& b) {
+				a.X += b.X;
+				a.Y += b.Y;
+				a.Z += b.Z;
+				a.W += b.W;
+				return a;
+			}
+
+			template<typename T>
 			inline Vector<4, T> QuaternionToVector(const Quaternion& q) {
 				return Vector<4, T>(q.X, q.Y, q.Z, q.W);
 			}
@@ -37,46 +64,46 @@ namespace Blueshift {
 			template<typename T>
 			inline Matrix<3, T> QuaternionToMatrix3(const Quaternion& q) {
 				return Matrix<3, T> {
-					1 - 2 * (q.Y * q.Y - q.Z * q.Z),
+					1.0 - 2 * (q.Y * q.Y - q.Z * q.Z),
 						2 * (q.X * q.Y - q.W * q.Z),
 						2 * (q.X * q.Z - q.W * q.Y),
 
-						2 * (q.X * q.Y + q.W * Q.z),
-					1 - 2 * (q.X * q.X - q.Z * q.Z),
-						2 * (q.Y * q.Z + q.W * q.X),
+						  2.0 * (q.X * q.Y + q.W * Q.z),
+					1.0 - 2.0 * (q.X * q.X - q.Z * q.Z),
+						  2.0 * (q.Y * q.Z + q.W * q.X),
 
-						2 * (q.X * q.Z - q.W * q.Y),
-						2 * (q.Y * q.Z - q.W * q.X),
-					1 - 2 * (q.X * q.X - q.Y * q.Y)
+						  2.0 * (q.X * q.Z - q.W * q.Y),
+						  2.0 * (q.Y * q.Z - q.W * q.X),
+					1.0 - 2.0 * (q.X * q.X - q.Y * q.Y)
 				};
 			}
 			template<typename T>
 			inline Matrix<4, T> QuaternionToMatrix4(const Quaternion& q) {
 				return Matrix<4, T> {
-					1 - 2 * (q.Y * q.Y - q.Z * q.Z),
-						2 * (q.X * q.Y - q.W * q.Z),
-						2 * (q.X * q.Z - q.W * q.Y),
+					1.0 - 2.0 * (q.Y * q.Y - q.Z * q.Z),
+						  2.0 * (q.X * q.Y - q.W * q.Z),
+						  2.0 * (q.X * q.Z - q.W * q.Y),
 					0,
 
-						2 * (q.X * q.Y + q.W * Q.z),
-					1 - 2 * (q.X * q.X - q.Z * q.Z),
-						2 * (q.Y * q.Z + q.W * q.X),
+						  2.0 * (q.X * q.Y + q.W * Q.z),
+					1.0 - 2.0 * (q.X * q.X - q.Z * q.Z),
+						  2.0 * (q.Y * q.Z + q.W * q.X),
 					0,
 
-						2 * (q.X * q.Z - q.W * q.Y),
-						2 * (q.Y * q.Z - q.W * q.X),
-					1 - 2 * (q.X * q.X - q.Y * q.Y),
-					0,
+						  2.0 * (q.X * q.Z - q.W * q.Y),
+						  2.0 * (q.Y * q.Z - q.W * q.X),
+					1.0 - 2.0 * (q.X * q.X - q.Y * q.Y),
+					0.0,
 
-					0, 0, 0, 1
+					0.0, 0.0, 0.0, 1.0
 				};
 			}
 
 			template<typename T>
 			inline Quaternion Matrix3ToQuaternion(const Matrix<3, T>& m) {
-				T w = sqrt(1 + m(0, 0) + m(1, 1) + m(2, 2)) / 2;
+				T w = sqrt(1 + m(0, 0) + m(1, 1) + m(2, 2)) / 2.0;
 				T w4 = 4.0 * w;
-				return Quaternion(
+				return Quaternion<T>(
 					(m(2, 1) - m(1, 2)) / w4,
 					(m(0, 2) - m(2, 0)) / w4,
 					(m(1, 0) - m(0, 1)) / w4,
@@ -85,9 +112,9 @@ namespace Blueshift {
 			}
 			template<typename T>
 			inline Quaternion Matrix4ToQuaternion(const Matrix<4, T>& m) {
-				T w = sqrt(1 + m(0, 0) + m(1, 1) + m(2, 2)) / 2;
+				T w = sqrt(1 + m(0, 0) + m(1, 1) + m(2, 2)) / 2.0;
 				T w4 = 4.0 * w;
-				return Quaternion(
+				return Quaternion<T>(
 					(m(2, 1) - m(1, 2)) / w4,
 					(m(0, 2) - m(2, 0)) / w4,
 					(m(1, 0) - m(0, 1)) / w4,
@@ -96,7 +123,39 @@ namespace Blueshift {
 			}
 
 			template<typename T>
-			inline Quaternion SLerp(const Quaternion& q0, const Quaternion& q1, T alpha) {
+			inline void Normalize(Quaternion<T>& q) {
+				T magnitude = sqrt(q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W);
+				if (magnitude == 0.0) 
+					return;
+				q.X /= magnitude;
+				q.Y /= magnitude;
+				q.Z /= magnitude;
+				q.W /= magnitude;
+			}
+
+			template<typename T>
+			inline Quaternion Unit(const Quaternion<T>& q) {
+				T magnitude = sqrt(q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W);
+				if (magnitude == 0.0)
+					return q;
+
+				return Quaternion<T>(q.X / magnitude, q.Y / magnitude, q.Z / magnitude, q.W / magnitude);
+			}
+
+			template<typename T>
+			inline Quaternion QuaternionFromAxisAngle(const Vector<3, T>& Axis, const T& Angle) {
+				T sin_half = sin(Angle / 2.0);
+				T cos_half = cos(Angle / 2.0);
+				return Quaternion<T>(
+					Axis.data[0] * sin_half,
+					Axis.data[1] * sin_half,
+					Axis.data[2] * sin_half,
+					cos_half
+				);
+			}
+
+			template<typename T>
+			inline Quaternion SLerp(const Quaternion<T>& q0, const Quaternion<T>& q1, T alpha) {
 				T omega = std::acos(Clamp(
 					q0.X * q1.X +
 					q0.Y * q1.Y + 
@@ -113,7 +172,7 @@ namespace Blueshift {
 				double st0 = sin((1 - alpha) * omega) / s_m;
 				double st1 = sin(alpha * omega) / s_m;
 
-				return Quaternion(
+				return Quaternion<T>(
 					q0.X * st0 + q1.X * st1,
 					q0.Y * st0 + q1.Y * st1,
 					q0.Z * st0 + q1.Z * st1,
