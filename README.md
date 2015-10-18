@@ -12,6 +12,9 @@ Blueshift seeks to minimize dependencies in order to maximize portability and ke
 
 For all libraries with compiled binaries in the repository, one may expect binaries compiled for x64 systems in debug and release mode with MSVC 2015 build tools.
 
+###Coordinate System
+We're using a left-handed coordinate system where +X is to the right, +Y is up, and +Z is away. If the camera is moving in the positive Z direction, it is moving forward. The sine of a 45 degree angle up from the camera's Z axis is positive. Unreal Engine 4 is wrong. There is no debate. End of discussion.
+
 ###Matrix Operations
 Blueshift uses column-major matrices. There's no real reason to choose one or the other unless you're using plain old C-style multidimensional arrays (row major by specification.) However, Blueshift's math library uses a 1-dimensional array and provides a convenient helper function to index the array (`matrix(i, j)`). Here's what our matrices look like laid out:
 
