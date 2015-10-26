@@ -1,5 +1,6 @@
 #pragma once
 #include <initializer_list>
+#include "Core/Math/Vector.h"
 
 namespace Blueshift {
 	namespace Core {
@@ -15,12 +16,39 @@ namespace Blueshift {
 					for (size_t i = 0; i < rows * rows; i++) { data[i] = 0; }
 				}
 				Matrix(const std::initializer_list<T> list) {
-					//until someone marks initializer_list<T>::size() as constexpr :(
-					//static_assert(list.size() == rows * rows, "Incorrect number of arguments passed to Matrix::ctor()");
-					size_t i = 0;
-					for (auto it : list) {
-						data[i++] = it;
+					if (list.size() == rows * rows) {
+						size_t i = 0;
+						for (auto it : list) {
+							data[i++] = it;
+						}
+					} else {
+						if (list.size() == 9 && rows == 4) {
+							//given 3x3 data for a 4x4 matrix, we can handle this as a fun special case
+							//however, initializer_list provides no [] operator, so we REALLY get creative...
+							const T* x = list.begin();
+
+							data[0] = *x++;
+							data[1] = *x++;
+							data[2] = *x++;
+							data[3] = 0.0;
+
+							data[4] = *x++;
+							data[5] = *x++;
+							data[6] = *x++;
+							data[7] = 0.0;
+
+							data[8] = *x++;
+							data[9] = *x++;
+							data[10] = *x++;
+							data[11] = 0.0;
+
+							data[12] = 0.0;
+							data[13] = 0.0;
+							data[14] = 0.0;
+							data[15] = 1.0;
+						}
 					}
+					
 				}
 
 				T& operator[](size_t idx) { return data[idx]; }
@@ -65,7 +93,8 @@ namespace Blueshift {
 				Matrix<rows, T> out;
 				for (size_t i = 0; i < rows; i++) {
 					for (size_t j = 0; j < rows; j++) {
-						//Sum up the corresponding column
+						//The value at i,j is just the dot product of
+						//row i of a and row j of b.
 						out[i * rows + j] = 0;
 						for (size_t k = 0; k < rows; k++)
 							out[i * rows + j] += lhs[i * rows + k] * rhs[k * rows + j];
@@ -155,8 +184,8 @@ namespace Blueshift {
 			inline Matrix<4, T> Inverse(const Matrix<4, T>& matrix) {
 				//thanks to gluInvertMatrix, here is the fastest and most concise version of this code you're ever going to find.
 				//yuck.
-				T* m = &matrix.data;
-				Matrix<4, T> out; T* inv = &out.data;
+				const T* m = &matrix.data[0];
+				Matrix<4, T> out; T* inv = &out.data[0];
 
 				inv[0] = m[5] * m[10] * m[15] - m[5] * m[11] * m[14] - m[9] * m[6] * m[15] + m[9] * m[7] * m[14] + m[13] * m[6] * m[11] - m[13] * m[7] * m[10];
 				inv[4] = -m[4] * m[10] * m[15] + m[4] * m[11] * m[14] + m[8] * m[6] * m[15] - m[8] * m[7] * m[14] - m[12] * m[6] * m[11] + m[12] * m[7] * m[10];
@@ -188,6 +217,79 @@ namespace Blueshift {
 
 				return out;
 			}
+
+			template<typename T = double>
+			inline Matrix<4, T> ScaleMatrix(Vector<3, T> t) {
+				return Matrix<4, T> {
+					t.data[0], 0.0, 0.0, 0.0,
+					0.0, t.data[1], 0.0, 0.0,
+					0.0, 0.0, t.data[2], 0.0,
+					0.0, 0.0, 0.0, 1.0
+				};
+			}
+
+			template<typename T = double>
+			inline Matrix<4, T> TranslationMatrix(Vector<3, T> t) {
+				return Matrix<4, T> {
+					1.0, 0.0, 0.0, 0.0,
+					0.0, 1.0, 0.0, 0.0,
+					0.0, 0.0, 1.0, 0.0,
+					t.data[0], t.data[1], t.data[2], 1.0
+				};
+			}
+
+			template<size_t n, typename T = double>
+			inline Matrix<n, T> RotationMatrix(Vector<3, T> axis, T angle) {
+				if (axis.SquaredLength() < 1 - 1e-5 || axis.SquaredLength() > 1 + 1e-5) {
+					axis /= axis.Length();
+				}
+				T y = sin(angle);
+				T x = cos(angle);
+				T ix = T(1.0) - x;
+
+				T ax = axis.data[0];
+				T ay = axis.data[1];
+				T az = axis.data[2];
+
+				return Matrix<n, T> {
+					ix * ax * ax + x,
+					ix * ax * ay - az * y,
+					ix * az * ax + ay * y,
+
+					ix * ax * ay + az * y,
+					ix * ay * ay + x,
+					ix * ay * az - ax * y,
+
+					ix * az * ax - ay * y,
+					ix * ay * az + ax * y,
+					ix * az * az + x
+				};
+			}
+
+			inline Matrix<4, float> Downgrade(Matrix<4, double>& m) {
+				return Matrix<4, float> {
+					float(m.data[0]), float(m.data[1]), float(m.data[2]), float(m.data[3]),
+					float(m.data[4]), float(m.data[5]), float(m.data[6]), float(m.data[7]),
+					float(m.data[8]), float(m.data[9]), float(m.data[10]), float(m.data[11]),
+					float(m.data[12]), float(m.data[13]), float(m.data[14]), float(m.data[15])
+				};
+			}
+
+
+			static const Matrix3 IdentityMatrix3 {
+				1.0, 0.0, 0.0,
+				0.0, 1.0, 0.0,
+				0.0, 0.0, 1.0
+			};
+
+			static const Matrix4 IdentityMatrix4 {
+				1.0, 0.0, 0.0, 0.0,
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0, 1.0, 0.0,
+				0.0, 0.0, 0.0, 1.0
+			};
+
+
 
 		}
 	}

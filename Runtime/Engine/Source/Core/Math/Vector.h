@@ -194,6 +194,16 @@ namespace Blueshift {
 				T x; for (size_t i = 0; i < n; i++) { x += a.data[i] * b.data[i]; }
 				return acos(x);
 			}
+			template<size_t n, typename T>
+			constexpr T Distance(const Vector<n, T>& a, const Vector<n, T>& b) {
+				T x; for (size_t i = 0; i < n; i++) { x += (a.data[i] - b.data[i]) * (a.data[i] - b.data[i]); }
+				return sqrt(x);
+			}
+			template<size_t n, typename T>
+			constexpr T SquaredDistance(const Vector<n, T>& a, const Vector<n, T>& b) {
+				T x; for (size_t i = 0; i < n; i++) { x += (a.data[i] - b.data[i]) * (a.data[i] - b.data[i]); }
+				return x;
+			}
 
 			template<typename T>
 			constexpr Vector<3, T> CrossProduct(const Vector<3, T>& a, const Vector<3, T>& b) {
