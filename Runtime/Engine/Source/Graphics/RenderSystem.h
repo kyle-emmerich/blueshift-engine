@@ -17,6 +17,7 @@ namespace Blueshift {
 			size_t primary_display_index;
 
 			std::vector<Graphics::RenderWindow*> render_windows;
+			uint8_t current_view_id;
 
 			std::thread render_thread;
 			void render_thread_func();
@@ -39,6 +40,10 @@ namespace Blueshift {
 			void AddRenderWindow(Graphics::RenderWindow* Window);
 			Graphics::RenderWindow& GetPrimaryRenderWindow() const;
 			const std::vector<Graphics::RenderWindow*>& GetRenderWindows() const;
+
+			inline uint8_t GetCurrentViewID() const {
+				return current_view_id;
+			}
 		};
 
 	}
