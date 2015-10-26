@@ -56,7 +56,7 @@ bool ConfigFile::ReadString(std::string data) {
 void ConfigFile::read_line(std::string line) {
 	std::string name;
 	std::string value;
-	int splitter_pos;
+	size_t splitter_pos;
 
 	if (line.length() == 0 ||
 		line[0] == '#') {
