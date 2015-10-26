@@ -5,5 +5,6 @@ using namespace Blueshift::Graphics;
 
 
 bgfx::VertexDecl SimpleVertex::decl;
+bgfx::VertexDecl OBJVertex::decl;
 bgfx::VertexDecl StaticVertex::decl;
 bgfx::VertexDecl SkeletalVertex::decl;

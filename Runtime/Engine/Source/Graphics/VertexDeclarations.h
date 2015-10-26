@@ -23,6 +23,21 @@ namespace Blueshift {
 			static bgfx::VertexDecl decl;
 		};
 
+		struct OBJVertex : public BaseVertex {
+			Blueshift::Core::Math::Vector3f Position;
+			Blueshift::Core::Math::Vector2f TexCoord;
+			Blueshift::Core::Math::Vector3f Normal;
+
+			static void init() {
+				decl.begin()
+					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
+					.end();
+			}
+			static bgfx::VertexDecl decl;
+		};
+
 		struct StaticVertex : public BaseVertex {
 			Blueshift::Core::Math::Vector3f Position;
 			Blueshift::Core::Math::Vector2f TexCoord;
@@ -67,6 +82,7 @@ namespace Blueshift {
 
 		inline void InitializeVertexDeclarations() {
 			SimpleVertex::init();
+			OBJVertex::init();
 			StaticVertex::init();
 			SkeletalVertex::init();
 		}
