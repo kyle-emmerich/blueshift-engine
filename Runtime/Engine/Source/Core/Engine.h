@@ -1,6 +1,8 @@
 #pragma once
 #include "Core/IApplication.h"
 #include "Core/Utility/ConfigFile.h"
+#include "Core/UUID.h"
+
 #include "Graphics/RenderSystem.h"
 
 namespace Blueshift {
