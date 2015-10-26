@@ -15,7 +15,7 @@ namespace Blueshift {
 			BaseApplication();
 			virtual ~BaseApplication();
 
-			void Start(std::string AppCfgPath = "app.cfg", std::string UserCfgPath = "user.cfg");
+			void Start(std::string AppCfgPath = "../app.cfg", std::string UserCfgPath = "../user.cfg");
 
 			virtual EngineParameters* GetEngineSetup();
 
