@@ -6,6 +6,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <map>
+#define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
 namespace Blueshift {
