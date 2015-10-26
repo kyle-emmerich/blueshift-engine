@@ -35,3 +35,8 @@ This means the base vectors are laid out like so:
 Because Blueshift is column-major, remember to keep all matrix multiplication operations in the correct order:
 
     Matrix4 world_space = parent_transform * local_transform;
+
+###Documentation
+As of right now (October 25th, 2015), there is no documentation other than the source code itself. Don't be afraid to dive in and start learning; the API is really clean and simple so far. When the project continues to grow and when Kyle has free time, documentation will begin.
+
+However, ReadTheDocs is terrible and Doxygen is terrible. A custom solution is probably in order, probably based on the [NoxAstra](https://noxastra.com) website.
