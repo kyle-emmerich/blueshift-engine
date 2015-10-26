@@ -46,7 +46,7 @@ void RenderWindow::PreRender() {
 	bgfx::setViewRect(view_id, 0, 0, view_width, view_height);
 	bgfx::touch(view_id);
 	bgfx::setState(
-		BGFX_STATE_MSAA |
+		//BGFX_STATE_MSAA |
 		BGFX_STATE_ALPHA_WRITE |
 		BGFX_STATE_RGB_WRITE |
 		BGFX_STATE_CULL_CW |

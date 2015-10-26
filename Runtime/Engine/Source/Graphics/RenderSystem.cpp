@@ -164,7 +164,7 @@ void RenderSystem::render_thread_func() {
 		0x303030ff, 1.0f, 0);
 	
 
-	//bgfx::setDebug(BGFX_DEBUG_TEXT);
+	bgfx::setDebug(BGFX_DEBUG_STATS);
 
 	InitializeVertexDeclarations();
 

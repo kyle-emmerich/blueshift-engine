@@ -214,6 +214,7 @@
     <ClCompile Include="Source\Core\Main.cpp" />
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
     <ClCompile Include="Source\Filesystem\Puke\Version1\Reader.cpp" />
+    <ClCompile Include="Source\Graphics\Model\Loader\OBJ.cpp" />
     <ClCompile Include="Source\Graphics\RenderSystem.cpp" />
     <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
     <ClCompile Include="Source\Graphics\Shader.cpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Source\Filesystem\Puke\Version1\Container.h" />
     <ClInclude Include="Source\Filesystem\Puke\Version1\Reader.h" />
     <ClInclude Include="Source\Graphics\Model\IMeshData.h" />
+    <ClInclude Include="Source\Graphics\Model\Loader\OBJ.h" />
     <ClInclude Include="Source\Graphics\Model\StaticMeshData.h" />
     <ClInclude Include="Source\Graphics\RenderSystem.h" />
     <ClInclude Include="Source\Graphics\RenderWindow.h" />
