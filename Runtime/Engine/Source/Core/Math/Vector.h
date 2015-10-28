@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <ostream>
+#include <istream>
 
 namespace Blueshift {
 	namespace Core {
@@ -229,4 +230,12 @@ inline std::ostream& operator<<(std::ostream& os, const Blueshift::Core::Math::V
 	}
 	os << ")";
 	return os;
+}
+
+template<size_t n, typename T>
+inline std::istream& operator>>(std::istream& is, Blueshift::Core::Math::Vector<n, T>& rhs) {
+	for (size_t i = 0; i < n; i++) {
+		is >> rhs.data[i];
+	}
+	return is;
 }
