@@ -12,6 +12,9 @@ namespace Blueshift {
 				Vector<3, T> Center;
 				Vector<3, T> HalfWidth;
 
+				constexpr AABB() 
+					: Center(Vector<3, T>()), HalfWidth(Vector<3, T>()) { }
+
 				constexpr AABB(Vector<3, T> center, Vector<3, T> halfwidth)
 					: Center(center), HalfWidth(halfwidth) {}
 
@@ -31,7 +34,7 @@ namespace Blueshift {
 			};
 
 			template<typename T>
-			bool Intersection(const AABB& a, const AABB& b) {
+			bool Intersection(const AABB<T>& a, const AABB<T>& b) {
 				return	Absolute(a.Center.X - b.Center.X) <= (a.HalfWidth.X + b.HalfWidth.X) &&
 						Absolute(a.Center.Y - b.Center.Y) <= (a.HalfWidth.Y + b.HalfWidth.Y) &&
 						Absolute(a.Center.Z - b.Center.Z) <= (a.HalfWidth.Z + b.HalfWidth.Z);
@@ -39,7 +42,7 @@ namespace Blueshift {
 			}
 
 			template<typename T>
-			bool Intersection(const Ray_<3, T>& ray, const AABB& a, T& NearOut, T& FarOut) {
+			bool Intersection(const Ray_<3, T>& ray, const AABB<T>& a, T& NearOut, T& FarOut) {
 				Vector<3, T> bmin = a.Min();
 				Vector<3, T> bmax = a.Max();
 

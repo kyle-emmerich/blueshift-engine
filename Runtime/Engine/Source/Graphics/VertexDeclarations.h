@@ -5,6 +5,8 @@
 namespace Blueshift {
 	namespace Graphics {
 
+		typedef bgfx::VertexDecl VertexType;
+
 		struct BaseVertex {};
 
 		struct SimpleVertex : public BaseVertex {
@@ -15,12 +17,12 @@ namespace Blueshift {
 				: Position(position), Normal(normal) {}
 
 			static void init() {
-				decl.begin()
+				Type.begin()
 					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
 					.end();
 			}
-			static bgfx::VertexDecl decl;
+			static VertexType Type;
 		};
 
 		struct OBJVertex : public BaseVertex {
@@ -29,13 +31,13 @@ namespace Blueshift {
 			Blueshift::Core::Math::Vector3f Normal;
 
 			static void init() {
-				decl.begin()
+				Type.begin()
 					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
 					.end();
 			}
-			static bgfx::VertexDecl decl;
+			static VertexType Type;
 		};
 
 		struct StaticVertex : public BaseVertex {
@@ -46,7 +48,7 @@ namespace Blueshift {
 			Blueshift::Core::Math::Vector3f Bitangent;
 
 			static void init() {
-				decl.begin()
+				Type.begin()
 					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
@@ -54,7 +56,7 @@ namespace Blueshift {
 					.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float)
 					.end();
 			}
-			static bgfx::VertexDecl decl;
+			static VertexType Type;
 		};
 
 		struct SkeletalVertex : public BaseVertex {
@@ -67,7 +69,7 @@ namespace Blueshift {
 			double Weights[8];
 
 			static void init() {
-				decl.begin()
+				Type.begin()
 					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
@@ -77,7 +79,7 @@ namespace Blueshift {
 					.add(bgfx::Attrib::Weight, 8, bgfx::AttribType::Float)
 					.end();
 			}
-			static bgfx::VertexDecl decl;
+			static VertexType Type;
 		};
 
 		inline void InitializeVertexDeclarations() {

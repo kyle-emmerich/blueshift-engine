@@ -11,8 +11,7 @@ namespace Blueshift {
 		public:
 			friend class ShaderProgram;
 			enum class UniformType {
-				Float = 0,
-				Vector4 = 2,
+				Vector = 2,
 				Matrix3 = 3,
 				Matrix4 = 4,
 			};
@@ -48,6 +47,10 @@ namespace Blueshift {
 						throw 0; //TODO: make exception for bad assignment
 					}
 					bgfx::setUniform(Handle, reinterpret_cast<const void*>(&data), 1);
+				}
+
+				inline void Set(const void* data) {
+					bgfx::setUniform(Handle, data, static_cast<uint16_t>(Size));
 				}
 			};
 		protected:
