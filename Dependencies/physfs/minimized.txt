@@ -1,0 +1,7 @@
+This folder is minimized for the purpose of inclusion in Blueshift's codebase.
+
+Please see the full version here:
+
+	https://icculus.org/physfs/downloads/
+
+We are using stable version 2.0.3, released October 22nd, 2013.
