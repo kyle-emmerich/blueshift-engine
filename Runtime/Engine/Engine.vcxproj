@@ -144,23 +144,26 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;$(SolutionDir)Dependencies\bullet\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Winmm.lib;bgfxDebug.lib;dxguid.lib;dinput8.lib;LinearMath_vs2010_x64_debug.lib;Bullet3Common_vs2010_x64_debug.lib;BulletCollision_vs2010_x64_debug.lib;BulletDynamics_vs2010_x64_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;$(SolutionDir)Dependencies\bullet\lib;$(SolutionDir)Dependencies\physfs\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib;bgfxDebug.lib;dxguid.lib;dinput8.lib;LinearMath_vs2010_x64_debug.lib;Bullet3Common_vs2010_x64_debug.lib;BulletCollision_vs2010_x64_debug.lib;BulletDynamics_vs2010_x64_debug.lib;physfs_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>$(ProjectDir)Assets\Shaders\build_shaders.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLibrary|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -192,7 +195,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(ProjectDir)Source;$(DXSDK_DIR)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(ProjectDir)Source;$(DXSDK_DIR)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -208,17 +211,21 @@
     <ClCompile Include="Source\Core\BasicTypes\StaticString.cpp" />
     <ClCompile Include="Source\Core\BasicTypes\String.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
+    <ClCompile Include="Source\Core\Exceptions.cpp" />
     <ClCompile Include="Source\Core\GameClient.cpp" />
     <ClCompile Include="Source\Core\GameServer.cpp" />
     <ClCompile Include="Source\Core\UUID.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
-    <ClCompile Include="Source\Filesystem\Puke\Version1\Reader.cpp" />
+    <ClCompile Include="Source\Storage\File.cpp" />
+    <ClCompile Include="Source\Storage\FileSystem.cpp" />
+    <ClCompile Include="Source\Graphics\Model\Loader\MSH.cpp" />
     <ClCompile Include="Source\Graphics\Model\Loader\OBJ.cpp" />
     <ClCompile Include="Source\Graphics\RenderSystem.cpp" />
     <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
     <ClCompile Include="Source\Graphics\Shader.cpp" />
     <ClCompile Include="Source\Graphics\ShaderProgram.cpp" />
+    <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Graphics\VertexDeclarations.cpp" />
     <ClCompile Include="Source\Input\Windows\Joystick_WIN.cpp" />
     <ClCompile Include="Source\Input\Windows\Keyboard_WIN.cpp" />
@@ -238,11 +245,13 @@
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\Exceptions.h" />
     <ClInclude Include="Source\Core\GameClient.h" />
     <ClInclude Include="Source\Core\GameServer.h" />
     <ClInclude Include="Source\Core\IApplication.h" />
     <ClInclude Include="Source\Core\ISubsystem.h" />
     <ClInclude Include="Source\Core\Math\AABB.h" />
+    <ClInclude Include="Source\Core\Math\Color.h" />
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
     <ClInclude Include="Source\Core\Math\Misc.h" />
@@ -250,23 +259,25 @@
     <ClInclude Include="Source\Core\Math\Quaternion.h" />
     <ClInclude Include="Source\Core\Math\Ray.h" />
     <ClInclude Include="Source\Core\Math\Polynomial.h" />
+    <ClInclude Include="Source\Core\Math\Sphere.h" />
     <ClInclude Include="Source\Core\Math\Spline.h" />
     <ClInclude Include="Source\Core\Timing\Stopwatch.h" />
     <ClInclude Include="Source\Core\Timing\Timer.h" />
     <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
+    <ClInclude Include="Source\Core\Utility\FastParsing.h" />
     <ClInclude Include="Source\Core\UUID.h" />
-    <ClInclude Include="Source\Filesystem\Puke\IReader.h" />
-    <ClInclude Include="Source\Filesystem\Puke\IWriter.h" />
-    <ClInclude Include="Source\Filesystem\Puke\Puke.h" />
-    <ClInclude Include="Source\Filesystem\Puke\Version1\Container.h" />
-    <ClInclude Include="Source\Filesystem\Puke\Version1\Reader.h" />
+    <ClInclude Include="Source\Storage\File.h" />
+    <ClInclude Include="Source\Storage\FileSystem.h" />
     <ClInclude Include="Source\Graphics\Model\IMeshData.h" />
+    <ClInclude Include="Source\Graphics\Model\Loader\MSH.h" />
     <ClInclude Include="Source\Graphics\Model\Loader\OBJ.h" />
     <ClInclude Include="Source\Graphics\Model\StaticMeshData.h" />
+    <ClInclude Include="Source\Graphics\RenderData.h" />
     <ClInclude Include="Source\Graphics\RenderSystem.h" />
     <ClInclude Include="Source\Graphics\RenderWindow.h" />
     <ClInclude Include="Source\Graphics\Shader.h" />
     <ClInclude Include="Source\Graphics\ShaderProgram.h" />
+    <ClInclude Include="Source\Graphics\Texture.h" />
     <ClInclude Include="Source\Graphics\VertexDeclarations.h" />
     <ClInclude Include="Source\Input\Windows\Joystick_WIN.h" />
     <ClInclude Include="Source\Input\Windows\Keyboard_WIN.h" />
@@ -289,6 +300,8 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <FileType>Document</FileType>
     </Text>
+    <None Include="Assets\Shaders\blueshift\BRDF.glsl" />
+    <None Include="Assets\Shaders\blueshift\Sampling.glsl" />
     <None Include="Source\Core\Math\Vector.h" />
     <Text Include="user.cfg">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

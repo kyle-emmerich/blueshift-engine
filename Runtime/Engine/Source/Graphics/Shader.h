@@ -1,5 +1,6 @@
 #pragma once
 #include "bgfx/bgfx.h"
+#include "Graphics/RenderData.h"
 #include <vector>
 #include <unordered_map>
 
@@ -11,6 +12,7 @@ namespace Blueshift {
 		public:
 			friend class ShaderProgram;
 			enum class UniformType {
+				Texture = 1,
 				Vector = 2,
 				Matrix3 = 3,
 				Matrix4 = 4,
@@ -54,17 +56,20 @@ namespace Blueshift {
 				}
 			};
 		protected:
-			bgfx::ShaderHandle handle;
-			uint8_t* data;
+			bgfx::ShaderHandle handle = BGFX_INVALID_HANDLE;
+			RenderData data;
 
 			std::vector<bgfx::UniformHandle> uniform_handles;
 			std::vector<Uniform*> uniforms;
 			std::unordered_map<std::string, Uniform*> named_uniforms;
 		public:
-			Shader(uint8_t* data, size_t size);
+			Shader(std::string Path);
+			Shader(RenderData Data);
 			~Shader();
 
-			Shader& AddUniform(std::string Name, UniformType Type, size_t Size = 1);
+			Shader* AddUniform(std::string Name, UniformType Type, size_t Size = 1);
+			Shader* Complete();
+
 			inline const Uniform* GetUniformInfo(size_t id) const {
 				if (id < uniforms.size()) {
 					return uniforms[id];

@@ -3,6 +3,7 @@
 #include "Core/Engine.h"
 
 #include "Graphics/Model/Loader/OBJ.h"
+#include "Graphics/Texture.h"
 #include <fstream>
 
 using namespace Blueshift;
@@ -21,7 +22,6 @@ RenderSystem::RenderSystem()
 RenderSystem::~RenderSystem() {
 	for (auto* window : render_windows) {
 		if (window != nullptr) {
-			window->Close();
 			delete window;
 		}
 	}
@@ -69,73 +69,113 @@ const std::vector<RenderWindow*>& RenderSystem::GetRenderWindows() const {
 	return render_windows;
 }
 
+void RenderSystem::WaitRenderThread() {
+	if (render_thread.joinable()) {
+		render_thread.join();
+	}
+}
+
 void RenderSystem::render_thread_func() {
 	while (render_windows.size() == 0) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 	bgfx::init();
-	bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
-		0x303030ff, 1.0f, 0);
-	
+	{
+		InitializeVertexDeclarations();
+		bgfx::setDebug(BGFX_DEBUG_STATS);
 
-	bgfx::setDebug(BGFX_DEBUG_STATS);
+		//Create a fullscreen quad
+		Vector2f fs_verts[4] = {
+			Vector2f(-1.0f, -1.0f),
+			Vector2f(1.0f, -1.0f),
+			Vector2f(-1.0f,  1.0f),
+			Vector2f(1.0f,  1.0f)
+		};
+		uint16_t fs_indices[6] = {
+			0, 1, 2, 2, 1, 3
+		};
+		VertexType fs_type;
+		fs_type.begin().add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float).end();
+		Model::MeshBounds bounds;
+		Model::StaticMeshData<Vector2f, uint16_t> fs_quad("FullscreenQuad", fs_verts, 4, fs_type, fs_indices, 6, bounds);
 
-	InitializeVertexDeclarations();
+		Shader* fs_vert = new Shader("Shaders/background.vert.win.bin");
+		fs_vert->Complete();
+		Shader* fs_frag = new Shader("Shaders/background.frag.win.bin");
+		fs_frag
+			->AddUniform("u_cubemap", Shader::UniformType::Texture)
+			->AddUniform("u_view", Shader::UniformType::Matrix4)
+			->Complete();
+		ShaderProgram fs_program(fs_vert, fs_frag);
 
-	uint8_t* vs_code, * fs_code;
-	std::ifstream reader("../Assets/Shaders/debug_vs.win.bin", std::ios::binary);
-	reader.seekg(0, std::ios::end);
-	size_t vs_size = reader.tellg();
-	reader.seekg(0, std::ios::beg);
-	vs_code = new uint8_t[vs_size];
-	reader.read((char*)vs_code, vs_size);
-	reader.close();
-	reader.open("../Assets/Shaders/debug_fs.win.bin", std::ios::binary);
-	reader.seekg(0, std::ios::end);
-	size_t fs_size = reader.tellg();
-	reader.seekg(0, std::ios::beg);
-	fs_code = new uint8_t[fs_size];
-	reader.read((char*)fs_code, fs_size);
-	reader.close();
+		Model::Loader::OBJ obj_loader;
+		std::vector<std::unique_ptr<Model::OBJMeshData>> meshes;
+		obj_loader.Load("ball.obj", meshes);
 
-	reader.open("../Assets/ball.obj");
+		Shader* vs = new Shader("Shaders/debug_vs.win.bin");
+		vs->Complete();
 
-	Model::Loader::OBJ obj_loader;
-	std::vector<std::unique_ptr<Model::OBJMeshData>> meshes;
-	obj_loader.Load(reader, meshes);
+		Shader* fs = new Shader("Shaders/debug_fs.win.bin");
+		fs->AddUniform("u_samples", Shader::UniformType::Vector, 1)
+			->AddUniform("u_lightVec", Shader::UniformType::Vector, 1)
+			->AddUniform("u_texture", Shader::UniformType::Texture, 1)
+			->Complete();
 
-	Shader* vs = new Shader(vs_code, vs_size);
-	Shader* fs = new Shader(fs_code, fs_size);
-	ShaderProgram program(vs, fs);
+		ShaderProgram program(vs, fs);
+		Texture tex("space.dds");
 
-	fs->AddUniform("u_lightVec", Shader::UniformType::Vector, 1);
+		float theta = 0.0f;
 
+		float samples = 20;
 
-	float theta = 0.0f;
+		Core::IApplication* application = Core::Engine::Get().GetParameters()->Application;
+		while (application->IsRunning()) {
+			for (RenderWindow* window : render_windows) {
+				current_view_id = window->GetViewID();
+				window->PreRender();
 
-	Core::IApplication* application = Core::Engine::Get().GetParameters()->Application;
-	while (application->IsRunning()) {
-		for (RenderWindow* window : render_windows) {
-			current_view_id = window->GetViewID();
-			window->PreRender();
-			
-			theta += 0.01f;
-			program["u_lightVec"] = Math::Vector3f(cos(theta), 0.0f, sin(theta));
+				Math::Matrix4f view = Inverse(Math::TranslationMatrix<float>(Vector3f(0.0f, 2.0f, -20.0f)) /** Math::RotationMatrix<4, float>(Vector3f(0.0f, 1.0f, 0.0f), theta)*/);
+				Math::Matrix4f proj = Math::Downgrade(Scene::CameraComponent::CreatePerspectiveTransform(window->GetAspectRatio(), 60.0, 0.1, 100.0));
+				bgfx::setViewTransform(0, view.data, proj.data);
 
-			Math::Matrix4f model = Math::TranslationMatrix<float>(Vector3f(0.0f, 0.0f, 0.0f));
-			Math::Matrix4f view = Inverse(Math::TranslationMatrix(Math::Vector3f(0.0f, 0.0f, -5.0f)));
-			Math::Matrix4f proj = Math::Downgrade(Scene::CameraComponent::CreatePerspectiveTransform(window->GetAspectRatio(), 70.0, 0.1, 100.0));
+				//draw the background
+				tex.AssignTo(0, fs_program["u_cubemap"]);
+				fs_quad.Render(this, &fs_program);
 
-			bgfx::setTransform(model.data);
-			bgfx::setViewTransform(0, view.data, proj.data);
-			
-			meshes[0]->Render(&program);
+				
 
-			window->PostRender();
+				theta += 0.01f;
+				
+				int n = 10;
+				for (int j = -n/2; j < n/2; j++) {
+					for (int i = -n/2; i < n/2; i++) {
+						Math::Matrix4f model =
+							Math::RotationMatrix<4, float>(Math::Vector3f(1.0, 0.0, 0.0), theta + Math::ToRadians(180.0f)) *
+							Math::TranslationMatrix<float>(Vector3f(i * 2.0f, i%2 * j%2, j * 2.0f));
+						program["u_samples"].Set(&samples);
+						program["u_lightVec"] = Math::Vector3f(0.25f, -1.0f, 0.25f);
+
+						tex.AssignTo(0, program["u_texture"]);
+
+						bgfx::setTransform(model.data);
+						bgfx::setState(
+							BGFX_STATE_MSAA |
+							BGFX_STATE_ALPHA_WRITE |
+							BGFX_STATE_RGB_WRITE |
+							BGFX_STATE_CULL_CCW |
+							BGFX_STATE_DEPTH_WRITE |
+							BGFX_STATE_DEPTH_TEST_LEQUAL
+							);
+
+						meshes[0]->Render(this, &program);
+					}
+				}
+
+				window->PostRender();
+			}
+
+			bgfx::frame();
 		}
-
-		bgfx::frame();
 	}
-
 	bgfx::shutdown();
 }

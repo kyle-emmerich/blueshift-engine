@@ -1,28 +1,27 @@
 #include "Graphics/Shader.h"
 #include "bgfx/bgfxplatform.h"
+#include "Storage/File.h"
 
 using namespace Blueshift;
 using namespace Graphics;
 
-Shader::Shader(uint8_t* data, size_t size)
-	: data(data) {
-	handle = bgfx::createShader(bgfx::makeRef(data, static_cast<uint32_t>(size)));
+Shader::Shader(std::string Path) {
+	Storage::File file(Path);
+	size_t length = file.GetLength();
 
-	uint16_t num_uniforms = bgfx::getShaderUniforms(handle);
-	if (num_uniforms > 0) {
-		uniform_handles.resize(static_cast<size_t>(num_uniforms));
-		bgfx::getShaderUniforms(handle, &(uniform_handles[0]), num_uniforms);
-	}
+	data = AllocateRenderData(length);
+	file.Read(data->data, length);
+	file.Close();
 }
 
-Shader::~Shader() {
-	bgfx::destroyShader(handle);
-	if (data != nullptr) {
-		delete[] data;
-	}
+Shader::Shader(RenderData Data)
+	: data(Data) { }
 
+Shader::~Shader() {
 	for (auto handle : uniform_handles) {
-		bgfx::destroyUniform(handle);
+		if (handle.idx != bgfx::invalidHandle) {
+			bgfx::destroyUniform(handle);
+		}
 	}
 	uniform_handles.clear();
 	named_uniforms.clear();
@@ -30,14 +29,18 @@ Shader::~Shader() {
 		delete uniform;
 	}
 	uniforms.clear();
+
+	if (handle.idx != bgfx::invalidHandle) {
+		bgfx::destroyShader(handle);
+	}
 }
 
-Shader& Shader::AddUniform(std::string Name, Shader::UniformType Type, size_t Size) {
-	if (uniform_handles.size() <= uniforms.size()) {
-		throw 0; //TODO exception
+Shader* Shader::AddUniform(std::string Name, Shader::UniformType Type, size_t Size) {
+	if (handle.idx != bgfx::invalidHandle) {
+		throw 0; //bad
 	}
 	Uniform* uniform = new Uniform;
-	uniform->Handle = uniform_handles[uniforms.size()];
+	uniform->Handle = bgfx::createUniform(Name.c_str(), static_cast<bgfx::UniformType::Enum>(Type), static_cast<uint16_t>(Size));
 	uniform->Owner = this;
 	uniform->Name = Name;
 	uniform->Type = Type;
@@ -45,5 +48,10 @@ Shader& Shader::AddUniform(std::string Name, Shader::UniformType Type, size_t Si
 	uniform_handles.push_back(uniform->Handle);
 	uniforms.push_back(uniform);
 	named_uniforms[uniform->Name] = uniform;
-	return *this;
+	return this;
+}
+
+Shader* Shader::Complete() {
+	handle = bgfx::createShader(data);
+	return this;
 }

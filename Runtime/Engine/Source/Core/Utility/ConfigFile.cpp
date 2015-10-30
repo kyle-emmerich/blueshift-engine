@@ -1,3 +1,4 @@
+#include "Storage/File.h"
 #include "Core/Utility/ConfigFile.h"
 #include <fstream>
 #include <cctype>
@@ -20,37 +21,20 @@ using std::ifstream;
 using std::stringstream;
 
 ConfigFile::ConfigFile(std::string path) {
-	ReadFile(path);
-}
+	Storage::File file(path);
+	size_t length = file.GetLength();
+	char* data = new char[length];
+	file.Read(data, length);
 
-bool ConfigFile::ReadStream(std::istream& stream) {
-	initialized = false;
-	current_section.clear();
-	options.clear();
-
-	std::string buf;
-	while (!stream.eof()) {
-		std::getline(stream, buf);
-		read_line(buf);
+	std::stringstream ss;
+	ss << data;
+	std::string line;
+	while (!std::getline(ss, line).eof()) {
+		read_line(line);
 	}
-	initialized = true;
-	return true;
-}
 
-bool ConfigFile::ReadFile(std::string path) {
-	ifstream stream(path.c_str());
-	bool result = false;
-	initialized = false;
-	if (stream.is_open()) {
-		result = ReadStream(stream);
-	}
-	stream.close();
-
-	return result;
-}
-
-bool ConfigFile::ReadString(std::string data) {
-	return ReadStream(stringstream(data));
+	ss.clear();
+	delete[] data;
 }
 
 void ConfigFile::read_line(std::string line) {

@@ -1,6 +1,7 @@
 #include "Graphics/Model/Loader/OBJ.h"
 #include "Core/Math/Vector.h"
 #include "Core/Utility/FastParsing.h"
+#include "Storage/File.h"
 #include <sstream>
 
 using namespace Blueshift;
@@ -13,35 +14,19 @@ OBJ::OBJ()
 	: current(nullptr) {}
 OBJ::~OBJ() {}
 
-bool OBJ::Load(uint8_t* data, size_t size, std::vector<std::unique_ptr<Model::OBJMeshData>>& meshes) {
+bool OBJ::Load(std::string path, std::vector<std::unique_ptr<Model::OBJMeshData>>& meshes) {
+	Storage::File file(path);
+	size_t length = file.GetLength();
+	char* data = new char[length];
+	file.Read(data, length);
+
+	std::stringstream ss;
+	ss << data;
 	std::string line;
-	std::string obj(reinterpret_cast<const char*>(data));
-	
-	objects.clear();
-	current = new o;
-	
-	size_t offset = 0;
-	while (offset < obj.length()) {
-		size_t nl = obj.find_first_of('\n', offset);
-		line = obj.substr(offset, nl - offset);
-		offset = nl + 1;
-		try {
-			process_line(line);
-		} catch (std::exception&) {
-			return false;
-		}
-	}
-	to_mesh_data(meshes);
-	return true;
-}
-bool OBJ::Load(std::istream& is, std::vector<std::unique_ptr<Model::OBJMeshData>>& meshes) {
-	std::string line;
-	objects.clear();
+
 	current = new o;
 
-	size_t offset = 0;
-	while (!is.eof()) {
-		std::getline(is, line);
+	while (!std::getline(ss, line).eof()) {
 		try {
 			process_line(line);
 		} catch (std::exception&) {
@@ -49,6 +34,9 @@ bool OBJ::Load(std::istream& is, std::vector<std::unique_ptr<Model::OBJMeshData>
 		}
 	}
 	to_mesh_data(meshes);
+
+	ss.clear();
+	delete[] data;
 	return true;
 }
 

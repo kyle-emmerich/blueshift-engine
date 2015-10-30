@@ -8,6 +8,8 @@
 
 namespace Blueshift {
 	namespace Graphics {
+		class RenderSystem;
+
 		namespace Model {
 
 			struct MeshBounds {
@@ -28,8 +30,8 @@ namespace Blueshift {
 
 			class IMeshData {
 			public:
-				virtual void Render(ShaderProgram*, size_t SectionID) = 0;
-				virtual void Render(ShaderProgram*, MeshDataSection* Section) = 0;
+				virtual void Render(RenderSystem* renderer, ShaderProgram*, size_t SectionID) = 0;
+				virtual void Render(RenderSystem* renderer, ShaderProgram*, MeshDataSection* Section) = 0;
 
 				virtual const MeshDataSection& GetSection(size_t SectionID) const = 0;
 				virtual const std::string& GetName() const = 0;

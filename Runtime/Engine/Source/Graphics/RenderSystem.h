@@ -4,6 +4,8 @@
 #include "Core/BasicTypes/Array.h"
 #include "Core/Utility/ConfigFile.h"
 #include "Graphics/RenderWindow.h"
+#include "Graphics/Model/StaticMeshData.h"
+#include "bgfx/bgfx.h"
 #include <thread>
 #include <memory>
 #include <vector>
@@ -40,6 +42,8 @@ namespace Blueshift {
 			void AddRenderWindow(Graphics::RenderWindow* Window);
 			Graphics::RenderWindow& GetPrimaryRenderWindow() const;
 			const std::vector<Graphics::RenderWindow*>& GetRenderWindows() const;
+
+			void WaitRenderThread();
 
 			inline uint8_t GetCurrentViewID() const {
 				return current_view_id;

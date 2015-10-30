@@ -1,5 +1,7 @@
 #pragma once
 #include "Core/BaseApplication.h"
+#include "Graphics/RenderSystem.h"
+#include "Graphics/RenderWindow.h"
 
 namespace Blueshift {
 	namespace Core {

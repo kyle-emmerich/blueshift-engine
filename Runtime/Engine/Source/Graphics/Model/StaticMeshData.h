@@ -1,6 +1,8 @@
 #pragma once
 #include "Graphics/Model/IMeshData.h"
 #include "Core/Engine.h"
+#include "Graphics/RenderData.h"
+#include "Graphics/RenderSystem.h"
 
 namespace Blueshift {
 	namespace Graphics {
@@ -13,8 +15,8 @@ namespace Blueshift {
 				bgfx::VertexBufferHandle vertex_buf;
 				bgfx::IndexBufferHandle index_buf;
 
-				VertexT* vertex_data;
-				IndexT* index_data;
+				RenderData vertex_data;
+				RenderData index_data;
 				size_t num_vertices;
 				size_t num_indices;
 
@@ -29,11 +31,11 @@ namespace Blueshift {
 					IndexT* Indices, size_t NumIndices, MeshBounds Bounds)
 					: num_vertices(NumVertices), num_indices(NumIndices) {
 
-					vertex_data = new VertexT[NumVertices * Type.getStride()];
-					index_data = new IndexT[NumIndices * sizeof(IndexT)];
+					vertex_data = AllocateRenderData(NumVertices * Type.getStride());
+					index_data = AllocateRenderData(NumIndices * sizeof(IndexT));
 
-					memcpy(vertex_data, Vertices, NumVertices * Type.getStride());
-					memcpy(index_data, Indices, NumIndices * sizeof(IndexT));
+					memcpy(vertex_data->data, Vertices, NumVertices * Type.getStride());
+					memcpy(index_data->data, Indices, NumIndices * sizeof(IndexT));
 
 					//Are we using 32-bit indices?
 					uint16_t index_flags = BGFX_BUFFER_NONE;
@@ -49,13 +51,11 @@ namespace Blueshift {
 					}
 					
 					vertex_buf = bgfx::createVertexBuffer(
-						bgfx::makeRef(vertex_data, static_cast<uint32_t>(num_vertices * sizeof(VertexT))),
-						Type,
+						vertex_data, Type,
 						BGFX_BUFFER_NONE
 					);
 					index_buf = bgfx::createIndexBuffer(
-						bgfx::makeRef(index_data, static_cast<uint32_t>(num_indices * sizeof(IndexT))),
-						index_flags
+						index_data, index_flags
 					);
 
 					//SectionID=0 is always the whole data buffer unless
@@ -81,13 +81,6 @@ namespace Blueshift {
 						bgfx::destroyIndexBuffer(index_buf);
 						index_buf = BGFX_INVALID_HANDLE;
 					}
-
-					if (vertex_data != nullptr) {
-						delete[] vertex_data;
-					}
-					if (index_data != nullptr) {
-						delete[] index_data;
-					}
 				}
 
 				size_t AddSection(size_t VertexStart, size_t VertexNumber, size_t IndexStart, size_t IndexNumber, MeshBounds Bounds) {
@@ -101,21 +94,21 @@ namespace Blueshift {
 				}
 
 
-				inline virtual void Render(ShaderProgram* program, size_t SectionID = 0) {
+				inline virtual void Render(RenderSystem* renderer, ShaderProgram* program, size_t SectionID = 0) {
 					if (SectionID >= sections.size()) {
 						throw 0; //TODO: Make an exception type for this.
 						//Should indicate section is out of bounds.
 					}
 					MeshDataSection* section = &sections[SectionID];
-					Render(program, section);
+					Render(renderer, program, section);
 				}
-				inline virtual void Render(ShaderProgram* program, MeshDataSection* Section) {
+				inline virtual void Render(RenderSystem* renderer, ShaderProgram* program, MeshDataSection* Section) {
 					//TODO: make sure section isn't null...
 					//TODO: make sure program is valid
 					//TODO: replace programhandle with api-friendly wrap
 					bgfx::setVertexBuffer(vertex_buf, static_cast<uint32_t>(Section->VertexStart), static_cast<uint32_t>(Section->VertexNumber));
 					bgfx::setIndexBuffer(index_buf, static_cast<uint32_t>(Section->IndexStart), static_cast<uint32_t>(Section->IndexNumber));
-					bgfx::submit(Core::Engine::Get().GetRenderSystem().GetCurrentViewID(), program->GetHandle());
+					bgfx::submit(renderer->GetCurrentViewID(), program->GetHandle());
 				}
 
 				inline virtual const std::string& GetName() const {

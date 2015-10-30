@@ -17,6 +17,7 @@ Blueshift::Core::EngineParameters* TestClient::GetEngineSetup() {
 	Blueshift::Core::EngineParameters* Parameters = GameClient::GetEngineSetup();
 
 	Parameters->ApplicationName = "Blueshift Client Test";
+	Parameters->ApplicationIdentity = "Blueshift";
 
 	return Parameters;
 }
@@ -38,6 +39,6 @@ bool TestClient::Update(double dt) {
 }
 
 int main(int argc, char* argv[]) {
-	TestClient().Start();
+	TestClient().Start(argc, argv);
 	return 0;
 } 

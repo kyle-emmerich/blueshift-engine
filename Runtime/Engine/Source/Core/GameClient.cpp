@@ -1,5 +1,6 @@
 #include "Core/GameClient.h"
 #include "Core/Engine.h"
+#include "Graphics/RenderSystem.h"
 #include "Graphics/RenderWindow.h"
 
 using namespace Blueshift;
@@ -25,17 +26,17 @@ EngineParameters* GameClient::GetEngineSetup() {
 }
 
 void GameClient::Initialize() {
-	Engine->GetRenderSystem().SetPrimaryDisplay(AppConfig.Get<size_t>("Window", "DisplayID"));
+	Engine->GetRenderSystem().SetPrimaryDisplay(AppConfig->Get<size_t>("Window", "DisplayID"));
 	main_window = new RenderWindow(
-		AppConfig.Get<uint32_t>("Window", "Width", 1280),
-		AppConfig.Get<uint32_t>("Window", "Height", 720)
+		AppConfig->Get<uint32_t>("Window", "Width", 1280),
+		AppConfig->Get<uint32_t>("Window", "Height", 720)
 	);
 	main_window->SetTitle(Engine->GetParameters()->ApplicationName);
 
-	if (AppConfig.Get<bool>("Window", "IsFullscreen", false)) {
+	if (AppConfig->Get<bool>("Window", "IsFullscreen", false)) {
 		main_window->SetFullscreen(true);
 	}
-	if (AppConfig.Get<bool>("Window", "IsFullscreenDesktop", false)) {
+	if (AppConfig->Get<bool>("Window", "IsFullscreenDesktop", false)) {
 		main_window->SetFullscreenDesktop(true);
 	}
 	
@@ -44,7 +45,6 @@ void GameClient::Initialize() {
 
 void GameClient::Shutdown() {
 	main_window->Close();
-	delete main_window;
 }
 
 bool GameClient::Update(double dt) {

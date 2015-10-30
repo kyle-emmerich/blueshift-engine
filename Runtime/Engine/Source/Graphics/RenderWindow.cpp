@@ -1,4 +1,5 @@
-#include "RenderWindow.h"
+#include "Graphics/RenderWindow.h"
+#include "Graphics/RenderSystem.h"
 #include "Core/Engine.h"
 #include "bgfx/bgfx.h"
 
@@ -35,7 +36,7 @@ void RenderWindow::PreRender() {
 			bgfx::setViewFrameBuffer(view_id, BGFX_INVALID_HANDLE);
 			bgfx::reset(view_width, view_height,
 				BGFX_RESET_VSYNC |
-				BGFX_RESET_MSAA_X8 |
+				BGFX_RESET_MSAA_X16 |
 				BGFX_RESET_SRGB_BACKBUFFER
 				);
 
@@ -43,15 +44,12 @@ void RenderWindow::PreRender() {
 			//update framebuffer
 		}
 	}
+	bgfx::setViewClear(view_id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
 	bgfx::setViewRect(view_id, 0, 0, view_width, view_height);
+	
+	
 	bgfx::touch(view_id);
-	bgfx::setState(
-		BGFX_STATE_MSAA |
-		BGFX_STATE_ALPHA_WRITE |
-		BGFX_STATE_RGB_WRITE |
-		BGFX_STATE_CULL_CCW |
-		BGFX_STATE_DEPTH_WRITE |
-		BGFX_STATE_DEPTH_TEST_LESS);
+
 }
 
 void RenderWindow::PostRender() {

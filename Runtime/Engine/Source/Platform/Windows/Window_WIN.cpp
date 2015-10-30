@@ -1,6 +1,7 @@
 #ifdef _WIN32
 #include "Window_WIN.h"
 #include "Core/Engine.h"
+#include "Graphics/RenderSystem.h"
 #include "Platform/DisplayInfo.h"
 #include "Input/Windows/Mouse_WIN.h"
 #include "Input/Windows/Keyboard_WIN.h"

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include "Graphics/Model/StaticMeshData.h"
 #include "Graphics/VertexDeclarations.h"
 
@@ -40,8 +41,7 @@ namespace Blueshift {
 					 OBJ();
 					~OBJ();
 
-					bool Load(std::istream& is, std::vector<std::unique_ptr<Model::OBJMeshData>>& meshes);
-					bool Load(uint8_t* data, size_t size, std::vector<std::unique_ptr<Model::OBJMeshData>>& meshes);
+					bool Load(std::string Path, std::vector<std::unique_ptr<Model::OBJMeshData>>& meshes);
 				};
 			
 			}

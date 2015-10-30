@@ -15,7 +15,7 @@ namespace Blueshift {
 			BaseApplication();
 			virtual ~BaseApplication();
 
-			void Start(std::string AppCfgPath = "../app.cfg", std::string UserCfgPath = "../user.cfg");
+			void Start(int argc, char* argv[]);
 
 			virtual EngineParameters* GetEngineSetup();
 
@@ -29,8 +29,9 @@ namespace Blueshift {
 			}
 			Engine* Engine;
 			Timing::Stopwatch Timer;
-			Utility::ConfigFile AppConfig;
-			Utility::ConfigFile UserConfig;
+			Utility::ConfigFile* AppConfig;
+			Utility::ConfigFile* UserConfig;
+			int DesiredFramerate = 60;
 		};
 	}
 }
