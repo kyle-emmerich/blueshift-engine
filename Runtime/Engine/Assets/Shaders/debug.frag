@@ -1,81 +1,90 @@
 $input v_worldpos, v_normal
 
 #include "bgfx_shader.sh"
+#include "blueshift/BRDF.glsl"
+#include "blueshift/Sampling.glsl"
 
 float PI = 3.14159265359;
-//int specular_samples = 20;
-//int mips_count = 4;
+const int specular_samples = 2;
+int mips_count = 1;
 
-uniform vec3 u_lightVec = vec3(1.0, 0.0, 0.0);
+uniform float u_samples = 2.0;
+uniform vec3 u_lightVec = vec3(0.0, 0.0, 1.0);
+SAMPLERCUBE(u_texture, 0);
 //uniform vec2 random[specular_samples];
 
-vec3 DiffuseLambert(vec3 c) {
-	return (c / 3.14159).xyz;
+mat3 GenerateFrame(vec3 norm) {
+	vec3 up = vec3(0.0, 1.0, 0.0);
+	vec3 right = cross(norm, up);
+	up = cross(right, norm);
+	right = cross(norm, up);
+
+	mat3 frame;
+	frame[0] = right;
+	frame[1] = up;
+	frame[2] = norm;
+	return frame;
 }
 
-vec3 FresnelSchlick(float cos_T, float ior, vec3 color, float metallic) {
+vec3 GGXSpecular(in BgfxSamplerCube environment, in vec3 N, in vec3 V, in float ior, in vec3 color, in float metallic, in float roughness, inout vec3 k_s) {
+	vec3 reflection = reflect(V * -1.0, N);
+	mat3 world_frame = GenerateFrame(reflection);
+	vec3 radiance = vec3(0.0, 0.0, 0.0);
+	float NdV = clamp(dot(N, V), 0.0, 1.0);
+
 	vec3 F0 = abs((1.0 - ior) / (1.0 + ior));
 	F0 = F0 * F0;
 	F0 = lerp(F0, color.rgb, metallic);
-	return F0 + (1.0 - F0) * pow(1.0 - cos_T, 5.0);
-}
 
-float GGXPartialGeometryTerm(vec3 V, vec3 N, vec3 H, float roughness) {
-	return 0.0;
-}
+	vec3 weight = vec3(0.0, 0.0, 0.0);
 
-vec3 GenerateSampleVector(int i, int num_samples, float roughness) {
-	//float theta_s = atan(roughness * sqrt(random[i].x));
-	//float phi_s = 2 * pi * random[i].y;
-	
-	return vec3(0.0, 0.0, 0.0);
-}
-/*
-vec3 GGXSpecular(SAMPLERCUBE environment, vec3 N, vec3 V, float roughness, out vec3 k_s) {
-	vec3 reflection = reflect(V * -1.0, N);
-	// idk what this is yet? mat3 world_frame = GenerateFrame(reflection);
-	vec3 radiance = vec3(0.0, 0.0, 0.0);
-	float NdV = max(0.0, min(1.0, dot(N, V)));
-	
-	for (int i = 0; i < specular_samples; ++i) {
-		vec3 sample_vector = GenerateSampleVector(i, specular_samples, roughness);
-		sample_vector = normalize(mul(u_world[0], sample_vector));
+	int samples = (int)u_samples;
+	for (int i = 0; i < 20; i++) {
+	//fix this?
+		vec3 sample_vector = GenerateSampleVector(Hammersley(i, 20), roughness);
+		sample_vector = normalize(vec4(sample_vector, 1.0).xyz);
 
 		vec3 half_vector = normalize(sample_vector + V);
-		float cos_T = max(0.0, min(1.0, dot(sample_vector, normal)));
+		float cos_T = clamp(dot(sample_vector, N), 0.0, 1.0);
 		float sin_T = sqrt(1.0 - cos_T * cos_T);
 
-		vec3 fresnel_term = Fresnel_Schlick(max(0.0, min(1.0, dot(half_vector, V)), F0);
+		vec3 fresnel_term = FresnelSchlick(clamp(dot(half_vector, V), 0.0, 1.0), F0);
 		float geometry = GGXPartialGeometryTerm(V, N, half_vector, roughness) * GGXPartialGeometryTerm(sample_vector, N, half_vector, roughness);
 		
-		float denominator = max(0.0, min(1.0, 4.0 * (NdV * max(0.0, min(1.0, half_vector, normal))) + 0.05));
-		k_s += fresnel_term;
-		radiance += texture(environment, sample_vector, (roughness * mips_count)).rgb * geometry * fresnel * sin_T / denominator;
+		float denominator = clamp(4.0 * (NdV * clamp(dot(half_vector, N), 0.0, 1.0) + 0.05), 0.0, 1.0);
+		weight += fresnel_term;
+		radiance += pow(textureCubeLod(environment, sample_vector, roughness * 12.0).rgb, 2.0) * geometry * fresnel_term * sin_T / denominator;
 	}
-	k_s = max(0.0, min(1.0(k_s / specular_samples)));
-	return radiance / specular_samples;
-}*/
+	k_s = clamp(weight / 20, 0.0, 1.0);
+	return clamp(radiance / 20, 0.0, 1.0);
+}
 
 void main() {
-	vec3 downlight = mul(normalize(u_lightVec.xyz), u_model[0]);
-	vec3 eye_pos = vec3(0.0, 0.0, -2.0);
-	vec3 surface_pos = v_worldpos;
+	vec3 downlight = normalize(u_lightVec).xyz;
+	vec3 eye_pos = mul(u_model[0], u_view[0].xyz);
+	vec3 surface_pos = gl_FragCoord.xyz / gl_FragCoord.w;
 
 	//L = vector to light, just the inverse of a directional light
-	vec3 L = downlight * 1.0;
+	vec3 L = downlight * -1.0;
 	//the normal at the point
 	vec3 N = v_normal;
+
+	vec3 V = normalize(surface_pos - eye_pos);
 
 	float NdL = max(0, dot(N, L));
 
 	//material values to be read in some time
-	float metallic = 0.0;
-	float k_s = 0.0; //specular weight
-	float k_d = (1 - k_s) * (1 - metallic); //diffuse weight
+	vec3 albedo = vec3(1.0, 1.0, 1.0);
+	float metallic = 0.7;
+	float ior = 1.7;
+	float roughness = 0;
+	vec3 k_s = 0.0; //specular weight
+	vec3 specular = GGXSpecular(u_texture, N, V, ior, albedo, metallic, roughness, k_s);
+	vec3 k_d = (1 - k_s) * (1 - metallic); //diffuse weight
+	
+	vec3 irradiance = vec3(1.0, 1.0, 1.0) * textureCubeLod(u_texture, N, 8) * NdL;
+	vec3 diffuse = albedo * irradiance;
 
-	vec3 diffuse = DiffuseLambert(vec3(1.0, 0.7, 0.75)) * NdL;
-	vec3 specular = vec3(0.0, 0.0, 0.0);//GGXSpecular( );
-
-	vec3 color = diffuse;
-	gl_FragColor = vec4(diffuse, 1.0);
+	vec3 color = k_d * diffuse + specular;
+	gl_FragColor = vec4(color, 1.0);
 }	
