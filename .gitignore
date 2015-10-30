@@ -45,7 +45,6 @@ dlldata.c
 *.ilk
 *.meta
 *.pch
-*.pdb
 *.pgc
 *.pgd
 *.rsp
