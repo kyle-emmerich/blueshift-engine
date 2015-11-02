@@ -8,7 +8,11 @@ namespace Blueshift {
 
 			template<size_t rows, typename T>
 			struct Matrix {
-				T data[rows * rows];
+				union {
+					T data[rows * rows];
+					T m[rows][rows];
+					Vector<rows, T> rows[rows];
+				}
 				constexpr explicit Matrix(T s) {
 					for (size_t i = 0; i < rows * rows; i++) { data[i] = s; }
 				}
@@ -51,8 +55,14 @@ namespace Blueshift {
 					
 				}
 
-				T& operator[](size_t idx) { return data[idx]; }
-				const T& operator[](size_t idx) const { return data[idx]; }
+				Vector<rows, T>& operator[](size_t idx) { 
+					static_assert(idx >= 0 && idx < rows, "Matrix subscript index out of bounds");
+					return rows[idx];
+				}
+				const Vector<rows, T>& operator[](size_t idx) const { 
+					static_assert(idx >= 0 && idx < rows, "Matrix subscript index out of bounds");
+					return rows[idx]; 
+				}
 
 				constexpr T operator()(size_t i, size_t j) const {
 					return data[i * rows + j];

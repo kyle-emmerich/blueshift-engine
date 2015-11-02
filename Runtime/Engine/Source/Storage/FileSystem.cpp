@@ -12,7 +12,6 @@ FileSystem::FileSystem(std::string BasePath, std::string Identity, const std::ve
 	}
 	
 	std::string write_dir = PHYSFS_getUserDir();
-	//std::replace(write_dir.begin(), write_dir.end(), '\\', '/');
 	if (0 == PHYSFS_setWriteDir(write_dir.c_str())) {
 		throw FileError(Formatter() << "Could not set write directory to \"" << write_dir <<"\": " << PHYSFS_getLastError());
 	}

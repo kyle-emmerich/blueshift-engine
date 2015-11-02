@@ -2,13 +2,14 @@
 #include "Core/IApplication.h"
 #include "Core/Engine.h"
 #include "Core/Timing/Stopwatch.h"
+#include <atomic>
 
 namespace Blueshift {
 	namespace Core {
 
 		class BaseApplication : public IApplication {
 		private:
-			bool running = true;
+			std::atomic<bool> running = true;
 		protected:
 			
 		public:
@@ -31,7 +32,6 @@ namespace Blueshift {
 			Timing::Stopwatch Timer;
 			Utility::ConfigFile* AppConfig;
 			Utility::ConfigFile* UserConfig;
-			int DesiredFramerate = 60;
 		};
 	}
 }

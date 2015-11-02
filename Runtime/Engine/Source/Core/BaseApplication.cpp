@@ -25,7 +25,7 @@ void BaseApplication::Start(int argc, char* argv[]) {
 	double frame_start = Timer.GetElapsedSeconds();
 	double delta = 1.0 / 60.0;
 	std::chrono::high_resolution_clock::time_point tp = std::chrono::high_resolution_clock::now();
-	int desired_framerate = DesiredFramerate;
+	int desired_framerate = 60;
 	std::chrono::high_resolution_clock::duration frame_time = std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(std::chrono::duration<double, std::ratio<1, 60>>(1));
 	while (running) {
 		frame_start = Timer.GetElapsedSeconds();
