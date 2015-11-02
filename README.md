@@ -9,8 +9,12 @@ Blueshift seeks to minimize dependencies in order to maximize portability and ke
  - [bgfx](https://github.com/bkaradzic/bgfx)
  - [bx](https://github.com/bkaradzic/bx)
  - [bullet](https://github.com/bulletphysics/bullet3)
+ - [physfs](https://icculus.org/physfs)
 
 For all libraries with compiled binaries in the repository, one may expect binaries compiled for x64 systems in debug and release mode with MSVC 2015 build tools.
+
+###64-bit
+Blueshift is currently 64-bit only. This might change if absolutely necessary, but it's unlikely. Most of the engine will be written using double precision floats and would run badly on 32-bit systems.
 
 ###Coordinate System
 We're using a left-handed coordinate system where +X is to the right, +Y is up, and +Z is away. If the camera is moving in the positive Z direction, it is moving forward. The sine of a 45 degree angle up from the camera's Z axis is positive. Unreal Engine 4 is wrong. There is no debate. End of discussion.
