@@ -50,7 +50,7 @@ void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVec
 	pos++;
 }
 
-void DebugDraw::Render() {
+void DebugDraw::Render(Matrix4f view, Matrix4f projection) {
 	bgfx::setState(
 		BGFX_STATE_RGB_WRITE |
 		BGFX_STATE_ALPHA_WRITE |
@@ -60,6 +60,7 @@ void DebugDraw::Render() {
 	);
 	bgfx::dbgTextPrintf(0, 1, 0x4f, "Physics debug draw is on");
 	bgfx::dbgTextPrintf(0, 1, 0x4f, "Drawing %d lines, dropping %d", pos / 2, dropped);
+	bgfx::setViewTransform(Core::Engine::Get().GetRenderSystem().GetCurrentViewID(), view.data, projection.data);
 	bgfx::setVertexBuffer(vb, pos);
 	bgfx::submit(Core::Engine::Get().GetRenderSystem().GetCurrentViewID(), prog->GetHandle());
 
