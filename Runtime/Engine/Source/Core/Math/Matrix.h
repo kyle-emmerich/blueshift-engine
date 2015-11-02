@@ -12,7 +12,7 @@ namespace Blueshift {
 					T data[rows * rows];
 					T m[rows][rows];
 					Vector<rows, T> rows[rows];
-				}
+				};
 				constexpr explicit Matrix(T s) {
 					for (size_t i = 0; i < rows * rows; i++) { data[i] = s; }
 				}
