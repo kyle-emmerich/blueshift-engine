@@ -11,7 +11,7 @@ namespace Blueshift {
 
 		class Object {
 		private:
-			Component* root_component;
+			std::vector<Component*> components;
 
 			std::string name;
 		protected:

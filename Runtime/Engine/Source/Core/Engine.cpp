@@ -26,27 +26,11 @@ Engine::Engine(EngineParameters* Parameters, int argc, char* argv[]) {
 	if (argc == 0) {
 		init_args.push_back("");
 	}
-	
-	if (parameters->Subsystems.Storage) {
-		filesys = new Storage::FileSystem(init_args[0], parameters->ApplicationIdentity, parameters->SearchPaths);
-
-		try {
-			log_file = new Storage::File(parameters->LogFilePath, Storage::FileOpenMode::Append);
-		} catch (RuntimeError&) {
-			std::cout << "Could not open log file (" << parameters->LogFilePath << ")" << std::endl;
-		}
-	}
-	if (parameters->Subsystems.Rendering) {
-		render = new RenderSystem;
-	}
 }
 
 Engine::~Engine() {
-	if (parameters->Subsystems.Rendering) {
-		delete render;
-	}
-	if (parameters->Subsystems.Storage) {
-		delete filesys;
+	for (auto it = subsystems.begin(); it != subsystems.end(); it++) {
+		delete it->second;
 	}
 	delete parameters;
 }

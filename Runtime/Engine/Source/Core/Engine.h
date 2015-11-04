@@ -3,7 +3,8 @@
 #include "Core/Utility/ConfigFile.h"
 #include "Core/UUID.h"
 #include "Core/Exceptions.h"
-
+#include "Core/ISubsystem.h"
+#include <typeindex>
 
 namespace Blueshift {
 	namespace Graphics {
@@ -21,25 +22,12 @@ namespace Blueshift {
 			std::string ApplicationName;
 			std::string ApplicationIdentity;
 
-			std::string LogFilePath = "log.txt";
 			bool LogToStdOut = true;
 			bool AutoLogErrors = true;
 
 			std::vector<std::string> SearchPaths;
 
 			IApplication* Application;
-
-			struct {
-				bool Rendering;
-				bool Input;
-				bool Audio;
-				bool Physics;
-				bool Networking;
-				bool AI;
-				bool API;
-				bool Storage;
-				bool Database;
-			} Subsystems;
 		};
 
 		enum class LogLevel {
@@ -50,6 +38,7 @@ namespace Blueshift {
 
 		class Engine {
 		private:
+			std::map<std::type_index, ISubsystem*> subsystems;
 			Graphics::RenderSystem* render = nullptr;
 			Storage::FileSystem* filesys = nullptr;
 
@@ -72,17 +61,29 @@ namespace Blueshift {
 			Engine(EngineParameters* Parameters, int argc, char* argv[]);
 			~Engine();
 
-			Graphics::RenderSystem& GetRenderSystem() const {
-				return *render;
+			template<typename T>
+			inline T* CreateSystem() {
+				T* system = new T(this);
+				system->Type = typeid(T);
+				subsystems[typeid(T)] = system;
+				return system;
 			}
-			Storage::FileSystem& GetFileSystem() const {
-				return *filesys;
+			template<typename T>
+			inline T* GetSystem() const {
+				return static_cast<T*>(&subsystems[typeid(T)]);
+			}
+			template<typename T>
+			inline bool HasSystem() const {
+				return subsystems.find(typeid(T)) != subsystems.end();
 			}
 
 			const EngineParameters* GetParameters() const {
 				return parameters;
 			}
 
+			inline void SetLogFile(Storage::File& file) {
+				log_file = &file;
+			}
 			void Log(LogLevel level, std::string message);
 			void Log(const RuntimeError& err, bool is_auto = false);
 			bool IsAutoLogErrorsOn() const {
@@ -98,6 +99,9 @@ namespace Blueshift {
 				log_level = level;
 			}
 			
+			inline const std::vector<std::string>& GetArgs() const {
+				return init_args;
+			}
 		};
 
 	}

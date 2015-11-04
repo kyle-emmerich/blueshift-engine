@@ -9,15 +9,5 @@ EngineParameters* GameServer::GetEngineSetup() {
 
 	Parameters->Type = ApplicationType::Server;
 
-	Parameters->Subsystems.Rendering = false;
-	Parameters->Subsystems.Input = false;
-	Parameters->Subsystems.Audio = false;
-	Parameters->Subsystems.Physics = true;
-	Parameters->Subsystems.Networking = true;
-	Parameters->Subsystems.AI = true;
-	Parameters->Subsystems.API = true;
-	Parameters->Subsystems.Storage = true;
-	Parameters->Subsystems.Database = true;
-
 	return Parameters;
 }

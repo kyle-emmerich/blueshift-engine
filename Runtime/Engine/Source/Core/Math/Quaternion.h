@@ -179,6 +179,8 @@ namespace Blueshift {
 					q0.W * st0 + q1.W * st1
 				);
 			}
+
+			typedef Quaternion<float> Quaternionf;
 		}
 	}
 }

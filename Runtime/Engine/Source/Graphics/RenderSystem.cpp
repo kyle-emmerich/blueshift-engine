@@ -1,6 +1,8 @@
 #include "Graphics/RenderSystem.h"
 #include "Graphics/VertexDeclarations.h"
+#include "Graphics/RenderableComponent.h"
 #include "Core/Engine.h"
+
 
 #include "Graphics/Model/Loader/OBJ.h"
 #include "Graphics/Texture.h"
@@ -13,9 +15,9 @@ using namespace Blueshift::Platform;
 using namespace Blueshift::Core;
 using namespace Blueshift::Core::Math;
 
-RenderSystem::RenderSystem() 
+RenderSystem::RenderSystem(Core::Engine* engine) 
 	: render_thread(&RenderSystem::render_thread_func, this) {
-	DisplayInfo::EnumerateDisplays(this);
+	DisplayInfo::EnumerateDisplays(this); 
 	primary_display_index = 0;
 }
 
@@ -28,6 +30,15 @@ RenderSystem::~RenderSystem() {
 	render_windows.clear();
 	if (render_thread.joinable()) {
 		render_thread.join();
+	}
+}
+
+void RenderSystem::ProcessComponents(std::vector<Scene::Component>& components) {
+	RenderableComponent* renderables = dynamic_cast<RenderableComponent*>(components.data());
+	size_t size = components.size();
+	for (size_t i = 0; i < size; i++) {
+		RenderableComponent* component = renderables + i;
+		component->Render(this);
 	}
 }
 

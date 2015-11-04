@@ -2,6 +2,7 @@
 #include "Core/Engine.h"
 #include "Graphics/RenderSystem.h"
 #include "Graphics/RenderWindow.h"
+#include "Storage/FileSystem.h"
 
 using namespace Blueshift;
 using namespace Core;
@@ -12,21 +13,15 @@ EngineParameters* GameClient::GetEngineSetup() {
 
 	Parameters->Type = ApplicationType::Client;
 
-	Parameters->Subsystems.Rendering = true;
-	Parameters->Subsystems.Input = true;
-	Parameters->Subsystems.Audio = true;
-	Parameters->Subsystems.Physics = true;
-	Parameters->Subsystems.Networking = true;
-	Parameters->Subsystems.AI = false;
-	Parameters->Subsystems.API = true;
-	Parameters->Subsystems.Storage = true;
-	Parameters->Subsystems.Database = false;
-
 	return Parameters;
 }
 
 void GameClient::Initialize() {
-	Engine->GetRenderSystem().SetPrimaryDisplay(AppConfig->Get<size_t>("Window", "DisplayID"));
+	Engine->CreateSystem<Graphics::RenderSystem>();
+	Engine->CreateSystem<Storage::FileSystem>();
+	Engine->SetLogFile(Storage::File("log.txt"));
+
+	Engine->GetSystem<Graphics::RenderSystem>()->SetPrimaryDisplay(AppConfig->Get<size_t>("Window", "DisplayID"));
 	main_window = new RenderWindow(
 		AppConfig->Get<uint32_t>("Window", "Width", 1280),
 		AppConfig->Get<uint32_t>("Window", "Height", 720)
@@ -40,7 +35,7 @@ void GameClient::Initialize() {
 		main_window->SetFullscreenDesktop(true);
 	}
 	
-	Engine->GetRenderSystem().AddRenderWindow(main_window);
+	Engine->GetSystem<Graphics::RenderSystem>()->AddRenderWindow(main_window);
 }
 
 void GameClient::Shutdown() {
@@ -48,5 +43,8 @@ void GameClient::Shutdown() {
 }
 
 bool GameClient::Update(double dt) {
+	//This is where systems get invoked.
+	//But there aren't any ready yet, so just keep that in mind.
+
 	return main_window->ProcessEvents();
 }

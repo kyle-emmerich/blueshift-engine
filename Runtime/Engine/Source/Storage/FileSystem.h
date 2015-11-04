@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "Core/Engine.h"
 #include "Storage/File.h"
 
 namespace Blueshift {
@@ -30,7 +31,7 @@ namespace Blueshift {
 
 			friend class File;
 		public:
-			FileSystem(std::string BasePath, std::string Identity, const std::vector<std::string>& SearchPaths);
+			FileSystem(Core::Engine* engine);
 			~FileSystem();
 
 			void MountPackage(std::string PackagePath, std::string MountTo = "/", bool Prepend = true);

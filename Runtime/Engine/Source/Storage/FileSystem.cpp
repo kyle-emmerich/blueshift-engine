@@ -1,11 +1,13 @@
 #include "Storage/FileSystem.h"
-#include <algorithm>
-#include <sys/stat.h>
 
 using namespace Blueshift;
 using namespace Storage;
 
-FileSystem::FileSystem(std::string BasePath, std::string Identity, const std::vector<std::string>& SearchPaths) {
+FileSystem::FileSystem(Core::Engine* engine) {
+	const std::string& BasePath = engine->GetArgs().at(0);
+	const std::string& Identity = engine->GetParameters()->ApplicationIdentity;
+	const std::vector<std::string>& SearchPaths = engine->GetParameters()->SearchPaths;
+
 	int success = PHYSFS_init(BasePath.c_str());
 	if (success == 0) {
 		throw FileSystemNotInitiatedError(PHYSFS_getLastError());

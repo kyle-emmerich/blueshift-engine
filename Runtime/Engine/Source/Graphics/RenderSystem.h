@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/ISubsystem.h"
+#include "Core/Engine.h"
 #include "Platform/DisplayInfo.h"
 #include "Core/BasicTypes/Array.h"
 #include "Core/Utility/ConfigFile.h"
@@ -24,11 +24,10 @@ namespace Blueshift {
 			std::thread render_thread;
 			void render_thread_func();
 		public:
-			RenderSystem();
-			~RenderSystem();
+			RenderSystem(Core::Engine* engine);
+			virtual ~RenderSystem();
 
-			RenderSystem(RenderSystem&) = delete;
-			RenderSystem(RenderSystem&&) = delete;
+			virtual void ProcessComponents(std::vector<Scene::Component>& components);
 
 			void AddAvailableDisplayInfo(Platform::DisplayInfo&& Display);
 

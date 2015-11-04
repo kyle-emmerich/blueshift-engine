@@ -12,6 +12,8 @@ namespace Blueshift {
 
 		namespace Model {
 
+			class IMeshData;
+
 			struct MeshBounds {
 				Core::Math::AABB<float> BoundingBox;
 				Core::Math::OBB<float> OrientedBoundingBox;
@@ -25,6 +27,7 @@ namespace Blueshift {
 				size_t IndexStart;
 				size_t IndexNumber;
 
+				IMeshData* MeshData;
 				MeshBounds Bounds;
 			};
 
