@@ -1,13 +1,13 @@
 #pragma once
-#include "Core/Engine.h"
+#include "Scene/Scene.h"
 
 namespace Blueshift {
 	namespace Graphics {
 
-		class RenderableComponent : public Scene::Component {
+		class RenderableComponent : public Scene::TransformableComponent {
 		public:
 
-			void Render(Graphics::RenderSystem* system);
+			virtual void Render(Graphics::RenderSystem* system) = 0;
 		};
 
 	}
