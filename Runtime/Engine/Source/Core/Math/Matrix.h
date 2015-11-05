@@ -105,9 +105,9 @@ namespace Blueshift {
 					for (size_t j = 0; j < rows; j++) {
 						//The value at i,j is just the dot product of
 						//row i of a and row j of b.
-						out[i * rows + j] = 0;
+						out[i][j] = 0;
 						for (size_t k = 0; k < rows; k++)
-							out[i * rows + j] += lhs[i * rows + k] * rhs[k * rows + j];
+							out[i][j] += lhs[i][k] * rhs[k][j];
 					}
 				}
 				return out;
