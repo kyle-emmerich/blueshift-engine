@@ -105,7 +105,6 @@ namespace Blueshift {
 				inline virtual void Render(RenderSystem* renderer, ShaderProgram* program, MeshDataSection* Section) {
 					//TODO: make sure section isn't null...
 					//TODO: make sure program is valid
-					//TODO: replace programhandle with api-friendly wrap
 					bgfx::setVertexBuffer(vertex_buf, static_cast<uint32_t>(Section->VertexStart), static_cast<uint32_t>(Section->VertexNumber));
 					bgfx::setIndexBuffer(index_buf, static_cast<uint32_t>(Section->IndexStart), static_cast<uint32_t>(Section->IndexNumber));
 					bgfx::submit(renderer->GetCurrentViewID(), program->GetHandle());
