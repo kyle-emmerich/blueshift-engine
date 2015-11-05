@@ -16,6 +16,12 @@ For all libraries with compiled binaries in the repository, one may expect binar
 ###64-bit
 Blueshift is currently 64-bit only. This might change if absolutely necessary, but it's unlikely. Most of the engine will be written using double precision floats and would run badly on 32-bit systems.
 
+###Code Style
+Blueshift's codebase exemplifies the best practices in modern C++. Everything must be exception-safe, const-correct, and free of memory leaks. Raw pointers are not shyed away from, but their use
+in the public API is minimal and ownership is well-documented.
+
+For more information, see the Code Style file under Documentation in the repository.
+
 ###Coordinate System
 We're using a left-handed coordinate system where +X is to the right, +Y is up, and +Z is away. If the camera is moving in the positive Z direction, it is moving forward. The sine of a 45 degree angle up from the camera's Z axis is positive. Unreal Engine 4 is wrong. There is no debate. End of discussion.
 
