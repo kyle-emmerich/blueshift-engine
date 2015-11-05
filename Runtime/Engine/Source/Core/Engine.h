@@ -4,6 +4,7 @@
 #include "Core/UUID.h"
 #include "Core/Exceptions.h"
 #include "Core/ISubsystem.h"
+#include "Core/Timing/Stopwatch.h"
 #include <typeindex>
 
 namespace Blueshift {
@@ -102,6 +103,8 @@ namespace Blueshift {
 			inline const std::vector<std::string>& GetArgs() const {
 				return init_args;
 			}
+
+			Timing::Stopwatch Timer;
 		};
 
 	}

@@ -16,22 +16,22 @@ BaseApplication::~BaseApplication() {
 
 void BaseApplication::Start(int argc, char* argv[]) {
 	Engine = new Core::Engine(GetEngineSetup(), argc, argv);
-	Timer.Start();
+	Engine->Timer.Start();
 	AppConfig = new Utility::ConfigFile("app.cfg");
 	UserConfig = new Utility::ConfigFile("user.cfg");
 
 	Initialize();
 
-	double frame_start = Timer.GetElapsedSeconds();
+	double frame_start = Engine->Timer.GetElapsedSeconds();
 	double delta = 1.0 / 60.0;
 	std::chrono::high_resolution_clock::time_point tp = std::chrono::high_resolution_clock::now();
 	int desired_framerate = 60;
 	std::chrono::high_resolution_clock::duration frame_time = std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(std::chrono::duration<double, std::ratio<1, 60>>(1));
 	while (running) {
-		frame_start = Timer.GetElapsedSeconds();
+		frame_start = Engine->Timer.GetElapsedSeconds();
 		running = Update(delta);
 
-		delta = Timer.GetElapsedSeconds() - frame_start;
+		delta = Engine->Timer.GetElapsedSeconds() - frame_start;
 		if (delta < 1.0 / static_cast<double>(desired_framerate)) { //this needs to get changed.
 			tp = std::chrono::high_resolution_clock::now() + frame_time;
 			std::this_thread::sleep_until(tp);

@@ -29,7 +29,6 @@ namespace Blueshift {
 				return running;
 			}
 			Engine* Engine;
-			Timing::Stopwatch Timer;
 			Utility::ConfigFile* AppConfig;
 			Utility::ConfigFile* UserConfig;
 		};
