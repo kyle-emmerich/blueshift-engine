@@ -23,10 +23,10 @@ Blueshift::Core::EngineParameters* TestClient::GetEngineSetup() {
 }
 
 void TestClient::Initialize() {
-	//One little thing: change the default display to (my) left one
-	Engine->GetRenderSystem().SetPrimaryDisplay(1);
-
 	GameClient::Initialize();
+
+	//One little thing: change the default display to (my) left one
+	Engine->GetSystem<Blueshift::Graphics::RenderSystem>()->SetPrimaryDisplay(1);
 }
 
 void TestClient::Shutdown() {
