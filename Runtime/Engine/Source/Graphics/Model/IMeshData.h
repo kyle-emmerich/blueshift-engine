@@ -29,10 +29,6 @@ namespace Blueshift {
 
 				IMeshData* MeshData;
 				MeshBounds Bounds;
-
-				inline void Render(RenderSystem* renderer, ShaderProgram* program) {
-					MeshData->Render(renderer, program, this);
-				}
 			};
 
 			class IMeshData {
