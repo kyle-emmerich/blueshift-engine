@@ -63,6 +63,7 @@ namespace Blueshift {
 					sections.push_back({
 						0, num_vertices,
 						0, num_indices,
+						this,
 						Bounds
 					});
 				}
