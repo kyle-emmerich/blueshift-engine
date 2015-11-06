@@ -15,11 +15,13 @@ float ReverseBits(uint bits) {
      return float(bits) * 2.3283064365386963e-10; // / 0x100000000
  }
 
-vec2 Hammersley(uint i, uint N) {
-     float E1 = fract((float)i / N + float(Random.x & 0xffff) / (1 << 16));
-	 float E2 = float(ReverseBits(i) ^ Random.y) * 2.3283064365386963e-10;
+ 
+vec2 Hammersley(uint i, uint N, vec2 Random) {
+     float E1 = 0.0;//fract((float)i / (float)N + float(Random.x & 0xffff) / (float)(1 << 16));
+	 float E2 = 0.0;//float(ReverseBits(i) ^ Random.y) * 2.3283064365386963e-10;
 	 return vec2(E1, E2);
 }
+
 
 vec4 UniformSampleHemisphere(vec2 E) {
 	float phi = 2.0 * PI * E.x;
@@ -40,7 +42,7 @@ vec4 ImportanceSampleGGX(vec2 E, float roughness) {
 	float m2 = m * m;
 
 	float phi = 2.0 * PI * E.x;
-	float cos_T = sqrt((1.0 - E.y) / (1.0 + (m2 - 1.0) * E.y);
+	float cos_T = sqrt((1.0 - E.y) / (1.0 + (m2 - 1.0) * E.y));
 	float sin_T = sqrt(1.0 - cos_T * cos_T);
 
 	vec3 H;
