@@ -7,9 +7,9 @@ using namespace Scene;
 
 void CameraComponent::recalculate_transform() {
 	//Let the TransformableComponent calculate itself first
-	TransformableComponent::recalculate_transform();
+	//TransformableComponent::recalculate_transform();
 	//Now find the inverse
-	inverse_transform = Core::Math::Inverse(transform);
+	//inverse_transform = Core::Math::Inverse(transform);
 }
 
 Core::Math::Matrix4 CameraComponent::CreatePerspectiveTransform(double AspectRatio, double VerticalFieldOfViewDeg, double Near, double Far) {
