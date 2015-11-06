@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene/Component.h"
+#include <typeindex>
 
 namespace Blueshift {
 	namespace Core {
@@ -8,7 +9,9 @@ namespace Blueshift {
 		public:
 			ISubsystem() : Type(typeid(ISubsystem)) {}
 
-			virtual void ProcessComponents(std::vector<Scene::Component>& components) = 0;
+			virtual std::type_index GetTypeID() {
+				return Type;
+			}
 
 			std::type_index Type;
 		};
