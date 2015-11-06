@@ -4,7 +4,6 @@ $input v_worldpos, v_normal
 #include "blueshift/BRDF.glsl"
 #include "blueshift/Sampling.glsl"
 
-float PI = 3.14159265359;
 const int specular_samples = 2;
 int mips_count = 1;
 
@@ -41,7 +40,7 @@ vec3 GGXSpecular(in BgfxSamplerCube environment, in vec3 N, in vec3 V, in float 
 	int samples = (int)u_samples;
 	for (int i = 0; i < 20; i++) {
 	//fix this?
-		vec3 sample_vector = GenerateSampleVector(Hammersley(i, 20), roughness);
+		vec3 sample_vector = vec3(0.0, 1.0, 0.0);//GenerateSampleVector( roughness);
 		sample_vector = normalize(vec4(sample_vector, 1.0).xyz);
 
 		vec3 half_vector = normalize(sample_vector + V);
@@ -75,9 +74,9 @@ void main() {
 
 	//material values to be read in some time
 	vec3 albedo = vec3(1.0, 1.0, 1.0);
-	float metallic = 0.7;
-	float ior = 1.7;
-	float roughness = 0;
+	float metallic = 0.5;
+	float ior = 1.2;
+	float roughness = 0.25;
 	vec3 k_s = 0.0; //specular weight
 	vec3 specular = GGXSpecular(u_texture, N, V, ior, albedo, metallic, roughness, k_s);
 	vec3 k_d = (1 - k_s) * (1 - metallic); //diffuse weight
