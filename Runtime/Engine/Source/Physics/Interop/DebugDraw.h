@@ -3,6 +3,7 @@
 #include "btBulletDynamicsCommon.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
+#include "Graphics/RenderSystem.h"
 #include <vector>
 
 namespace Blueshift {
@@ -22,16 +23,16 @@ namespace Blueshift {
 				
 				bgfx::DynamicVertexBufferHandle vb;
 
-				Graphics::Shader* vs;
-				Graphics::Shader* fs;
-				Graphics::ShaderProgram* prog;
+				Blueshift::Graphics::Shader* vs;
+				Blueshift::Graphics::Shader* fs;
+				Blueshift::Graphics::ShaderProgram* prog;
 			public:
 				DebugDraw();
 				virtual ~DebugDraw();
 
 				void drawLine(const btVector3& from, const btVector3& to, const btVector3& color);
 
-				void Render(Matrix4f view, Matrix4f projection);
+				void Render(Core::Math::Matrix4f view, Core::Math::Matrix4f projection);
 			};
 
 		}

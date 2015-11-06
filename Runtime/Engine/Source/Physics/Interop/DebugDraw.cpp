@@ -60,9 +60,9 @@ void DebugDraw::Render(Matrix4f view, Matrix4f projection) {
 	);
 	bgfx::dbgTextPrintf(0, 1, 0x4f, "Physics debug draw is on");
 	bgfx::dbgTextPrintf(0, 1, 0x4f, "Drawing %d lines, dropping %d", pos / 2, dropped);
-	bgfx::setViewTransform(Core::Engine::Get().GetRenderSystem().GetCurrentViewID(), view.data, projection.data);
-	bgfx::setVertexBuffer(vb, pos);
-	bgfx::submit(Core::Engine::Get().GetRenderSystem().GetCurrentViewID(), prog->GetHandle());
+	bgfx::setViewTransform(Core::Engine::Get().GetSystem<Graphics::RenderSystem>()->GetCurrentViewID(), view.data, projection.data);
+	bgfx::setVertexBuffer(vb, static_cast<uint32_t>(pos));
+	bgfx::submit(Core::Engine::Get().GetSystem<Graphics::RenderSystem>()->GetCurrentViewID(), prog->GetHandle());
 
 	dropped = 0;
 	pos = 0;

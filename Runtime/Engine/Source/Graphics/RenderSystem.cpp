@@ -153,9 +153,12 @@ void RenderSystem::render_thread_func() {
 				tex.AssignTo(0, fs_program["u_cubemap"]);
 				fs_quad.Render(this, &fs_program);
 
-				
+				//render components
+
 
 				theta += 0.01f;
+
+
 				
 				int n = 10;
 				for (int j = -n/2; j < n/2; j++) {

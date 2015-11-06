@@ -19,7 +19,7 @@ Space::Space() {
 	_internal.world->setGravity(btVector3(0, -9.81, 0));
 }
 
-Space::Space() {
+Space::~Space() {
 	delete _internal.world;
 	delete _internal.solver;
 	delete _internal.pair_cache;
