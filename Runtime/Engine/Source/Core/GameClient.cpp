@@ -18,8 +18,7 @@ EngineParameters* GameClient::GetEngineSetup() {
 
 void GameClient::Initialize() {
 	Engine->CreateSystem<Graphics::RenderSystem>();
-	Engine->CreateSystem<Storage::FileSystem>();
-	Engine->SetLogFile(Storage::File("log.txt"));
+	Engine->SetLogFile(new Storage::File("log.txt", Storage::FileOpenMode::Append));
 
 	Engine->GetSystem<Graphics::RenderSystem>()->SetPrimaryDisplay(AppConfig->Get<size_t>("Window", "DisplayID"));
 	main_window = new RenderWindow(
