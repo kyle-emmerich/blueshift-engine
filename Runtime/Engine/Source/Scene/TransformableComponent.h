@@ -15,6 +15,8 @@ namespace Blueshift {
 
 			friend class SceneGraph;
 		public:
+			TransformableComponent(SceneGraph* scene, Object* object);
+
 			inline virtual void SetPosition(const Core::Math::Vector3f& Position) {
 				position.X = Position.X;
 				position.Y = Position.Y;
