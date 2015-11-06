@@ -197,6 +197,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(ProjectDir)Source;$(DXSDK_DIR)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -204,6 +206,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;$(SolutionDir)Dependencies\bullet\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Winmm.lib;bgfxRelease.lib;dxguid.lib;dinput8.lib;BulletCollision_x64_release.lib;BulletDyamics_x64_release.lib;LinearMath_x64_release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkStatus>true</LinkStatus>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -217,6 +221,11 @@
     <ClCompile Include="Source\Core\UUID.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
+    <ClCompile Include="Source\Graphics\StaticMeshComponent.cpp" />
+    <ClCompile Include="Source\Physics\Interop\DebugDraw.cpp" />
+    <ClCompile Include="Source\Physics\Space.cpp" />
+    <ClCompile Include="Source\Scene\SceneGraph.cpp" />
+    <ClCompile Include="Source\Scene\TransformableComponent.cpp" />
     <ClCompile Include="Source\Storage\File.cpp" />
     <ClCompile Include="Source\Storage\FileSystem.cpp" />
     <ClCompile Include="Source\Graphics\Model\Loader\MSH.cpp" />
@@ -233,8 +242,6 @@
     <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
     <ClCompile Include="Source\Scene\CameraComponent.cpp" />
-    <ClCompile Include="Source\Scene\Component.cpp" />
-    <ClCompile Include="Source\Scene\TransformableComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\BaseApplication.h" />
@@ -253,6 +260,7 @@
     <ClInclude Include="Source\Core\Math\AABB.h" />
     <ClInclude Include="Source\Core\Math\Color.h" />
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
+    <ClInclude Include="Source\Core\Math\Math.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
     <ClInclude Include="Source\Core\Math\Misc.h" />
     <ClInclude Include="Source\Core\Math\OBB.h" />
@@ -266,6 +274,16 @@
     <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
     <ClInclude Include="Source\Core\Utility\FastParsing.h" />
     <ClInclude Include="Source\Core\UUID.h" />
+    <ClInclude Include="Source\Graphics\StaticMeshComponent.h" />
+    <ClInclude Include="Source\Graphics\RenderableComponent.h" />
+    <ClInclude Include="Source\Physics\Interop\DebugDraw.h" />
+    <ClInclude Include="Source\Physics\Interop\Math.h" />
+    <ClInclude Include="Source\Physics\PhysicsSystem.h" />
+    <ClInclude Include="Source\Physics\Space.h" />
+    <ClInclude Include="Source\Scene\Component.h" />
+    <ClInclude Include="Source\Scene\Scene.h" />
+    <ClInclude Include="Source\Scene\SceneGraph.h" />
+    <ClInclude Include="Source\Scene\TransformableComponent.h" />
     <ClInclude Include="Source\Storage\File.h" />
     <ClInclude Include="Source\Storage\FileSystem.h" />
     <ClInclude Include="Source\Graphics\Model\IMeshData.h" />
@@ -288,11 +306,7 @@
     <ClInclude Include="Source\Platform\PlatformSpecific.h" />
     <ClInclude Include="Source\Platform\Windows\Window_WIN.h" />
     <ClInclude Include="Source\Scene\CameraComponent.h" />
-    <ClInclude Include="Source\Scene\Component.h" />
-    <ClInclude Include="Source\Scene\MeshComponent.h" />
     <ClInclude Include="Source\Scene\Object.h" />
-    <ClInclude Include="Source\Scene\SceneComponent.h" />
-    <ClInclude Include="Source\Scene\TransformableComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="app.cfg">
