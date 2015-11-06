@@ -34,7 +34,7 @@ File::~File() {
 		//since this instance is going away, make a copy
 		//on the heap that just stores it for the dangling list.
 		File* dangle_copy = new File(file);
-		Core::Engine::Get().GetFileSystem().dangling.push_back(dangle_copy);
+		Core::Engine::Get().GetSystem<Storage::FileSystem>()->dangling.push_back(dangle_copy);
 	}
 	if (file != nullptr) {
 		Close();
@@ -47,24 +47,32 @@ size_t File::GetLength() {
 
 size_t File::write_bytes(const uint8_t* Data, size_t Size, size_t Count) {
 	ensure_writable();
-	return static_cast<size_t>(PHYSFS_write(file, Data, Size, Count)) * Size;
+	return static_cast<size_t>(PHYSFS_write(
+		file, 
+		Data, 
+		static_cast<PHYSFS_uint32>(Size), 
+		static_cast<PHYSFS_uint32>(Count))) * Size;
 }
 
 size_t File::read_bytes(uint8_t* Data, size_t Size, size_t Count) {
 	ensure_readable();
-	return static_cast<size_t>(PHYSFS_read(file, Data, Size, Count)) * Size;
+	return static_cast<size_t>(PHYSFS_read(
+		file, 
+		Data, 
+		static_cast<PHYSFS_uint32>(Size),
+		static_cast<PHYSFS_uint32>(Count))) * Size;
 }
 
 bool File::Close() {
-	FileSystem& filesys = Core::Engine::Get().GetFileSystem();
+	FileSystem* filesys = Core::Engine::Get().GetSystem<Storage::FileSystem>();
 	int success = PHYSFS_close(file);
 	if (success != 0) {
-		if (dangling && !filesys.closing) {
+		if (dangling && !filesys->closing) {
 			//remove ourself from the dangling list
-			for (auto it = filesys.dangling.begin(); it != filesys.dangling.end(); it++) {
+			for (auto it = filesys->dangling.begin(); it != filesys->dangling.end(); it++) {
 				if ((*it)->file == this->file) {
 					dangling = false;
-					filesys.dangling.erase(it);
+					filesys->dangling.erase(it);
 					break;
 				}
 			}
@@ -76,9 +84,9 @@ bool File::Close() {
 	} else {
 		//we're now dangling
 		open = true;
-		if (!dangling && !filesys.closing) {
+		if (!dangling && !filesys->closing) {
 			dangling = true;
-			filesys.dangling.push_back(this);
+			filesys->dangling.push_back(this);
 		}
 		return false;
 	}
