@@ -1,5 +1,6 @@
 #pragma once
 #include <initializer_list>
+#include <inttypes.h>
 #include "Core/Math/Vector.h"
 
 namespace Blueshift {
@@ -11,7 +12,7 @@ namespace Blueshift {
 				union {
 					T data[rows * rows];
 					T m[rows][rows];
-					Vector<rows, T> rows[rows];
+					Vector<rows, T> vec[rows];
 				};
 				constexpr explicit Matrix(T s) {
 					for (size_t i = 0; i < rows * rows; i++) { data[i] = s; }
@@ -55,13 +56,13 @@ namespace Blueshift {
 					
 				}
 
-				Vector<rows, T>& operator[](size_t idx) { 
-					static_assert(idx >= 0 && idx < rows, "Matrix subscript index out of bounds");
-					return rows[idx];
+				Vector<rows, T>& operator[](const size_t& idx) { 
+					//static_assert(idx >= 0 && idx < rows, "Matrix subscript index out of bounds");
+					return vec[idx];
 				}
-				const Vector<rows, T>& operator[](size_t idx) const { 
-					static_assert(idx >= 0 && idx < rows, "Matrix subscript index out of bounds");
-					return rows[idx]; 
+				const Vector<rows, T>& operator[](const size_t& idx) const { 
+					//static_assert(idx >= 0 && idx < rows, "Matrix subscript index out of bounds");
+					return vec[idx]; 
 				}
 
 				constexpr T operator()(size_t i, size_t j) const {

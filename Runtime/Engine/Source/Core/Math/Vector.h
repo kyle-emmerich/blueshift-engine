@@ -14,6 +14,7 @@ namespace Blueshift {
 				constexpr explicit Vector(T s) {
 					for (size_t i = 0; i < n; i++) { data[i] = s; }
 				}
+				Vector() = default;
 
 				constexpr T Length() const {
 					T x; for (size_t i = 0; i < n; i++) { x += data[i] * data[i]; }
@@ -22,6 +23,15 @@ namespace Blueshift {
 				constexpr T SquaredLength() const {
 					T x; for (size_t i = 0; i < n; i++) { x += data[i] * data[i]; }
 					return x;
+				}
+
+				inline T& operator[](const size_t& idx) {
+					static_assert(idx < n, "Vector subscript index out of bounds");
+					return data[idx];
+				}
+				inline const T& operator[](const size_t& idx) const {
+					static_assert(idx < n, "Vector subscript index out of bounds");
+					return data[idx];
 				}
 			};
 
@@ -32,18 +42,26 @@ namespace Blueshift {
 					: X(x), Y(y) {}
 				constexpr explicit Vector(T s)
 					: X(s), Y(s) {}
-				constexpr explicit Vector()
-					: X(0), Y(0) {}
 				constexpr explicit Vector(Vector<3, T>& Other)
 					: X(Other.X), Y(Other.Y) {}
 				constexpr explicit Vector(Vector<4, T>& Other)
 					: X(Other.X), Y(Other.Y) {}
+				Vector() = default;
 
 				constexpr T Length() const {
 					return sqrt(X * X + Y * Y);
 				}
 				constexpr T SquaredLength() const {
 					return X * X + Y * Y;
+				}
+
+				inline T& operator[](const size_t& idx) {
+					static_assert(idx < 2, "Vector subscript index out of bounds");
+					return data[idx];
+				}
+				inline const T& operator[](const size_t& idx) const {
+					static_assert(idx < 2, "Vector subscript index out of bounds");
+					return data[idx];
 				}
 			};
 
@@ -54,18 +72,26 @@ namespace Blueshift {
 					: X(x), Y(y), Z(z) {}
 				constexpr explicit Vector(T s)
 					: X(s), Y(s), Z(s) {}
-				constexpr explicit Vector()
-					: X(0), Y(0), Z(0) {}
 				constexpr explicit Vector(Vector<2, T>& Other)
 					: X(Other.X), Y(Other.Y), Z(0) {}
 				constexpr explicit Vector(Vector<4, T>& Other)
 					: X(Other.X), Y(Other.Y), Z(Other.Z) {}
+				Vector() = default;
 
 				constexpr T Length() const {
 					return sqrt(X * X + Y * Y + Z * Z);
 				}
 				constexpr T SquaredLength() const {
 					return X * X + Y * Y + Z * Z;
+				}
+
+				inline T& operator[](const size_t& idx) {
+					static_assert(idx < 3, "Vector subscript index out of bounds");
+					return data[idx];
+				}
+				inline const T& operator[](const size_t& idx) const {
+					static_assert(idx < 3, "Vector subscript index out of bounds");
+					return data[idx];
 				}
 			};
 
@@ -76,18 +102,26 @@ namespace Blueshift {
 					: X(x), Y(y), Z(z), W(w) {}
 				constexpr explicit Vector(T s)
 					: X(s), Y(s), Z(s), W(s) {}
-				constexpr explicit Vector()
-					: X(0), Y(0), Z(0), W(0) {}
 				constexpr explicit Vector(Vector<2, T>& Other)
 					: X(Other.X), Y(Other.Y), Z(0) {}
 				constexpr explicit Vector(Vector<3, T>& Other)
 					: X(Other.X), Y(Other.Y), Z(Other.Z), W(0) {}
+				Vector() = default;
 
 				constexpr T Length() const {
 					return sqrt(X * X + Y * Y + Z * Z + W * W);
 				}
 				constexpr T SquaredLength() const {
 					return X * X + Y * Y + Z * Z + W * W;
+				}
+
+				inline T& operator[](const size_t& idx) {
+					//static_assert(idx < 4, "Vector subscript index out of bounds");
+					return data[idx];
+				}
+				inline const T& operator[](const size_t& idx) const {
+					//static_assert(idx < 4, "Vector subscript index out of bounds");
+					return data[idx];
 				}
 			};
 

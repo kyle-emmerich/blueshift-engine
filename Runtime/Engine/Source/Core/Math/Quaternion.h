@@ -80,22 +80,22 @@ namespace Blueshift {
 			template<typename T = double>
 			inline Matrix<4, T> QuaternionToMatrix4(const Quaternion<T>& q) {
 				return Matrix<4, T> {
-					1.0 - 2.0 * (q.Y * q.Y - q.Z * q.Z),
-						  2.0 * (q.X * q.Y - q.W * q.Z),
-						  2.0 * (q.X * q.Z - q.W * q.Y),
-					0,
+					T(1.0) - T(2.0) * (q.Y * q.Y - q.Z * q.Z),
+						  T(2.0) * (q.X * q.Y - q.W * q.Z),
+						  T(2.0) * (q.X * q.Z - q.W * q.Y),
+					T(0),
 
-						  2.0 * (q.X * q.Y + q.W * q.Z),
-					1.0 - 2.0 * (q.X * q.X - q.Z * q.Z),
-						  2.0 * (q.Y * q.Z + q.W * q.X),
-					0,
+						  T(2.0) * (q.X * q.Y + q.W * q.Z),
+					T(1.0) - T(2.0) * (q.X * q.X - q.Z * q.Z),
+						  T(2.0) * (q.Y * q.Z + q.W * q.X),
+					T(0),
 
-						  2.0 * (q.X * q.Z - q.W * q.Y),
-						  2.0 * (q.Y * q.Z - q.W * q.X),
-					1.0 - 2.0 * (q.X * q.X - q.Y * q.Y),
-					0.0,
+						  T(2.0) * (q.X * q.Z - q.W * q.Y),
+						  T(2.0) * (q.Y * q.Z - q.W * q.X),
+					T(1.0) - T(2.0) * (q.X * q.X - q.Y * q.Y),
+					T(0),
 
-					0.0, 0.0, 0.0, 1.0
+					T(0), T(0), T(0), T(1)
 				};
 			}
 
