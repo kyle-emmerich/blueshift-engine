@@ -1,6 +1,7 @@
 #include "Core/BaseApplication.h"
 #include "Core/Engine.h"
 #include "Graphics/RenderSystem.h"
+#include "Storage/FileSystem.h"
 #include <chrono>
 #include <thread>
 
@@ -17,6 +18,7 @@ BaseApplication::~BaseApplication() {
 void BaseApplication::Start(int argc, char* argv[]) {
 	Engine = new Core::Engine(GetEngineSetup(), argc, argv);
 	Engine->Timer.Start();
+	Engine->CreateSystem<Storage::FileSystem>();
 	AppConfig = new Utility::ConfigFile("app.cfg");
 	UserConfig = new Utility::ConfigFile("user.cfg");
 
