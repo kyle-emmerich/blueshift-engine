@@ -32,7 +32,7 @@ namespace Blueshift {
 						//T*, or the size of a pointer itself.
 						//throw 0; //TODO: make exception for wrong size data assignment
 					}
-					bgfx::setUniform(Handle, reinterpret_cast<const void*>(data), Size);
+					bgfx::setUniform(Handle, reinterpret_cast<const void*>(data), static_cast<uint16_t>(Size));
 				}
 
 				template<typename T>
@@ -40,7 +40,7 @@ namespace Blueshift {
 					if (data.size() != Size) {
 						throw 0; //TODO: make exception for wrong size data
 					}
-					bgfx::setUniform(Handle, reinterpret_cast<const void*>(&data[0]), Size);
+					bgfx::setUniform(Handle, reinterpret_cast<const void*>(&data[0]), static_cast<uint16_t>(Size));
 				}
 
 				template<typename T>
