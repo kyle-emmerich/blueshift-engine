@@ -6,6 +6,8 @@
 #include "Core/Engine.h"
 #include "Storage/File.h"
 
+#include "Core/ISubsystem.h"
+
 namespace Blueshift {
 	namespace Storage {
 
@@ -21,7 +23,7 @@ namespace Blueshift {
 				: FileError(Error) {}
 		};
 
-		class FileSystem {
+		class FileSystem : public Core::ISubsystem {
 		protected:
 			//TODO: make dangling list thread-safe
 			std::vector<File*> dangling;
