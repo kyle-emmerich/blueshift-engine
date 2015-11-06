@@ -66,12 +66,12 @@ namespace Blueshift {
 			inline T* CreateSystem() {
 				T* system = new T(this);
 				system->Type = typeid(T);
-				subsystems[typeid(T)] = system;
+				subsystems[typeid(T)] = dynamic_cast<ISubsystem*>(system);
 				return system;
 			}
 			template<typename T>
-			inline T* GetSystem() const {
-				return static_cast<T*>(&subsystems[typeid(T)]);
+			inline T* GetSystem() {
+				return dynamic_cast<T*>(subsystems[typeid(T)]);
 			}
 			template<typename T>
 			inline bool HasSystem() const {
@@ -82,8 +82,8 @@ namespace Blueshift {
 				return parameters;
 			}
 
-			inline void SetLogFile(Storage::File& file) {
-				log_file = &file;
+			inline void SetLogFile(Storage::File* file) {
+				log_file = file;
 			}
 			void Log(LogLevel level, std::string message);
 			void Log(const RuntimeError& err, bool is_auto = false);

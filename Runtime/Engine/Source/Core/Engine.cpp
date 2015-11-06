@@ -32,6 +32,9 @@ Engine::~Engine() {
 	for (auto it = subsystems.begin(); it != subsystems.end(); it++) {
 		delete it->second;
 	}
+	if (log_file != nullptr) {
+		delete log_file;
+	}
 	delete parameters;
 }
 
