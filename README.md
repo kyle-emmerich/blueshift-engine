@@ -3,6 +3,11 @@
 # Blueshift Engine
 Blueshift is a high performance game engine written for the modern game industry. It must be held to high standards, as it will serve as the engine for Titan Interactive's flagship game, NoxAstra.
 
+# Twitch Stream
+Kyle will stream Blueshift/NoxAstra development almost daily. There's no set time yet, so just check it out occasionally.
+
+[Twitch Link](http://twitch.tv/noxastra)
+
 ## Dependencies
 Blueshift seeks to minimize dependencies in order to maximize portability and keep the codebase size down. Right now, we're using the following dependencies:
 
@@ -42,9 +47,11 @@ This means the base vectors are laid out like so:
     Z.x Z.y Z.z 0 //forward-vector
     P.x P.y P.z 1 //position
 
-Because Blueshift is row-major, remember to keep all matrix multiplication operations in the correct order:
+There is some confusion in how much this actually matters. The real answer is that it really doesn't matter that much, but it does carry some implications when dealing with multiplication order. Recall that matrix multiplication is not commutative, so `a * b` is not the same as `b * a`. Usually, you'll want to multiply a parent space by the local transform to get the local transform into world space:
 
-    Matrix4 world_space = local_transform * parent_transform;
+    Matrix4 world_transform = parent_transform * local_transform;
+
+However, keep in mind that points and vectors are treated differently. Specifically, translating a vector makes no sense and will produce a "wrong" result. In order to explicitly handle vectors vs points, convert them 4-vectors and use W=0 for vectors and W=1 for points. Helper functions might be added later in order to clarify the procedure.
 
 ###Documentation
 As of right now (October 25th, 2015), there is no documentation other than the source code itself. Don't be afraid to dive in and start learning; the API is really clean and simple so far. When the project continues to grow and when Kyle has free time, documentation will begin.
