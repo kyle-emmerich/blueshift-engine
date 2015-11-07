@@ -93,7 +93,7 @@ void RenderSystem::render_thread_func() {
 	bgfx::init();
 	{
 		InitializeVertexDeclarations();
-		bgfx::setDebug(BGFX_DEBUG_STATS);
+		//bgfx::setDebug(BGFX_DEBUG_STATS);
 
 		//Create a fullscreen quad
 		Vector2f fs_verts[4] = {
@@ -121,14 +121,14 @@ void RenderSystem::render_thread_func() {
 
 		Model::Loader::OBJ obj_loader;
 		std::vector<std::unique_ptr<Model::OBJMeshData>> meshes;
-		obj_loader.Load("ball.obj", meshes);
+		obj_loader.Load("ship1.obj", meshes);
 
 		Shader* vs = new Shader("Shaders/debug_vs.win.bin");
 		vs->Complete();
 
 		Shader* fs = new Shader("Shaders/debug_fs.win.bin");
 		fs->AddUniform("u_samples", Shader::UniformType::Vector, 1)
-			->AddUniform("u_lightVec", Shader::UniformType::Vector, 1)
+			->AddUniform("u_lightPos", Shader::UniformType::Vector, 1)
 			->AddUniform("u_texture", Shader::UniformType::Texture, 1)
 			->Complete();
 
@@ -145,7 +145,10 @@ void RenderSystem::render_thread_func() {
 				current_view_id = window->GetViewID();
 				window->PreRender();
 
-				Math::Matrix4f view = Inverse(Math::TranslationMatrix<float>(Vector3f(0.0f, 2.0f, -20.0f)) /** Math::RotationMatrix<4, float>(Vector3f(0.0f, 1.0f, 0.0f), theta)*/);
+				Math::Matrix4f view = Inverse(
+					Math::RotationMatrix<4, float>(Vector3f(0.0f, 1.0f, 0.0f), theta + Math::Pi * 0.5f) * 
+					Math::TranslationMatrix<float>(Vector3f(cos(theta) * 25.0f, 1.5f, sin(theta) * 25.0f))
+				);
 				Math::Matrix4f proj = Math::Downgrade(Scene::CameraComponent::CreatePerspectiveTransform(window->GetAspectRatio(), 60.0, 0.1, 100.0));
 				bgfx::setViewTransform(0, view.data, proj.data);
 
@@ -156,18 +159,18 @@ void RenderSystem::render_thread_func() {
 				//render components
 
 
-				theta += 0.01f;
+				theta += 0.005f;
 
 
 				
-				int n = 10;
+				int n = 2;
 				for (int j = -n/2; j < n/2; j++) {
 					for (int i = -n/2; i < n/2; i++) {
 						Math::Matrix4f model =
-							Math::RotationMatrix<4, float>(Math::Vector3f(1.0, 0.0, 0.0), theta + Math::ToRadians(180.0f)) *
-							Math::TranslationMatrix<float>(Vector3f(i * 2.0f, i%2 * j%2, j * 2.0f));
+							Math::RotationMatrix<4, float>(Vector3f(0.0f, 1.0f, 0.0f), Math::ToRadians(180.0f));
+							Math::TranslationMatrix<float>(Vector3f(i * 2.0f, 0, j * 2.0f));
 						program["u_samples"].Set(&samples);
-						program["u_lightVec"] = Math::Vector3f(0.25f, -1.0f, 0.25f);
+						program["u_lightPos"] = Math::Vector3f(0.0f, 3.0f, -6.0f);
 
 						tex.AssignTo(0, program["u_texture"]);
 
@@ -180,6 +183,7 @@ void RenderSystem::render_thread_func() {
 							BGFX_STATE_DEPTH_WRITE |
 							BGFX_STATE_DEPTH_TEST_LEQUAL
 							);
+						bgfx::setViewTransform(0, view.data, proj.data);
 
 						meshes[0]->Render(this, &program);
 					}

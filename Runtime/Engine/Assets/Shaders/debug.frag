@@ -8,7 +8,7 @@ const int specular_samples = 2;
 int mips_count = 1;
 
 uniform float u_samples = 2.0;
-uniform vec3 u_lightVec = vec3(0.0, 0.0, 1.0);
+uniform vec3 u_lightPos = vec3(0.0, 0.0, 1.0);
 SAMPLERCUBE(u_texture, 0);
 //uniform vec2 random[specular_samples];
 
@@ -25,7 +25,7 @@ mat3 GenerateFrame(vec3 norm) {
 	return frame;
 }
 
-vec3 GGXSpecular(in BgfxSamplerCube environment, in vec3 N, in vec3 V, in float ior, in vec3 color, in float metallic, in float roughness, inout vec3 k_s) {
+vec3 GGXSpecular(in BgfxSamplerCube environment, in vec3 L, in vec3 N, in vec3 V, in float ior, in vec3 color, in float metallic, in float roughness, inout vec3 k_s) {
 	vec3 reflection = reflect(V * -1.0, N);
 	mat3 world_frame = GenerateFrame(reflection);
 	vec3 radiance = vec3(0.0, 0.0, 0.0);
@@ -38,9 +38,9 @@ vec3 GGXSpecular(in BgfxSamplerCube environment, in vec3 N, in vec3 V, in float 
 	vec3 weight = vec3(0.0, 0.0, 0.0);
 
 	int samples = (int)u_samples;
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 10; i++) {
 	//fix this?
-		vec3 sample_vector = vec3(0.0, 1.0, 0.0);//GenerateSampleVector( roughness);
+		vec3 sample_vector = L;//vec3(0.0, 1.0, 0.0);//GenerateSampleVector( roughness);
 		sample_vector = normalize(vec4(sample_vector, 1.0).xyz);
 
 		vec3 half_vector = normalize(sample_vector + V);
@@ -54,36 +54,53 @@ vec3 GGXSpecular(in BgfxSamplerCube environment, in vec3 N, in vec3 V, in float 
 		weight += fresnel_term;
 		radiance += pow(textureCubeLod(environment, sample_vector, roughness * 12.0).rgb, 2.0) * geometry * fresnel_term * sin_T / denominator;
 	}
-	k_s = clamp(weight / 20, 0.0, 1.0);
-	return clamp(radiance / 20, 0.0, 1.0);
+	k_s = clamp(weight / 10, 0.0, 1.0);
+	return clamp(radiance / 10, 0.0, 1.0);
 }
 
 void main() {
-	vec3 downlight = normalize(u_lightVec).xyz;
-	vec3 eye_pos = mul(u_model[0], u_view[0].xyz);
-	vec3 surface_pos = gl_FragCoord.xyz / gl_FragCoord.w;
+	vec3 eye_pos = transpose(u_invView)[3].xyz;
+	vec3 surface_pos = v_worldpos.xyz + transpose(u_model[0])[3].xyz;
 
-	//L = vector to light, just the inverse of a directional light
-	vec3 L = downlight * -1.0;
+	vec3 L = normalize(mul(u_view, u_lightPos) - surface_pos);
 	//the normal at the point
-	vec3 N = v_normal;
+	vec3 N = normalize(v_normal);
 
-	vec3 V = normalize(surface_pos - eye_pos);
+	vec3 V = normalize(-v_worldpos.xyz);
+	vec3 H = normalize(V + L);
 
 	float NdL = max(0, dot(N, L));
+	float NdV = max(0, dot(N, V));
+	float NdH = max(0, dot(N, H));
+	float VdH = max(0, dot(V, H));
 
 	//material values to be read in some time
-	vec3 albedo = vec3(1.0, 1.0, 1.0);
-	float metallic = 0.5;
+	vec3 albedo = vec3(0.56, 0.57, 0.58);
+	float metallic = 0.9;
 	float ior = 1.2;
-	float roughness = 0.25;
+	float roughness = 0.35;
+
 	vec3 k_s = 0.0; //specular weight
-	vec3 specular = GGXSpecular(u_texture, N, V, ior, albedo, metallic, roughness, k_s);
+	vec3 specular = GGXSpecular(u_texture, L, N, V, ior, albedo, metallic, roughness, k_s);
 	vec3 k_d = (1 - k_s) * (1 - metallic); //diffuse weight
 	
-	vec3 irradiance = vec3(1.0, 1.0, 1.0) * textureCubeLod(u_texture, N, 8) * NdL;
-	vec3 diffuse = albedo * irradiance;
+	vec3 irradiance = vec3(1.0, 1.0, 1.0) * textureCubeLod(u_texture, N, roughness * 12.0) * NdL;
+	vec3 diffuse = albedo * NdL * 0.5;
 
 	vec3 color = k_d * diffuse + specular;
-	gl_FragColor = vec4(color, 1.0);
+	//color = vec3(1.0, 1.0, 1.0);
+	//dot(L, N)*diffuse + pow(NdH, 4.0) 
+	float distribution = GGXDistribution(N, H, roughness);
+	float geometry =
+			GGXPartialGeometryTerm(V, N, H, roughness) * 
+			GGXPartialGeometryTerm(L, N, H, roughness);
+	vec3 F0 = abs((1.0 - ior) / (1.0 + ior));
+	F0 = F0 * F0;
+	F0 = lerp(F0, albedo, metallic);
+	vec3 fresnel = FresnelSchlick(VdH, F0);
+
+	vec3 cook_torrance = (fresnel * distribution * geometry) / (4 * NdV * NdL);
+
+	gl_FragColor = vec4((k_s * cook_torrance) + (k_d * diffuse), 1.0);
+	//gl_FragColor = vec4(((NdL * albedo)) + pow(NdH * NdL, 4.0), 1.0);
 }	
