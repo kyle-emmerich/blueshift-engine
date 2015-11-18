@@ -11,25 +11,25 @@ SceneGraph::~SceneGraph() {
 
 }
 
-void* SceneGraph::allocate_component(size_t type_size, std::type_index& type) {
-	std::lock_guard<std::mutex>(mutex, std::adopt_lock);
+void* SceneGraph::allocate_component(size_t type_size, const std::type_index& type, size_t& idx) {
+	std::lock_guard<std::mutex>(this->mutex);
 	if (components.find(type) == components.end()) {
 		component_list list;
 		list.capacity = 10;
 		list.type_size = type_size;
-		list.size = 1;
+		list.size = 0;
 		list.ptr = malloc(type_size * list.capacity);
 		components[type] = list;
 	}
 	component_list& comps = components[type];
 	evaluate_capacity(comps);
 	
-	size_t idx = comps.size++;
+	idx = comps.size++;
 	uint8_t* ptr = static_cast<uint8_t*>(comps.ptr) + (type_size * idx);
 	return static_cast<void*>(ptr);
 }
 
-void SceneGraph::delete_component(std::type_index& type, void* component) {
+void SceneGraph::delete_component(const std::type_index& type, void* component) {
 	std::lock_guard<std::mutex>(mutex, std::adopt_lock);
 	component_list& comps = components[type];
 	uint8_t* comps_ptr = static_cast<uint8_t*>(comps.ptr);
@@ -37,6 +37,7 @@ void SceneGraph::delete_component(std::type_index& type, void* component) {
 	//don't try this at home, kids
 
 	if (comp > comps_ptr && comp < comps_ptr + comps.type_size * comps.size) {
+		size_t idx = (comp - comps_ptr) / comps.type_size;
 		//this is valid
 		//move everything after it down.
 		//basically, we find the pointer to the end of the buffer by
@@ -56,6 +57,18 @@ void SceneGraph::delete_component(std::type_index& type, void* component) {
 		//now we decrement out size counter.
 		comps.size--;
 		evaluate_capacity(comps);
+		//let's also curate handles
+		auto comp_it = comps.handles.end();
+		for (auto it = comps.handles.begin(); it != comps.handles.end(); it++) {
+			if (it->idx > idx) {
+				it->idx--;
+			} else if (it->idx == idx) {
+				comp_it = it;
+			}
+		}
+		if (comp_it != comps.handles.end()) {
+			comps.handles.erase(comp_it);
+		}
 	} else {
 		//TODO: add component not found in list exception
 		throw 999;
