@@ -12,7 +12,7 @@
 
 //Since Windows only has the macros we need in Windowsx.h, we need
 //to undef some others to get rid of errors
-//THIS IS FUCKING WRONG, MICROSOFT
+//THIS IS WRONG, MICROSOFT
 #undef IsMaximized
 #undef IsMinimized
 
@@ -130,7 +130,7 @@ void Window::SetFullscreen(bool IsFullscreen) {
 	}
 	fullscreen = IsFullscreen;
 
-	//TODO: Do this
+	//TODO: Wait for bgfx to support exclusive mode fullscreen with proper resolution switching
 }
 bool Window::IsFullscreen() const {
 	return fullscreen;
@@ -188,7 +188,6 @@ void Window::SetTitle(std::string Title) {
 std::string Window::GetTitle() const {
 	std::string str; str.resize(256);
 	GetWindowText(handle, &str[0], 256);
-
 	return str;
 }
 
@@ -227,8 +226,6 @@ void Window::_RegisterClass() {
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 
-	//TODO: Set icon?
-
 	//Finish up the class.
 	RegisterClassEx(&wc);
 }
@@ -262,6 +259,9 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 			}
 			break;
 		case WM_MOUSEMOVE:
+			//Tell the input subsystem where the mouse cursor is; device doesn't matter,
+			//cursor is OS-level on Windows. Might change for other OSes; watch this space.
+			//TODO: update mouse cursor input if API changes during porting 
 			Input::Devices::Mouse::_set_last_position(
 				GET_X_LPARAM(lParam),
 				GET_Y_LPARAM(lParam)
@@ -271,6 +271,8 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 			Input::Devices::Keyboard::TextInput((char)wParam);
 			break;
 		case WM_INPUT:
+			//Make sure we have focus; we don't want to be grabbing input and doing stuff
+			//if the user isn't looking. Kinda creepy if we do.
 			if (GetFocus() != handle) {
 				break;
 			}
