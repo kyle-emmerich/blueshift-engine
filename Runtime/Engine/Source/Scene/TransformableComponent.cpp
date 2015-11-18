@@ -18,7 +18,7 @@ void TransformableComponent::UpdateWorldTransform() {
 	}
 
 	Matrix4f parent = object->GetTransform();
-	Matrix4f local = TranslationMatrix(position) * QuaternionToMatrix4(orientation);
+	Matrix4f local = QuaternionToMatrix4(orientation) * TranslationMatrix(position);
 	world_transform = local * parent;
 	local_dirty = false;
 }
