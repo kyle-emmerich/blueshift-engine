@@ -23,7 +23,8 @@ void GameClient::Initialize() {
 	Engine->GetSystem<Graphics::RenderSystem>()->SetPrimaryDisplay(AppConfig->Get<size_t>("Window", "DisplayID"));
 	main_window = new RenderWindow(
 		AppConfig->Get<uint32_t>("Window", "Width", 1280),
-		AppConfig->Get<uint32_t>("Window", "Height", 720)
+		AppConfig->Get<uint32_t>("Window", "Height", 720),
+		graph
 	);
 	main_window->SetTitle(Engine->GetParameters()->ApplicationName);
 
@@ -31,7 +32,7 @@ void GameClient::Initialize() {
 		main_window->SetFullscreen(true);
 	}
 	if (AppConfig->Get<bool>("Window", "IsFullscreenDesktop", false)) {
-		main_window->SetFullscreenDesktop(true);
+		main_window->SetFullscreenDesktop(true, AppConfig->Get<bool>("Window", "SpanAllDisplays", false));
 	}
 	
 	Engine->GetSystem<Graphics::RenderSystem>()->AddRenderWindow(main_window);
