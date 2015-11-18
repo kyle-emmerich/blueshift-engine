@@ -1,4 +1,11 @@
-// shadertype=glsl
+#ifndef BLUESHIFT_SAMPLING_H
+#define BLUESHIFT_SAMPLING_H
+
+float Random(vec2 uv)
+{
+	return fract(sin(dot(uv.xy, vec2(12.9898, 78.233) ) ) * 43758.5453);
+}
+
 vec3 TangentToWorld(vec3 dir, vec3 tangent_z) {
 	vec3 up = abs(tangent_z.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
 	vec3 tangent_x = normalize(cross(up, tangent_z));
@@ -61,3 +68,5 @@ float MISWeight(uint n1, float PDF1, uint n2, float PDF2) {
 	float weight2 = n2 * PDF2;
 	return weight1 * weight1 / (weight1 * weight1 + weight2 * weight2);
 }
+
+#endif

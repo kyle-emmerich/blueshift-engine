@@ -1,8 +1,6 @@
-float PI = 3.14159265359;
-
-float saturate(float x) {
-	return clamp(x, 0.0, 1.0);
-}
+#ifndef BLUESHIFT_BRDF_H
+#define BLUESHIFT_BRDF_H
+#include "Blueshift/Utility.glsl"
 
 vec3 DiffuseLambert(vec3 c) {
 	return (c / PI).xyz;
@@ -17,11 +15,11 @@ float positive(float x) {
 }
 
 float GGXDistribution(vec3 N, vec3 H, float roughness) {
-	float NdH = dot(N, H);
+	float NdH = clamp(dot(N, H), 0.0, 1.0);
 	float roughness2 = roughness * roughness;
 	float NdH2 = NdH * NdH;
 	float denom = NdH2 * roughness2 + (1 - NdH2);
-	return (positive(NdH) * roughness2) / (3.14159265359 * denom * denom);
+	return (NdH * roughness2) / (PI * denom * denom);
 }
 
 float GGXPartialGeometryTerm(vec3 V, vec3 N, vec3 H, float roughness) {
@@ -32,3 +30,5 @@ float GGXPartialGeometryTerm(vec3 V, vec3 N, vec3 H, float roughness) {
     float tan2 = (1.0 - VdH2) / VdH2;
     return (chi * 2.0) / (1.0 + sqrt(1.0 + roughness * roughness * tan2));
 }
+
+#endif
