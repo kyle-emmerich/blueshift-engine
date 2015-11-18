@@ -42,6 +42,17 @@ namespace Blueshift {
 				bs_vec.data[3] = static_cast<T>(vec.m_floats[3]);
 				return bs_vec;
 			}
+
+			template<typename T>
+			btQuaternion ToBullet(const Core::Math::Quaternion<T>& q) {
+				btQuaternion bt_quat(
+					static_cast<btScalar>(q.data[0]),
+					static_cast<btScalar>(q.data[1]),
+					static_cast<btScalar>(q.data[2]),
+					static_cast<btScalar>(q.data[3])
+				);
+				return bt_quat;
+			}
 		}
 	}
 }
