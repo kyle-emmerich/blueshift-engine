@@ -8,12 +8,17 @@ namespace Blueshift {
 		class SceneGraph;
 		class TransformableComponent : public Component {
 		protected:
-			Core::Math::Vector3f position;
-			Core::Math::Quaternionf orientation;
-			Core::Math::Matrix4f world_transform;
+			Core::Math::Vector3f position = Core::Math::Vector3f(0.0f, 0.0f, 0.0f);
+			Core::Math::Quaternionf orientation = Core::Math::Quaternionf(0.0f, 0.0f, 0.0f, 1.0f);
+			Core::Math::Matrix4f world_transform = Core::Math::IdentityMatrix4f;
 			bool local_dirty = true;
 
 			friend class SceneGraph;
+#pragma pack(push, 8)
+			struct serialized {
+				Component::serialized component;
+			};
+#pragma pack(pop)
 		public:
 			TransformableComponent(SceneGraph* scene, Object* object);
 
