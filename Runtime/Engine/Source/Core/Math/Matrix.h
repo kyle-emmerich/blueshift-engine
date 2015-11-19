@@ -114,6 +114,16 @@ namespace Blueshift {
 				return out;
 			}
 
+			template<size_t rows, typename T>
+			inline Vector<rows, T> operator *(const Matrix<rows, T>& lhs, const Vector<rows, T>& rhs) {
+				Vector<rows, T> out;
+				Matrix<rows, T>& transposed = Transpose(lhs);
+				for (size_t i = 0; i < rows; i++) {
+					out[i] = DotProduct(rhs, transposed.vec[i]);
+				}
+				return out;
+			}
+
 			typedef Matrix<2, double> Matrix2; typedef Matrix<2, float> Matrix2f;
 			typedef Matrix<3, double> Matrix3; typedef Matrix<3, float> Matrix3f;
 			typedef Matrix<4, double> Matrix4; typedef Matrix<4, float> Matrix4f;
@@ -156,6 +166,17 @@ namespace Blueshift {
 					matrix(0, 2) * matrix(1, 1) * matrix(2, 0) * matrix(3, 3) + matrix(0, 1) * matrix(1, 2) * matrix(2, 0) * matrix(3, 3) +
 					matrix(0, 2) * matrix(1, 0) * matrix(2, 1) * matrix(3, 3) - matrix(0, 0) * matrix(1, 2) * matrix(2, 1) * matrix(3, 3) -
 					matrix(0, 1) * matrix(1, 0) * matrix(2, 2) * matrix(3, 3) + matrix(0, 0) * matrix(1, 1) * matrix(2, 2) * matrix(3, 3);
+			}
+
+			template<size_t rows, typename T>
+			inline Matrix<rows, T> Transpose(const Matrix<rows, T>& matrix) {
+				Matrix<rows, T> rv;
+				for (int i = 0; i < rows; i++) {
+					for (int j = 0; j < rows; j++) {
+						rv[i][j] = matrix[j][i];
+					}
+				}
+				return rv;
 			}
 
 			template<typename T>
@@ -230,7 +251,7 @@ namespace Blueshift {
 			}
 
 			template<typename T = double>
-			inline Matrix<4, T> ScaleMatrix(Vector<3, T> t) {
+			inline Matrix<4, T> ScaleMatrix(const Vector<3, T>& t) {
 				return Matrix<4, T> {
 					t.data[0], 0.0, 0.0, 0.0,
 					0.0, t.data[1], 0.0, 0.0,
@@ -239,8 +260,8 @@ namespace Blueshift {
 				};
 			}
 
-			template<typename T = double>
-			inline Matrix<4, T> TranslationMatrix(Vector<3, T> t) {
+			template<typename T = double, size_t n = 3>
+			inline Matrix<4, T> TranslationMatrix(const Vector<n, T>& t) {
 				return Matrix<4, T> {
 					1.0, 0.0, 0.0, 0.0,
 					0.0, 1.0, 0.0, 0.0,
@@ -250,7 +271,7 @@ namespace Blueshift {
 			}
 
 			template<size_t n, typename T = double>
-			inline Matrix<n, T> RotationMatrix(Vector<3, T> axis, T angle) {
+			inline Matrix<n, T> RotationMatrix(const Vector<3, T>& axis, T angle) {
 				if (axis.SquaredLength() < 1 - 1e-5 || axis.SquaredLength() > 1 + 1e-5) {
 					axis /= axis.Length();
 				}
@@ -300,7 +321,18 @@ namespace Blueshift {
 				0.0, 0.0, 0.0, 1.0
 			};
 
+			static const Matrix3f IdentityMatrix3f {
+				1.0f, 0.0f, 0.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 1.0f
+			};
 
+			static const Matrix4f IdentityMatrix4f {
+				1.0f, 0.0f, 0.0f, 0.0f,
+				0.0f, 1.0f, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
 
 		}
 	}
