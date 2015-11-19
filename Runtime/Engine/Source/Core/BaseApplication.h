@@ -10,8 +10,9 @@ namespace Blueshift {
 		class BaseApplication : public IApplication {
 		private:
 			std::atomic<bool> running = true;
-		protected:
 			
+		protected:
+			Scene::SceneGraph* graph = nullptr;
 		public:
 			BaseApplication();
 			virtual ~BaseApplication();
@@ -21,6 +22,8 @@ namespace Blueshift {
 			virtual EngineParameters* GetEngineSetup();
 
 			inline virtual void Initialize() {}
+			inline virtual void InitializeRenderData() {}
+			inline virtual void DestroyRenderData() {}
 			inline virtual void Shutdown() {}
 			
 			inline virtual bool Update(double) { return true; }
