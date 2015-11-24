@@ -54,6 +54,4 @@ There is some confusion in how much this actually matters. The real answer is th
 However, keep in mind that points and vectors are treated differently. Specifically, translating a vector makes no sense and will produce a "wrong" result. In order to explicitly handle vectors vs points, convert them 4-vectors and use W=0 for vectors and W=1 for points. Helper functions might be added later in order to clarify the procedure.
 
 ###Documentation
-As of right now (October 25th, 2015), there is no documentation other than the source code itself. Don't be afraid to dive in and start learning; the API is really clean and simple so far. When the project continues to grow and when Kyle has free time, documentation will begin.
-
-However, ReadTheDocs is terrible and Doxygen is terrible. A custom solution is probably in order, probably based on the [NoxAstra](https://noxastra.com) website.
+There is a project underway with the purpose of documenting Blueshift's APIs and structure. You can find it [here](https://noxastra.com/engine/docs).
