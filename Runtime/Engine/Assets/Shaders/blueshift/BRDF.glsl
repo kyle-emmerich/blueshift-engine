@@ -1,6 +1,6 @@
 #ifndef BLUESHIFT_BRDF_H
 #define BLUESHIFT_BRDF_H
-#include "Blueshift/Utility.glsl"
+#include "Utility.glsl"
 
 vec3 DiffuseLambert(vec3 c) {
 	return (c / PI).xyz;

@@ -61,7 +61,7 @@ struct Light_Star {
 float DensityRatio(float h, Planet planet) {
 	return exp(-h / planet.density_ratio);
 }
-
+ 
 vec3 IntegrateScattering(
 		in vec3 start, in vec3 ray, in float far, 
 		in vec3 light_dir, in float beta,

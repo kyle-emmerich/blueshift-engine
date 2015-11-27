@@ -32,7 +32,7 @@ vec3 FixCubeLookup(vec3 v, float lod, float top_level_cube_size) {
     if (ax != vmax) { v.x *= scale; }
     if (ay != vmax) { v.y *= scale; }
     if (az != vmax) { v.z *= scale; }
-    return _v;
+    return v;
 }
 
 float ToGamma(float r) {
@@ -52,7 +52,7 @@ vec3 ToLinear(vec3 rgb) {
 }
 
 vec4 ToLinear(vec4 rgba) {
-	return vec4(toLinear(rgba.xyz), rgba.w);
+	return vec4(ToLinear(rgba.xyz), rgba.w);
 }
 
 #endif
