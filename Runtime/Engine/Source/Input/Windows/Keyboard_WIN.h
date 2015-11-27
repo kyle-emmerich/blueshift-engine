@@ -20,6 +20,7 @@ namespace Blueshift {
 				static bool primary_found;
 
 				bool matrix[(size_t)ButtonName::Max];
+				bool last_matrix[(size_t)ButtonName::Max];
 
 				HANDLE device_handle;
 			public:
@@ -32,10 +33,12 @@ namespace Blueshift {
 
 				//Implement buttons capability
 				bool IsButtonDown(ButtonName Button);
+				bool WasButtonPressed(ButtonName Button);
+				bool WasButtonReleased(ButtonName Button);
 				
 				//Implement device
 				virtual std::string GetName() { return "Keyboard"; }
-				virtual void Poll() {}
+				virtual void Poll();
 
 				//Windows implementation
 				static Keyboard* _get_from_handle(HANDLE handle) {

@@ -6,6 +6,8 @@ namespace Blueshift {
 
 		class RenderableComponent : public Scene::TransformableComponent {
 		public:
+			RenderableComponent(Scene::SceneGraph* graph, Scene::Object* object)
+				: TransformableComponent(graph, object) {}
 
 			virtual void Render(Graphics::RenderSystem* system) = 0;
 		};

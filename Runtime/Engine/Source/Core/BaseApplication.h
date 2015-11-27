@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/IApplication.h"
 #include "Core/Engine.h"
+#include "Graphics/Graphics.h"
 #include "Core/Timing/Stopwatch.h"
 #include <atomic>
 
@@ -21,6 +22,7 @@ namespace Blueshift {
 
 			virtual EngineParameters* GetEngineSetup();
 
+			inline virtual void RegisterFileTypes(Storage::AssetSystem* Assets);
 			inline virtual void Initialize() {}
 			inline virtual void InitializeRenderData() {}
 			inline virtual void DestroyRenderData() {}

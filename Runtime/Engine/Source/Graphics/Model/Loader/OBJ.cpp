@@ -173,10 +173,9 @@ void OBJ::to_mesh_data(std::vector<std::unique_ptr<Model::OBJMeshData>>& meshes)
 		if (obj->complete) {
 			MeshBounds bounds = {
 				AABB<float>(),
-				OBB<float>(),
-				Sphere<float>()
+				0.0f
 			};
-			meshes.push_back(std::unique_ptr<Model::OBJMeshData>(new OBJMeshData(obj->name, &obj->verts[0], obj->verts.size(), OBJVertex::Type, &obj->indices[0], obj->indices.size(), bounds)));
+			meshes.push_back(std::unique_ptr<Model::OBJMeshData>(new OBJMeshData(&obj->verts[0], obj->verts.size(), OBJVertex::Type, &obj->indices[0], obj->indices.size(), bounds)));
 		}
 	}
 	objects.swap(std::vector<std::unique_ptr<o>>());

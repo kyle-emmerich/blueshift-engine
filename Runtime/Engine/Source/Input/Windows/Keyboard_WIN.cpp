@@ -130,6 +130,18 @@ bool Keyboard::IsButtonDown(ButtonName Button) {
 	return matrix[(size_t)Button];
 }
 
+bool Keyboard::WasButtonPressed(ButtonName Button) {
+	return matrix[(size_t)Button] && !last_matrix[(size_t)Button];
+}
+
+bool Keyboard::WasButtonReleased(ButtonName Button) {
+	return !matrix[(size_t)Button] && last_matrix[(size_t)Button];
+}
+
+void Keyboard::Poll() {
+	memcpy(&last_matrix[0], &matrix[0], sizeof(bool) * (size_t)ButtonName::Max);
+}
+
 void Keyboard::_pass_event(RAWKEYBOARD* data) {
 	//But wait! We're getting keyboard input?
 	//It could be our primary!

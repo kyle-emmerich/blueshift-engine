@@ -2,9 +2,8 @@
 #include "bgfx/bgfx.h"
 #include "Graphics/VertexDeclarations.h"
 #include "Graphics/ShaderProgram.h"
-#include "Core/Math/AABB.h"
-#include "Core/Math/OBB.h"
-#include "Core/Math/Sphere.h"
+#include "Core/Math/Math.h"
+#include "Storage/IAsset.h"
 
 namespace Blueshift {
 	namespace Graphics {
@@ -16,8 +15,7 @@ namespace Blueshift {
 
 			struct MeshBounds {
 				Core::Math::AABB<float> BoundingBox;
-				Core::Math::OBB<float> OrientedBoundingBox;
-				Core::Math::Sphere<float> BoundingSphere;
+				float BoundingRadius;
 			};
 
 			struct MeshDataSection {
@@ -31,13 +29,24 @@ namespace Blueshift {
 				MeshBounds Bounds;
 			};
 
-			class IMeshData {
+			struct MeshBone {
+				MeshBone* parent;
+				Core::Math::Matrix4f frame;
+				Core::Math::Matrix4f inverse_frame;
+			};
+
+			class IMeshData : public Storage::IAsset {
 			public:
 				virtual void Render(RenderSystem*, ShaderProgram*, size_t) = 0;
 				virtual void Render(RenderSystem*, ShaderProgram*, MeshDataSection*) = 0;
 
+				virtual MeshDataSection& GetSection(size_t SectionID) = 0;
 				virtual const MeshDataSection& GetSection(size_t SectionID) const = 0;
-				virtual const std::string& GetName() const = 0;
+				virtual size_t GetNumSections() const = 0;
+
+				virtual MeshBone& GetBone(size_t BoneID) = 0;
+				virtual const MeshBone& GetBone(size_t BoneID) const = 0;
+				virtual size_t GetNumBones() const = 0;
 			};
 
 			

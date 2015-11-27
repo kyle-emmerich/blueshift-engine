@@ -82,7 +82,7 @@ namespace Blueshift {
 					RAWINPUTDEVICELIST* list = new RAWINPUTDEVICELIST[num_devices];
 					GetRawInputDeviceList(list, &num_devices, sizeof(RAWINPUTDEVICELIST));
 
-					//For each device found, we need to look for all keyboards
+					//For each device found, we need to look for all mouse devices
 					bool found_first = false;
 					for (unsigned int i = 0; i < num_devices; i++) {
 						RAWINPUTDEVICELIST& device = list[i];
@@ -92,7 +92,7 @@ namespace Blueshift {
 							RID_DEVICE_INFO info; info.cbSize = sizeof(RID_DEVICE_INFO);
 							GetRawInputDeviceInfo(handle, RIDI_DEVICEINFO, &info, (PUINT)&info.cbSize);
 
-							//Then we can create a Keyboard object
+							//Then we can create a Mouse object
 							Mouse* mouse = new Mouse;
 							mouse->device_handle = handle;
 
@@ -101,7 +101,7 @@ namespace Blueshift {
 							Mouse::all_mouse_devices.push_back(mouse);
 							Mouse::device_map[handle] = index;
 
-							//If this is our first keyboard, let's set it as our primary.
+							//If this is our first mouse, let's set it as our primary.
 							if (!found_first) {
 								found_first = true;
 								primary = mouse;
@@ -114,6 +114,12 @@ namespace Blueshift {
 						delete mouse;
 					}
 					all_mouse_devices.clear();
+				}
+
+				static void _pass_all(RAWMOUSE* data) {
+					for (auto* mouse : all_mouse_devices) {
+						mouse->_pass_event(data);
+					}
 				}
 			};
 

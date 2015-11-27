@@ -5,7 +5,7 @@
 namespace Blueshift {
 	namespace Graphics {
 
-		class ShaderProgram {
+		class ShaderProgram : public Storage::IAsset {
 		public:
 			enum class Type {
 				Compute = 0,

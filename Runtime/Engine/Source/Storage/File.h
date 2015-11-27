@@ -122,6 +122,10 @@ namespace Blueshift {
 				return Read<char>(&str[0], Count);
 			}
 
+			inline std::string GetPath() const {
+				return path;
+			}
+
 			bool Close();
 		};
 

@@ -9,9 +9,8 @@ using namespace Blueshift::Graphics;
 
 
 
-RenderWindow::RenderWindow(uint32_t Width, uint32_t Height)
-	: Window(Width, Height, true), view_width(Width), view_height(Height)
-{ 
+RenderWindow::RenderWindow(uint32_t Width, uint32_t Height, Scene::SceneGraph* scene)
+	: Window(Width, Height, true), view_width(Width), view_height(Height), graph(scene) { 
 	view_id = static_cast<uint8_t>(Engine::Get().GetSystem<RenderSystem>()->GetRenderWindows().size());
 	if (Engine::Get().GetSystem<RenderSystem>()->GetRenderWindows().size() == 0) {
 		is_primary = true;
@@ -55,5 +54,3 @@ void RenderWindow::PreRender() {
 void RenderWindow::PostRender() {
 
 }
-
- 

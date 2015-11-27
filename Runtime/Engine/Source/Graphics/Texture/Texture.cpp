@@ -1,17 +1,17 @@
-#include "Graphics/Texture.h"
+#include "Graphics/Texture/Texture.h"
 #include "Storage/File.h"
 
 using namespace Blueshift;
 using namespace Graphics;
 
-Texture::Texture(
+Texture::Texture::Texture(
 	TextureType Type,
 	TextureFormat Format,
 	uint16_t Width, uint16_t Height, uint16_t Depth,
 	uint8_t NumMips,
 	RenderData Data
 	) : type(Type), format(Format), width(Width), height(Height), depth(Depth),
-		num_mips(NumMips) {
+	num_mips(NumMips) {
 
 	switch (Type) {
 	case TextureType::Texture2D:
@@ -38,8 +38,15 @@ Texture::Texture(
 	}
 }
 
-Texture::Texture(std::string path, bool keep_copy) {
-	Storage::File file(path);
+Texture::Texture::Texture(std::string path, bool keep_copy) {
+	Storage::File f(path);
+	from_file(f, keep_copy);
+}
+Texture::Texture::Texture(Storage::File* file, bool keep_copy) {
+	from_file(*file, keep_copy);
+}
+
+void Texture::Texture::from_file(Storage::File& file, bool keep_copy) {
 	size_t length = file.GetLength();
 	RenderData Data = AllocateRenderData(length);
 	file.Read(Data->data, length);
@@ -71,7 +78,7 @@ Texture::Texture(std::string path, bool keep_copy) {
 	num_mips = info.numMips;
 }
 
-Texture::~Texture() {
+Texture::Texture::~Texture() {
 	if (texture.idx != bgfx::invalidHandle) {
 		bgfx::destroyTexture(texture);
 	}
@@ -84,6 +91,6 @@ Texture::~Texture() {
 	}
 }
 
-void Texture::AssignTo(uint8_t Unit, const Shader::Uniform& Uniform) {
+void Texture::Texture::AssignTo(uint8_t Unit, const Shader::Uniform& Uniform) {
 	bgfx::setTexture(Unit, Uniform.Handle, texture);
 }

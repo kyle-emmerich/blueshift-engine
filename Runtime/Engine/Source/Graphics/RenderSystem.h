@@ -5,6 +5,7 @@
 #include "Core/Utility/ConfigFile.h"
 #include "Graphics/RenderWindow.h"
 #include "Graphics/Model/StaticMeshData.h"
+#include "Graphics/StaticMeshComponent.h"
 #include "bgfx/bgfx.h"
 #include <thread>
 #include <memory>
@@ -27,7 +28,14 @@ namespace Blueshift {
 			RenderSystem(Core::Engine* engine);
 			virtual ~RenderSystem();
 
-			virtual void ProcessComponents(std::vector<Scene::Component>& components);
+			template<typename T>
+			inline void ProcessComponents(Scene::SceneGraph* graph) {
+				auto it = graph->Begin<T>();
+				for (it; it != graph->End<T>(); ++it) {
+					auto x = *it;
+					it->Render(this);
+				}
+			}
 
 			void AddAvailableDisplayInfo(Platform::DisplayInfo&& Display);
 

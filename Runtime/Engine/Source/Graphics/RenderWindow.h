@@ -1,6 +1,6 @@
 #pragma once
 #include "Platform/PlatformSpecific.h"
-#include "Scene/CameraComponent.h"
+#include "Graphics/CameraComponent.h"
 #include <thread>
 
 namespace Blueshift {
@@ -16,9 +16,10 @@ namespace Blueshift {
 			uint32_t view_height;
 			virtual void resize_viewport(uint32_t width, uint32_t height);
 
-			Scene::CameraComponent* camera;
+			Scene::SceneGraph* graph;
+			Scene::Component::Handle camera;
 		public:
-			RenderWindow(uint32_t Width = 1280, uint32_t Height = 720);
+			RenderWindow(uint32_t Width = 1280, uint32_t Height = 720, Scene::SceneGraph* scene = nullptr);
 			virtual ~RenderWindow();
 
 			void PreRender();
@@ -28,8 +29,11 @@ namespace Blueshift {
 				return (double)this->view_width / (double)this->view_height;
 			}
 
-			inline void SetCamera(Scene::CameraComponent* camera) { this->camera = camera; }
-			inline Scene::CameraComponent* GetCamera() const { return camera; }
+			inline void SetCamera(const Scene::Component::Handle& camera) { this->camera = camera; }
+			inline const Scene::Component::Handle& GetCamera() const { return camera; }
+
+			inline void SetSceneGraph(Scene::SceneGraph* graph) { this->graph = graph; }
+			inline Scene::SceneGraph* GetSceneGraph() const { return graph; }
 
 			inline uint8_t GetViewID() const {
 				return view_id;

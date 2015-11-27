@@ -3,9 +3,8 @@
 #include "Graphics/RenderableComponent.h"
 #include "Core/Engine.h"
 
-
 #include "Graphics/Model/Loader/OBJ.h"
-#include "Graphics/Texture.h"
+#include "Graphics/Texture/Texture.h"
 #include <fstream>
 
 using namespace Blueshift;
@@ -30,15 +29,6 @@ RenderSystem::~RenderSystem() {
 	render_windows.clear();
 	if (render_thread.joinable()) {
 		render_thread.join();
-	}
-}
-
-void RenderSystem::ProcessComponents(std::vector<Scene::Component>& components) {
-	RenderableComponent* renderables = dynamic_cast<RenderableComponent*>(components.data());
-	size_t size = components.size();
-	for (size_t i = 0; i < size; i++) {
-		RenderableComponent* component = renderables + i;
-		component->Render(this);
 	}
 }
 
@@ -93,7 +83,7 @@ void RenderSystem::render_thread_func() {
 	bgfx::init();
 	{
 		InitializeVertexDeclarations();
-		//bgfx::setDebug(BGFX_DEBUG_STATS);
+		bgfx::setDebug(BGFX_DEBUG_TEXT);
 
 		//Create a fullscreen quad
 		Vector2f fs_verts[4] = {
@@ -108,7 +98,7 @@ void RenderSystem::render_thread_func() {
 		VertexType fs_type;
 		fs_type.begin().add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float).end();
 		Model::MeshBounds bounds;
-		Model::StaticMeshData<Vector2f, uint16_t> fs_quad("FullscreenQuad", fs_verts, 4, fs_type, fs_indices, 6, bounds);
+		Model::StaticMeshData<Vector2f, uint16_t> fs_quad(fs_verts, 4, fs_type, fs_indices, 6, bounds);
 
 		Shader* fs_vert = new Shader("Shaders/background.vert.win.bin");
 		fs_vert->Complete();
@@ -118,82 +108,51 @@ void RenderSystem::render_thread_func() {
 			->AddUniform("u_view", Shader::UniformType::Matrix4)
 			->Complete();
 		ShaderProgram fs_program(fs_vert, fs_frag);
-
-		Model::Loader::OBJ obj_loader;
-		std::vector<std::unique_ptr<Model::OBJMeshData>> meshes;
-		obj_loader.Load("ship1.obj", meshes);
-
-		Shader* vs = new Shader("Shaders/debug_vs.win.bin");
-		vs->Complete();
-
-		Shader* fs = new Shader("Shaders/debug_fs.win.bin");
-		fs->AddUniform("u_samples", Shader::UniformType::Vector, 1)
-			->AddUniform("u_lightPos", Shader::UniformType::Vector, 1)
-			->AddUniform("u_texture", Shader::UniformType::Texture, 1)
-			->Complete();
-
-		ShaderProgram program(vs, fs);
-		Texture tex("space.dds");
-
-		float theta = 0.0f;
-
-		float samples = 20;
+		Texture::Texture tex("space.dds");
 
 		Core::IApplication* application = Core::Engine::Get().GetParameters()->Application;
+		application->InitializeRenderData();
+
+		double start = Engine::Get().Timer.GetElapsedSeconds();
 		while (application->IsRunning()) {
+			std::unique_lock<std::mutex> lock(application->FrameMutex);
+			while (!application->IsFrameReady) {
+				application->FrameReady.wait(lock);
+			}
+			application->IsFrameReady = false;
+			
 			for (RenderWindow* window : render_windows) {
 				current_view_id = window->GetViewID();
+				Scene::SceneGraph* scene = window->GetSceneGraph();
+				CameraComponent* camera = window->GetCamera();
+				if (scene == nullptr || camera == nullptr) {
+					continue;
+				}
+
 				window->PreRender();
-
-				Math::Matrix4f view = Inverse(
-					Math::RotationMatrix<4, float>(Vector3f(0.0f, 1.0f, 0.0f), theta + Math::Pi * 0.5f) * 
-					Math::TranslationMatrix<float>(Vector3f(cos(theta) * 25.0f, 1.5f, sin(theta) * 25.0f))
-				);
-				Math::Matrix4f proj = Math::Downgrade(Scene::CameraComponent::CreatePerspectiveTransform(window->GetAspectRatio(), 60.0, 0.1, 100.0));
-				bgfx::setViewTransform(0, view.data, proj.data);
-
+				bgfx::setViewTransform(current_view_id, camera->GetViewTransform().data, camera->GetProjection().data);
 				//draw the background
+				//TODO: move this to... camera? scenegraph?
 				tex.AssignTo(0, fs_program["u_cubemap"]);
 				fs_quad.Render(this, &fs_program);
 
 				//render components
+				ProcessComponents<StaticMeshComponent>(scene);
 
-
-				theta += 0.005f;
-
-
-				
-				int n = 2;
-				for (int j = -n/2; j < n/2; j++) {
-					for (int i = -n/2; i < n/2; i++) {
-						Math::Matrix4f model =
-							Math::RotationMatrix<4, float>(Vector3f(0.0f, 1.0f, 0.0f), Math::ToRadians(180.0f));
-							Math::TranslationMatrix<float>(Vector3f(i * 2.0f, 0, j * 2.0f));
-						program["u_samples"].Set(&samples);
-						program["u_lightPos"] = Math::Vector3f(0.0f, 3.0f, -6.0f);
-
-						tex.AssignTo(0, program["u_texture"]);
-
-						bgfx::setTransform(model.data);
-						bgfx::setState(
-							BGFX_STATE_MSAA |
-							BGFX_STATE_ALPHA_WRITE |
-							BGFX_STATE_RGB_WRITE |
-							BGFX_STATE_CULL_CCW |
-							BGFX_STATE_DEPTH_WRITE |
-							BGFX_STATE_DEPTH_TEST_LEQUAL
-							);
-						bgfx::setViewTransform(0, view.data, proj.data);
-
-						meshes[0]->Render(this, &program);
-					}
-				}
+				Engine::Get().Console.Render();
 
 				window->PostRender();
 			}
 
 			bgfx::frame();
 		}
+		for (auto window : render_windows) {
+			auto graph = window->GetSceneGraph();
+			if (graph != nullptr) {
+				graph->DestroyComponents<StaticMeshComponent>();
+			}
+		}
+		application->DestroyRenderData();
 	}
 	bgfx::shutdown();
 }

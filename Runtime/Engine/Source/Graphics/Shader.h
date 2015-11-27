@@ -1,6 +1,7 @@
 #pragma once
 #include "bgfx/bgfx.h"
 #include "Graphics/RenderData.h"
+#include "Storage/IAsset.h"
 #include <vector>
 #include <unordered_map>
 
@@ -8,7 +9,7 @@ namespace Blueshift {
 	namespace Graphics {
 
 		class ShaderProgram;
-		class Shader {
+		class Shader : public Storage::IAsset {
 		public:
 			friend class ShaderProgram;
 			enum class UniformType {

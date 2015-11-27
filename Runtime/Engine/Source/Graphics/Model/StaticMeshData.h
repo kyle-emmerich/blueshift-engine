@@ -20,13 +20,30 @@ namespace Blueshift {
 				size_t num_vertices;
 				size_t num_indices;
 
-				std::string name;
-
 				std::vector<MeshDataSection> sections;
+				std::vector<MeshBone> bones;
 			public:
 				StaticMeshData() = delete;
+				StaticMeshData(RenderData vertices, RenderData indices, VertexType& type) {
+					//Are we using 32-bit indices?
+					uint16_t index_flags = BGFX_BUFFER_NONE;
+					if (sizeof(IndexT) == sizeof(uint32_t)) {
+						//We are, set the flag
+						index_flags = BGFX_BUFFER_INDEX32;
+					} else if (sizeof(IndexT) == sizeof(uint16_t)) {
+						//Do nothing, no flags to set for 16-bit indices.
+					} else {
+						//TODO: Throw an error for an unsupported index type?
+						//		This can probably be done at compile-time using newer
+						//		C++ features. A future consideration.
+					}
+
+					vertex_data = vertices;
+					index_data = indices;
+					vertex_buf = bgfx::createVertexBuffer(vertices, type, BGFX_BUFFER_NONE);
+					index_buf = bgfx::createIndexBuffer(indices, index_flags);
+				}
 				StaticMeshData(
-					std::string name,
 					VertexT* Vertices, size_t NumVertices, VertexType& Type,
 					IndexT* Indices, size_t NumIndices, MeshBounds Bounds)
 					: num_vertices(NumVertices), num_indices(NumIndices) {
@@ -89,11 +106,20 @@ namespace Blueshift {
 					sections.push_back({
 						VertexStart, VertexNumber,
 						IndexStart, IndexNumber,
-						Bounds
+						this,
+						Bounds,
 					});
 					return index;
 				}
-
+				size_t AddBone(MeshBone* parent, Core::Math::Matrix4f& frame, Core::Math::Matrix4f& inverse_frame) {
+					size_t index = bones.size();
+					bones.push_back({
+						parent,
+						frame,
+						inverse_frame
+					});
+					return index;
+				}
 
 				inline virtual void Render(RenderSystem* renderer, ShaderProgram* program, size_t SectionID = 0) {
 					if (SectionID >= sections.size()) {
@@ -111,11 +137,24 @@ namespace Blueshift {
 					bgfx::submit(renderer->GetCurrentViewID(), program->GetHandle());
 				}
 
-				inline virtual const std::string& GetName() const {
-					return name;
+				inline virtual MeshDataSection& GetSection(size_t SectionID) {
+					return sections[SectionID];
 				}
 				inline virtual const MeshDataSection& GetSection(size_t SectionID) const {
 					return sections[SectionID];
+				}
+				inline virtual size_t GetNumSections() const {
+					return sections.size();
+				}
+
+				inline virtual MeshBone& GetBone(size_t BoneID) {
+					return bones[BoneID];
+				}
+				inline virtual const MeshBone& GetBone(size_t BoneID) const {
+					return bones[BoneID];
+				}
+				inline virtual size_t GetNumBones() const {
+					return bones.size();
 				}
 			};
 

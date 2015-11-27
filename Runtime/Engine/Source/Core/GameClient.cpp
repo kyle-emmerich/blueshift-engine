@@ -20,7 +20,7 @@ void GameClient::Initialize() {
 	Engine->CreateSystem<Graphics::RenderSystem>();
 	Engine->SetLogFile(new Storage::File("log.txt", Storage::FileOpenMode::Append));
 
-	Engine->GetSystem<Graphics::RenderSystem>()->SetPrimaryDisplay(AppConfig->Get<size_t>("Window", "DisplayID"));
+	Engine->GetSystem<Graphics::RenderSystem>()->SetPrimaryDisplay(AppConfig->Get<size_t>("Window", "DisplayID", 1));
 	main_window = new RenderWindow(
 		AppConfig->Get<uint32_t>("Window", "Width", 1280),
 		AppConfig->Get<uint32_t>("Window", "Height", 720),

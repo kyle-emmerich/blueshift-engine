@@ -5,9 +5,17 @@
 #include "Core/Exceptions.h"
 #include "Core/ISubsystem.h"
 #include "Core/Timing/Stopwatch.h"
+#include "Core/DebugConsole.h"
 #include <typeindex>
 
 namespace Blueshift {
+	const int EngineVersion[] = { 0, 0, 1 };
+#if _DEBUG
+	const bool EngineDebugBuild = true;
+#else
+	const bool EngineDebugBuild = false;
+#endif
+
 	namespace Graphics {
 		class RenderSystem;
 	}
@@ -105,6 +113,7 @@ namespace Blueshift {
 			}
 
 			Timing::Stopwatch Timer;
+			Core::DebugConsole Console;
 		};
 
 	}

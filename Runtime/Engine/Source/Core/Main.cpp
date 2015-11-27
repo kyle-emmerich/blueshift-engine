@@ -1,20 +1,42 @@
 #include "Core/GameClient.h"
+#include "Graphics/Model/Loader/OBJ.h"
+#include "Graphics/StaticMeshComponent.h"
+#include "Scene/Scene.h"
+#include "Physics/RigidbodyComponent.h"
 #include <iostream>
 
-class TestClient : public Blueshift::Core::GameClient {
+using namespace Blueshift;
+using namespace Core::Math;
+
+class TestClient : public Core::GameClient {
+protected:
+	float cam_speed = 30.0f;
+	float look_sensitivity = 0.1f;
+	Vector4f camera_pos = Vector4f(0.0f, 0.0f, 10.0f, 1.0f);
+	Quaternionf camera_rot;
+	float yaw = 3.14159f; float pitch = 0.0f;
+
+	Scene::Object* model;
+	Graphics::Model::OBJMeshData* mesh;
+	Graphics::ShaderProgram* prog;
+
+	std::vector<std::unique_ptr<Graphics::Model::OBJMeshData>>* meshes;
+
 public:
 	inline TestClient() : Blueshift::Core::GameClient() {}
 
-	virtual Blueshift::Core::EngineParameters* GetEngineSetup();
+	virtual Core::EngineParameters* GetEngineSetup();
 
 	virtual void Initialize();
+	virtual void InitializeRenderData();
+	virtual void DestroyRenderData();
 	virtual void Shutdown();
 
 	virtual bool Update(double dt);
 };
 
-Blueshift::Core::EngineParameters* TestClient::GetEngineSetup() {
-	Blueshift::Core::EngineParameters* Parameters = GameClient::GetEngineSetup();
+Core::EngineParameters* TestClient::GetEngineSetup() {
+	Core::EngineParameters* Parameters = GameClient::GetEngineSetup();
 
 	Parameters->ApplicationName = "Blueshift Client Test";
 	Parameters->ApplicationIdentity = "Blueshift";
@@ -25,8 +47,49 @@ Blueshift::Core::EngineParameters* TestClient::GetEngineSetup() {
 void TestClient::Initialize() {
 	GameClient::Initialize();
 
-	//One little thing: change the default display to (my) left one
-	Engine->GetSystem<Blueshift::Graphics::RenderSystem>()->SetPrimaryDisplay(1);
+	Scene::Object* obj = new Scene::Object;
+	Scene::Component::Handle handle = graph->AllocateComponent<Graphics::CameraComponent>(obj);
+	Graphics::CameraComponent* camera = handle;
+	camera->SetProjection(camera->CreatePerspectiveTransform(main_window->GetAspectRatio()));
+	camera->UpdateWorldTransform();
+	main_window->SetCamera(handle);
+
+	Input::Devices::Keyboard::Register(main_window);
+	Input::Devices::Mouse::Register(main_window);
+
+	model = new Scene::Object;
+	//	Scene::Component::Handle phys_handle = graph->AllocateComponent<Physics::RigidbodyComponent>(model);
+
+	Engine->Console.SetVisible(true); 
+
+	Engine->Log(Core::LogLevel::Notice, "This is a test notice.");
+	Engine->Log(Core::LogLevel::Warning, "This is a test warning.");
+	Engine->Log(Core::LogLevel::Error, "This is a test error!");
+}
+
+void TestClient::InitializeRenderData() {
+	Graphics::Model::Loader::OBJ loader;
+	
+	meshes = new std::vector<std::unique_ptr<Graphics::Model::OBJMeshData>>;
+	loader.Load("ship2.obj", *meshes);
+	mesh = &(*(*meshes)[0]);
+	Scene::Component::Handle mesh_handle = graph->AllocateComponent<Graphics::StaticMeshComponent>(model);
+	Graphics::StaticMeshComponent* mesh_comp = mesh_handle;
+	mesh_comp->SetMesh(&mesh->GetSection(0));
+
+	Graphics::Shader* vs = new Graphics::Shader("Shaders/debug_vs.win.bin");
+	vs->Complete();
+	Graphics::Shader* fs = new Graphics::Shader("Shaders/debug_fs.win.bin");
+	fs->AddUniform("u_lightPos", Graphics::Shader::UniformType::Vector);
+	//fs->AddUniform("u_texture", Graphics::Shader::UniformType::Texture);
+	fs->Complete();
+	prog = new Graphics::ShaderProgram(vs, fs);
+	mesh_comp->SetProgram(prog);
+}
+
+void TestClient::DestroyRenderData() {
+	delete prog;
+	delete meshes;
 }
 
 void TestClient::Shutdown() {
@@ -34,7 +97,64 @@ void TestClient::Shutdown() {
 }
 
 bool TestClient::Update(double dt) {
+	Graphics::CameraComponent* camera = main_window->GetCamera();
+
+	//let's do basic camera controls
+	//TODO: write better input API because this SUCKS
+	//TODO: move this to a component
+	Vector4f camera_dv(0.0f, 0.0f, 0.0f, 0.0f);
+	if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyW)) {
+		camera_dv.Z += 1.0f;
+	}
+	if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyS)) {
+		camera_dv.Z -= 1.0f;
+	}
+	if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyA)) {
+		camera_dv.X -= 1.0f;
+	}
+	if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyD)) {
+		camera_dv.X += 1.0f;
+	}
+	if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyR)) {
+		camera_dv.Y += 1.0f;
+	}
+	if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyF)) {
+		camera_dv.Y -= 1.0f;
+	}
+
+	auto mouse = Input::Devices::Mouse::Primary();
+	if (mouse->IsButtonDown(Input::ButtonName::MouseRight)) {
+		Vector3 mouse_delta = mouse->GetDelta();
+		pitch += static_cast<float>(mouse_delta.Y * dt) * look_sensitivity;
+		yaw += static_cast<float>(mouse_delta.X * dt) * look_sensitivity;
+	}
+	mouse->Poll();
+
+	auto keyboard = Input::Devices::Keyboard::Primary();
 	
+	if (keyboard->WasButtonPressed(Input::ButtonName::Tilde)) {
+		Engine->Console.SetVisible(!Engine->Console.IsVisible());
+	}
+	if (keyboard->WasButtonPressed(Input::ButtonName::Space)) {
+		Engine->Console.Write("You pressed the spacebar.");
+	}
+
+	keyboard->Poll();
+	
+	Engine->Console.Write(Formatter() << dt);
+
+	//now rotate the camera_dv vector by the rotation matrix
+	camera_rot = QuaternionFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), pitch) * QuaternionFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), yaw);
+	Normalize(camera_rot);
+	Matrix4f camera_rot_mat = QuaternionToMatrix4(camera_rot);
+	camera_dv = camera_rot_mat * camera_dv * cam_speed;
+	//Now we can translate the position (point) by the dv (vector)
+	camera_pos += camera_dv * static_cast<float>(dt);
+
+	camera->SetOrientation(camera_rot);
+	camera->SetPosition(camera_pos.XYZ);
+	camera->UpdateWorldTransform();
+
 	return GameClient::Update(dt);
 }
 

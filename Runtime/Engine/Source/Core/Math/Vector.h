@@ -137,90 +137,6 @@ namespace Blueshift {
 				}
 			};
 
-#ifdef BLUESHIFT_OPTIMIZE_SIMD
-			//This is a test optimization of the Vector4f type.
-			//It uses SIMD instructions for the basic arithmetic operators, but not much else.
-			//Dot product and such coming soon.
-			struct Vector<4, float> {
-				union {
-					float data[4];
-					struct { float X, Y, Z, W; };
-					__m128 mm;
-				};
-
-				float Length() const {
-					return sqrt(X * X + Y * Y + Z * Z + W * W);
-				}
-				float SquaredLength() const {
-					return X * X + Y * Y + Z * Z + W * W;
-				}
-
-				inline float& operator[](const size_t& idx) {
-					return data[idx];
-				}
-				inline const float& operator[](const size_t& idx) const {
-					return data[idx];
-				}
-			};
-
-			inline Vector<4, float> operator+(const Vector<4, float>& a, const Vector<4, float>& b) {
-				Vector<4, float> rv;
-				rv.mm = _mm_add_ps(a.mm, b.mm);
-				return rv;
-			}
-			inline Vector<4, float> operator-(const Vector<4, float>& a, const Vector<4, float>& b) {
-				Vector<4, float> rv;
-				rv.mm = _mm_sub_ps(a.mm, b.mm);
-				return rv;
-			}
-			inline Vector<4, float> operator*(const Vector<4, float>& a, const Vector<4, float>& b) {
-				Vector<4, float> rv;
-				rv.mm = _mm_mul_ps(a.mm, b.mm);
-				return rv;
-			}
-			inline Vector<4, float> operator/(const Vector<4, float>& a, const Vector<4, float>& b) {
-				Vector<4, float> rv;
-				rv.mm = _mm_div_ps(a.mm, b.mm);
-				return rv;
-			}
-
-			inline Vector<4, float>& operator+=(Vector<4, float>& a, const Vector<4, float>& b) {
-				a.mm = _mm_add_ps(a.mm, b.mm);
-				return a;
-			}
-			inline Vector<4, float>& operator-=(Vector<4, float>& a, const Vector<4, float>& b) {
-				a.mm = _mm_sub_ps(a.mm, b.mm);
-				return a;
-			}
-			inline Vector<4, float>& operator*=(Vector<4, float>& a, const Vector<4, float>& b) {
-				a.mm = _mm_mul_ps(a.mm, b.mm);
-				return a;
-			}
-			inline Vector<4, float>& operator/=(Vector<4, float>& a, const Vector<4, float>& b) {
-				a.mm = _mm_div_ps(a.mm, b.mm);
-				return a;
-			}
-
-			float DotProduct(const Vector<4, float>& a, const Vector<4, float>& b) {
-#ifdef BLUESHIFT_OPTIMIZE_SSE4_1
-				return _mm_dp_ps(a.mm, b.mm, 0x7f).m128_f32[0];
-#else
-				const unsigned int mask_array[] = { 0xffffffff, 0xffffffff, 0xffffffff, 0 };
-				const __m128 mask = _mm_load_ps(reinterpret_cast<const float*>(mask_array));
-				const __m128 m = _mm_mul_ps(a.mm, b.mm);
-				const __m128 s0 = _mm_and_ps(m, mask);
-				const __m128 s1 = _mm_add_ps(s0, _mm_movehl_ps(s0, s0));
-				const __m128 s2 = _mm_add_ss(s1, _mm_shuffle_ps(s1, s1, 1));
-				return _mm_shuffle_ps(s2, s2, 0).m128_f32[0];
-#endif
-			}
-
-			//TODO: implement optimized cross product and more
-
-			
-
-#endif
-
 			template<size_t n, typename T>
 			inline Vector<n, T> operator+(const Vector<n, T>& a, const Vector<n, T>& b) {
 				Vector<n, T> rv;
@@ -340,6 +256,107 @@ namespace Blueshift {
 					lhs.X * rhs.Y - lhs.Y * rhs.X
 				);
 			}
+
+#ifdef BLUESHIFT_OPTIMIZE_SIMD
+			//This is a test optimization of the Vector4f type.
+			//It uses SIMD instructions for the basic arithmetic operators, but not much else.
+			//Dot product and such coming soon.
+			template<>
+			struct Vector<4, float> {
+				union {
+					float data[4];
+					struct { float X, Y, Z, W; };
+					__m128 mm;
+					Vector<3, float> XYZ;
+				};
+				Vector() = default;
+				constexpr Vector(float x, float y, float z, float w)
+					: X(x), Y(y), Z(z), W(w) {}
+				constexpr explicit Vector(float s)
+					: X(s), Y(s), Z(s), W(s) {}
+				constexpr explicit Vector(Vector<2, float>& Other)
+					: X(Other.X), Y(Other.Y), Z(0), W(0) {}
+				constexpr explicit Vector(Vector<3, float>& Other)
+					: X(Other.X), Y(Other.Y), Z(Other.Z), W(0) {}
+
+				float Length() const {
+					return sqrt(X * X + Y * Y + Z * Z + W * W);
+				}
+				float SquaredLength() const {
+					return X * X + Y * Y + Z * Z + W * W;
+				}
+
+				inline float& operator[](const size_t& idx) {
+					return data[idx];
+				}
+				inline const float& operator[](const size_t& idx) const {
+					return data[idx];
+				}
+			};
+
+			template<>
+			inline Vector<4, float> operator+(const Vector<4, float>& a, const Vector<4, float>& b) {
+				Vector<4, float> rv;
+				rv.mm = _mm_add_ps(a.mm, b.mm);
+				return rv;
+			}
+			template<>
+			inline Vector<4, float> operator-(const Vector<4, float>& a, const Vector<4, float>& b) {
+				Vector<4, float> rv;
+				rv.mm = _mm_sub_ps(a.mm, b.mm);
+				return rv;
+			}
+			template<>
+			inline Vector<4, float> operator*(const Vector<4, float>& a, const Vector<4, float>& b) {
+				Vector<4, float> rv;
+				rv.mm = _mm_mul_ps(a.mm, b.mm);
+				return rv;
+			}
+			template<>
+			inline Vector<4, float> operator/(const Vector<4, float>& a, const Vector<4, float>& b) {
+				Vector<4, float> rv;
+				rv.mm = _mm_div_ps(a.mm, b.mm);
+				return rv;
+			}
+
+			inline Vector<4, float>& operator+=(Vector<4, float>& a, const Vector<4, float>& b) {
+				a.mm = _mm_add_ps(a.mm, b.mm);
+				return a;
+			}
+			inline Vector<4, float>& operator-=(Vector<4, float>& a, const Vector<4, float>& b) {
+				a.mm = _mm_sub_ps(a.mm, b.mm);
+				return a;
+			}
+			inline Vector<4, float>& operator*=(Vector<4, float>& a, const Vector<4, float>& b) {
+				a.mm = _mm_mul_ps(a.mm, b.mm);
+				return a;
+			}
+			inline Vector<4, float>& operator/=(Vector<4, float>& a, const Vector<4, float>& b) {
+				a.mm = _mm_div_ps(a.mm, b.mm);
+				return a;
+			}
+			/*
+			template<>
+			float DotProduct(const Vector<4, float>& a, const Vector<4, float>& b) {
+#ifdef BLUESHIFT_OPTIMIZE_SSE4_1
+				return _mm_dp_ps(a.mm, b.mm, 0x7f).m128_f32[0];
+#else
+				const unsigned int mask_array[] = { 0xffffffff, 0xffffffff, 0xffffffff, 0 };
+				const __m128 mask = _mm_load_ps(reinterpret_cast<const float*>(mask_array));
+				const __m128 m = _mm_mul_ps(a.mm, b.mm);
+				const __m128 s0 = _mm_and_ps(m, mask);
+				const __m128 s1 = _mm_add_ps(s0, _mm_movehl_ps(s0, s0));
+				const __m128 s2 = _mm_add_ss(s1, _mm_shuffle_ps(s1, s1, 1));
+				return _mm_shuffle_ps(s2, s2, 0).m128_f32[0];
+#endif
+			}
+			*/
+
+			//TODO: implement optimized cross product and more
+
+
+
+#endif
 
 			typedef Vector<2, double> Vector2; typedef Vector<2, float> Vector2f;
 			typedef Vector<3, double> Vector3; typedef Vector<3, float> Vector3f;

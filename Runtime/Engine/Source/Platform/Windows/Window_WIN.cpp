@@ -281,10 +281,12 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 
 			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &input, &size, size_header);		
 			if (input.header.dwType == RIM_TYPEMOUSE) {
-				Input::Devices::Mouse* mouse = Input::Devices::Mouse::_get_from_handle(input.header.hDevice);
-				if (mouse != nullptr) {
-					mouse->_pass_event((RAWMOUSE*)&input.data);
-				}
+				//no multimouse support right now
+				Input::Devices::Mouse::_pass_all((RAWMOUSE*)&input.data);
+			//	Input::Devices::Mouse* mouse = Input::Devices::Mouse::_get_from_handle(input.header.hDevice);
+			//	if (mouse != nullptr) {
+			//		mouse->_pass_event((RAWMOUSE*)&input.data);
+			//	}
 			} else if (input.header.dwType == RIM_TYPEKEYBOARD) {
 				Input::Devices::Keyboard* keyboard = Input::Devices::Keyboard::_get_from_handle(input.header.hDevice);
 				if (keyboard != nullptr) {

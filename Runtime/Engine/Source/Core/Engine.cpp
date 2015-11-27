@@ -15,7 +15,8 @@ using namespace Blueshift::Platform;
 
 Engine* Engine::_instance = 0;
 
-Engine::Engine(EngineParameters* Parameters, int argc, char* argv[]) {
+Engine::Engine(EngineParameters* Parameters, int argc, char* argv[])
+	: Console(20) {
 	Engine::_instance = this;
 
 	parameters = Parameters;
@@ -46,16 +47,21 @@ void Engine::Log(LogLevel level, std::string message) {
 	char buf[80];
 	std::strftime(buf, sizeof(buf), "%F %T", now);
 
+	uint8_t attr = 0x0f;
+
 	ss << "[" << buf << "] ";
 	switch (level) {
 	case LogLevel::Warning:
 		ss << "Warning: ";
+		attr = 0x03;
 		break;
 	case LogLevel::Error:
 		ss << "Error! ";
+		attr = 0x01;
 		break;
 	default:
 		ss << "Notice: ";
+		attr = 0x08;
 		break;
 	}
 	ss << message << std::endl;
@@ -68,6 +74,7 @@ void Engine::Log(LogLevel level, std::string message) {
 	if (log_file != nullptr) {
 		log_file->Write(final_msg);
 	}
+	Console.Write(message, attr);
 }
 
 void Engine::Log(const RuntimeError& err, bool is_auto) {

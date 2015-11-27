@@ -5,6 +5,7 @@
 
 #include "Core/Engine.h"
 #include "Storage/File.h"
+#include "Storage/AssetSystem.h"
 
 #include "Core/ISubsystem.h"
 
