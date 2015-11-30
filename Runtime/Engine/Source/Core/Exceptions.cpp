@@ -10,3 +10,9 @@ RuntimeError::RuntimeError(std::string str)
 		engine.Log(*this, true);
 	}
 }
+
+LuaError::LuaError(std::string str)
+	: std::runtime_error(str) {
+	Core::Engine& engine = Core::Engine::Get();
+	engine.Log(Core::LogLevel::LuaError, str);
+}

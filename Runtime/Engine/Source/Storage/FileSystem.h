@@ -41,6 +41,10 @@ namespace Blueshift {
 		
 			uint64_t GetLastModifiedTime(std::string Filename);
 			std::string GetRealPath(std::string Filename);
+
+			bool FileExists(std::string Filename);
+			bool PathExists(std::string Pathname);
+			bool IsDirectory(std::string Path);
 		};
 
 	}

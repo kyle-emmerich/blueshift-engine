@@ -3,6 +3,7 @@
 #include "Graphics/StaticMeshComponent.h"
 #include "Scene/Scene.h"
 #include "Physics/RigidbodyComponent.h"
+#include "Scripting/LuaState.h"
 #include <iostream>
 
 using namespace Blueshift;
@@ -12,9 +13,11 @@ class TestClient : public Core::GameClient {
 protected:
 	float cam_speed = 30.0f;
 	float look_sensitivity = 0.1f;
-	Vector4f camera_pos = Vector4f(0.0f, 0.0f, 10.0f, 1.0f);
-	Quaternionf camera_rot;
+	Vector4 camera_pos = Vector4(0.0f, 0.0f, 10.0f, 1.0f);
+	Quaternion camera_rot;
 	float yaw = 3.14159f; float pitch = 0.0f;
+
+	Scripting::LuaState* lua;
 
 	Scene::Object* model;
 	Graphics::Model::OBJMeshData* mesh;
@@ -47,6 +50,24 @@ Core::EngineParameters* TestClient::GetEngineSetup() {
 void TestClient::Initialize() {
 	GameClient::Initialize();
 
+	Matrix4 m = Core::Math::Matrix4::Identity;
+	float x = m[0][0];
+	float y = m[1][1];
+	Vector4 v = m[2];
+
+	size_t ox = offsetof(Vector4, X);
+	size_t oy = offsetof(Vector4, Y);
+	size_t oz = offsetof(Vector4, Z);
+	size_t ow = offsetof(Vector4, W);
+
+	size_t svec = sizeof(Vector4);
+	size_t sfloat = sizeof(float);
+	size_t sdata = sizeof(v.mm);
+
+	size_t ovec = offsetof(Matrix4, vec);
+	size_t om = offsetof(Matrix4, m);
+
+
 	Scene::Object* obj = new Scene::Object;
 	Scene::Component::Handle handle = graph->AllocateComponent<Graphics::CameraComponent>(obj);
 	Graphics::CameraComponent* camera = handle;
@@ -62,9 +83,14 @@ void TestClient::Initialize() {
 
 	Engine->Console.SetVisible(true); 
 
-	Engine->Log(Core::LogLevel::Notice, "This is a test notice.");
-	Engine->Log(Core::LogLevel::Warning, "This is a test warning.");
-	Engine->Log(Core::LogLevel::Error, "This is a test error!");
+
+	lua = new Scripting::LuaState;
+	Engine->Console.SetLuaState(lua);
+	try {
+		lua->ExecuteFile("test.lua");
+	} catch (...) {}
+
+
 }
 
 void TestClient::InitializeRenderData() {
@@ -102,7 +128,7 @@ bool TestClient::Update(double dt) {
 	//let's do basic camera controls
 	//TODO: write better input API because this SUCKS
 	//TODO: move this to a component
-	Vector4f camera_dv(0.0f, 0.0f, 0.0f, 0.0f);
+	Vector4 camera_dv(0.0f, 0.0f, 0.0f, 0.0f);
 	if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyW)) {
 		camera_dv.Z += 1.0f;
 	}
@@ -124,7 +150,7 @@ bool TestClient::Update(double dt) {
 
 	auto mouse = Input::Devices::Mouse::Primary();
 	if (mouse->IsButtonDown(Input::ButtonName::MouseRight)) {
-		Vector3 mouse_delta = mouse->GetDelta();
+		Vector4 mouse_delta = mouse->GetDelta();
 		pitch += static_cast<float>(mouse_delta.Y * dt) * look_sensitivity;
 		yaw += static_cast<float>(mouse_delta.X * dt) * look_sensitivity;
 	}
@@ -140,19 +166,17 @@ bool TestClient::Update(double dt) {
 	}
 
 	keyboard->Poll();
-	
-	Engine->Console.Write(Formatter() << dt);
 
 	//now rotate the camera_dv vector by the rotation matrix
-	camera_rot = QuaternionFromAxisAngle(Vector3f(1.0f, 0.0f, 0.0f), pitch) * QuaternionFromAxisAngle(Vector3f(0.0f, 1.0f, 0.0f), yaw);
+	camera_rot = QuaternionFromAxisAngle(Vector4(1.0f, 0.0f, 0.0f), pitch) * QuaternionFromAxisAngle(Vector4(0.0f, 1.0f, 0.0f), yaw);
 	Normalize(camera_rot);
-	Matrix4f camera_rot_mat = QuaternionToMatrix4(camera_rot);
+	Matrix4 camera_rot_mat = QuaternionToMatrix4(camera_rot);
 	camera_dv = camera_rot_mat * camera_dv * cam_speed;
 	//Now we can translate the position (point) by the dv (vector)
 	camera_pos += camera_dv * static_cast<float>(dt);
 
 	camera->SetOrientation(camera_rot);
-	camera->SetPosition(camera_pos.XYZ);
+	camera->SetPosition(camera_pos);
 	camera->UpdateWorldTransform();
 
 	return GameClient::Update(dt);

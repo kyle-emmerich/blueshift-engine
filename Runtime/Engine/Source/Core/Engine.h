@@ -41,8 +41,10 @@ namespace Blueshift {
 
 		enum class LogLevel {
 			Notice		= 0,
-			Warning		= 1,
-			Error		= 2
+			Lua			= 1,
+			LuaError	= 2,
+			Warning		= 3,
+			Error		= 4
 		};
 
 		class Engine {

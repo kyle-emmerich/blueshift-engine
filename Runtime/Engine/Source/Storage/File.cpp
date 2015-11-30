@@ -63,6 +63,19 @@ size_t File::read_bytes(uint8_t* Data, size_t Size, size_t Count) {
 		static_cast<PHYSFS_uint32>(Count))) * Size;
 }
 
+void File::Seek(size_t pos) {
+	PHYSFS_seek(file, pos);
+}
+
+size_t File::Tell() const {
+	int64_t pos = PHYSFS_tell(file);
+	if (pos != -1) {
+		return static_cast<size_t>(pos);
+	}
+	//TODO: throw exception???
+	return 0;
+}
+
 bool File::Close() {
 	FileSystem* filesys = Core::Engine::Get().GetSystem<Storage::FileSystem>();
 	int success = PHYSFS_close(file);

@@ -59,6 +59,14 @@ void Engine::Log(LogLevel level, std::string message) {
 		ss << "Error! ";
 		attr = 0x01;
 		break;
+	case LogLevel::Lua:
+		ss << "Lua: ";
+		attr = 0x0f;
+		break;
+	case LogLevel::LuaError:
+		ss << "Lua error: ";
+		attr = 0x01;
+		break;
 	default:
 		ss << "Notice: ";
 		attr = 0x08;

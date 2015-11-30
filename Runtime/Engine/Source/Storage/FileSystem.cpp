@@ -31,6 +31,9 @@ FileSystem::FileSystem(Core::Engine* engine) {
 	std::string assets = PHYSFS_getBaseDir();
 	assets += "../Assets";
 	MountPackage(assets.c_str());
+	std::string scripts = PHYSFS_getBaseDir();
+	scripts += "../Scripts";
+	MountPackage(scripts.c_str());
 
 	for (auto path : SearchPaths) {
 		MountPackage(path);
@@ -58,4 +61,16 @@ uint64_t FileSystem::GetLastModifiedTime(std::string Filename) {
 }
 std::string FileSystem::GetRealPath(std::string Filename) {
 	return std::string(PHYSFS_getRealDir(Filename.c_str()));
+}
+
+bool FileSystem::FileExists(std::string Filename) {
+	return PHYSFS_exists(Filename.c_str()) != 0 && PHYSFS_isDirectory(Filename.c_str()) == 0;
+}
+
+bool FileSystem::PathExists(std::string Pathname) {
+	return PHYSFS_exists(Pathname.c_str()) != 0 && PHYSFS_isDirectory(Pathname.c_str()) != 0;
+}
+
+bool FileSystem::IsDirectory(std::string Path) {
+	return PathExists(Path);
 }

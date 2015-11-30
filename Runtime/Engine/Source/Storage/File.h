@@ -122,6 +122,13 @@ namespace Blueshift {
 				return Read<char>(&str[0], Count);
 			}
 
+			void Seek(size_t pos);
+			size_t Tell() const;
+
+			inline bool IsAtEOF() const {
+				return PHYSFS_eof(file) != 0;
+			}
+
 			inline std::string GetPath() const {
 				return path;
 			}
