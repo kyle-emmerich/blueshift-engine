@@ -10,7 +10,7 @@ namespace Blueshift {
 		__declspec(align(16))
 		class TransformableComponent : public Component {
 		protected:
-			Core::Math::Vector4 position = Core::Math::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			Core::Math::Vector4 position = Core::Math::Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 			Core::Math::Quaternion orientation = Core::Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 			Core::Math::Matrix4 world_transform = Core::Math::Matrix4::Identity;
 			bool local_dirty = true;
