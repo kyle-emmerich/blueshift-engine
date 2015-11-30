@@ -30,14 +30,13 @@ namespace Blueshift {
 			}
 
 			inline Quaternion operator* (const Quaternion& a, const float& s) {
-				return Quaternion(a.X * s, a.Y * s, a.Z * s, a.W * s);
+				Quaternion rv;
+				rv.mm = _mm_mul_ps(a.mm, _mm_load1_ps(&s));
+				return rv;
 			}
 
 			inline Quaternion& operator*=(Quaternion& a, const float& s) {
-				a.X *= s;
-				a.Y *= s;
-				a.Z *= s;
-				a.W *= s;
+				a.mm = _mm_mul_ps(a.mm, _mm_load1_ps(&s));
 				return a;
 			}
 
@@ -75,10 +74,10 @@ namespace Blueshift {
 				float wz = z * q.W;
 
 				Matrix4 out {
-		    1.0f - (yy + zz),				xy + wz,			xz - wy,  0.0f,
-					xy - wz,	    1.0f - (xx + zz),			yz + wx,  0.0f,
-					xz + wy,				yz - wx,    1.0f - (xx + yy), 0.0f,
-					0.0f, 0.0f, 0.0f, 1.0f
+		    1.0f - (yy + zz),				xy + wz,			xz - wy,	0.0f,
+					xy - wz,	    1.0f - (xx + zz),			yz + wx,	0.0f,
+					xz + wy,				yz - wx,    1.0f - (xx + yy),	0.0f,
+					0.0f,					0.0f,				0.0f,		1.0f
 				};
 				return out;
 			}
