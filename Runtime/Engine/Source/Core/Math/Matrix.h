@@ -114,6 +114,18 @@ namespace Blueshift {
 			}
 
 			inline Matrix4 operator *(const Matrix4& lhs, const Matrix4& rhs) {
+#if 1
+				Matrix4 out;
+				Matrix4 transposed = rhs.Transpose();
+
+				
+				for (size_t i = 0; i < 4; i++) {
+					for (size_t j = 0; j < 4; j++) {
+						out[i][j] = DotProduct(lhs[i], transposed[j], true);
+					}
+				}
+				return out;
+#else
 				Matrix4 out;
 				for (size_t j = 0; j < 4; j++) {
 					for (size_t i = 0; i < 4; i++) {
@@ -125,6 +137,7 @@ namespace Blueshift {
 					}
 				}
 				return out;
+#endif
 			}
 
 			inline Vector4 operator *(const Matrix4& lhs, const Vector4& rhs) {
