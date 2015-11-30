@@ -145,8 +145,8 @@ namespace Blueshift {
 				return _mm_shuffle_ps(s2, s2, 0).m128_f32[0];
 #endif
 			}
-			inline float Length(const Vector4& v) {
-				return sqrt(LengthSquared(v));
+			inline float Length(const Vector4& v, bool with_w = false) {
+				return sqrt(LengthSquared(v, with_w));
 			}
 
 			inline Vector4 CrossProduct(const Vector4& a, const Vector4& b) {
