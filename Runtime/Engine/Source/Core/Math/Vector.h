@@ -15,7 +15,7 @@ namespace Blueshift {
 			public:
 				Vector4() = default;
 				inline Vector4(__m128 vec) : mm(vec) {}
-				inline Vector4(float x, float y = 0.0f, float z = 0.0f, float w = 0.0f)
+				inline Vector4(float x, float y = 0.0f, float z = 0.0f, float w = 1.0f)
 					: X(x), Y(y), Z(z), W(w) {}
 
 				union {
@@ -45,8 +45,7 @@ namespace Blueshift {
 			}
 			inline Vector4 operator+(const Vector4& a, float s) {
 				Vector4 rv;
-				__declspec(align(16)) const float mm[] = { s, s, s, s };
-				rv.mm = _mm_add_ps(a.mm, _mm_load_ps(mm));
+				rv.mm = _mm_add_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
 			}
 			inline Vector4 operator-(const Vector4& a, const Vector4& b) {
@@ -56,8 +55,7 @@ namespace Blueshift {
 			}
 			inline Vector4 operator-(const Vector4& a, float s) {
 				Vector4 rv;
-				__declspec(align(16)) const float mm[] = { s, s, s, s };
-				rv.mm = _mm_sub_ps(a.mm, _mm_load_ps(mm));
+				rv.mm = _mm_sub_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
 			}
 			inline Vector4 operator*(const Vector4& a, const Vector4& b) {
@@ -67,8 +65,7 @@ namespace Blueshift {
 			}
 			inline Vector4 operator*(const Vector4& a, float s) {
 				Vector4 rv;
-				__declspec(align(16)) const float mm[] = { s, s, s, s };
-				rv.mm = _mm_mul_ps(a.mm, _mm_load_ps(mm));
+				rv.mm = _mm_mul_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
 			}
 			inline Vector4 operator/(const Vector4& a, const Vector4& b) {
@@ -78,8 +75,7 @@ namespace Blueshift {
 			}
 			inline Vector4 operator/(const Vector4& a, float s) {
 				Vector4 rv;
-				__declspec(align(16)) const float mm[] = { s, s, s, s };
-				rv.mm = _mm_div_ps(a.mm, _mm_load_ps(mm));
+				rv.mm = _mm_div_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
 			}
 
@@ -88,8 +84,7 @@ namespace Blueshift {
 				return a;
 			}
 			inline Vector4& operator+=(Vector4& a, float s) {
-				__declspec(align(16)) const float mm[] = { s, s, s, s };
-				a.mm = _mm_add_ps(a.mm, _mm_load_ps(mm));
+				a.mm = _mm_add_ps(a.mm, _mm_load1_ps(&s));
 				return a;
 			}
 			inline Vector4& operator-=(Vector4& a, const Vector4& b) {
@@ -97,8 +92,7 @@ namespace Blueshift {
 				return a;
 			}
 			inline Vector4& operator-=(Vector4& a, float s) {
-				__declspec(align(16)) const float mm[] = { s, s, s, s };
-				a.mm = _mm_sub_ps(a.mm, _mm_load_ps(mm));
+				a.mm = _mm_sub_ps(a.mm, _mm_load1_ps(&s));
 				return a;
 			}
 			inline Vector4& operator*=(Vector4& a, const Vector4& b) {
@@ -106,8 +100,7 @@ namespace Blueshift {
 				return a;
 			}
 			inline Vector4& operator*=(Vector4& a, float s) {
-				__declspec(align(16)) const float mm[] = { s, s, s, s };
-				a.mm = _mm_mul_ps(a.mm, _mm_load_ps(mm));
+				a.mm = _mm_mul_ps(a.mm, _mm_load1_ps(&s));
 				return a;
 			}
 			inline Vector4& operator/=(Vector4& a, const Vector4& b) {
@@ -115,16 +108,16 @@ namespace Blueshift {
 				return a;
 			}
 			inline Vector4& operator/=(Vector4& a, float s) {
-				__declspec(align(16)) const float mm[] = { s, s, s, s };
-				a.mm = _mm_div_ps(a.mm, _mm_load_ps(mm));
+				a.mm = _mm_div_ps(a.mm, _mm_load1_ps(&s));
 				return a;
 			}
 
-			inline float DotProduct(const Vector4& a, const Vector4& b) {
+			inline float DotProduct(const Vector4& a, const Vector4& b, bool with_w = false) {
 #ifdef BLUESHIFT_OPTIMIZE_SSE4_1
-				return _mm_dp_ps(a.mm, b.mm, 0x7f).m128_f32[0];
+				return with_w ? _mm_dp_ps(a.mm, b.mm, 0xFF).m128_f32[0] :
+								_mm_dp_ps(a.mm, b.mm, 0x7F).m128_f32[0];
 #else
-				__declspec(align(16)) const unsigned int mask_array[] = { 0xffffffff, 0xffffffff, 0xffffffff, 0 };
+				__declspec(align(16)) const unsigned int mask_array[] = { 0xFFFFFFFFFF, 0xFFFFFFFFFF, 0xFFFFFFFFFF, with_w ? 0xFFFFFFFFFF : 0 };
 				const __m128 mask = _mm_load_ps(reinterpret_cast<const float*>(mask_array));
 				const __m128 m = _mm_mul_ps(a.mm, b.mm);
 				const __m128 s0 = _mm_and_ps(m, mask);
@@ -138,11 +131,12 @@ namespace Blueshift {
 				return acos(DotProduct(a, b));
 			}
 
-			inline float LengthSquared(const Vector4& v) {
+			inline float LengthSquared(const Vector4& v, bool with_w = false) {
 #ifdef BLUESHIFT_OPTIMIZE_SSE4_1
-				return _mm_dp_ps(v.mm, v.mm, 0x7f).m128_f32[0];
+				return with_w ? _mm_dp_ps(v.mm, v.mm, 0xFF).m128_f32[0] :
+								_mm_dp_ps(v.mm, v.mm, 0x7F).m128_f32[0];
 #else
-				__declspec(align(16)) const unsigned int mask_array[] = { 0xffffffff, 0xffffffff, 0xffffffff, 0 };
+				__declspec(align(16)) const unsigned int mask_array[] = { 0xFFFFFFFFFF, 0xFFFFFFFFFF, 0xFFFFFFFFFF, with_w ? 0xFFFFFFFFFF : 0 };
 				const __m128 mask = _mm_load_ps(reinterpret_cast<const float*>(mask_array));
 				const __m128 m = _mm_mul_ps(v.mm, v.mm);
 				const __m128 s0 = _mm_and_ps(m, mask);
