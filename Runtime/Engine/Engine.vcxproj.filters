@@ -380,7 +380,6 @@
     <None Include="Assets\Shaders\blueshift\ShadingModel.glsl" />
     <None Include="Assets\Shaders\Blueshift\Atmosphere.glsl" />
     <None Include="Scripts\test.lua" />
-    <None Include="Scripts\poop.lua" />
     <None Include="Source\Core\Math\Vector_old.h">
       <Filter>Header Files</Filter>
     </None>

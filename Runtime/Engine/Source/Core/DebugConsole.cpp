@@ -60,6 +60,8 @@ void DebugConsole::write_line(const std::string& line, uint8_t attr) {
 }
 
 void DebugConsole::text_input(char c) {
+	if (!visible)
+		return;
 	if (c == 8) {
 		//backspace
 		if (input_cursor > 0) {
@@ -81,6 +83,8 @@ void DebugConsole::text_input(char c) {
 		}
 		memset(input, ' ', 256);
 		input_cursor = 0;
+		return;
+	} else if (c == '`') {
 		return;
 	}
 	input[input_cursor++] = c;
