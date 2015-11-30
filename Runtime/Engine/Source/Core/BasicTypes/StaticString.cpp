@@ -34,7 +34,7 @@ uint32_t StaticString::GetLength() const {
 StaticString& StaticString::operator= (const char Buffer[]) {
 	return StaticString(Buffer);
 }
-//todo: fix these, bad stack allocations
+//TODO: fix these, bad stack allocations
 StaticString& StaticString::operator= (char* Buffer) {
 	return StaticString(Buffer);
 }

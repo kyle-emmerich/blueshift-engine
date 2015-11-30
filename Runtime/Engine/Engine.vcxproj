@@ -98,6 +98,8 @@
     <OutDir>$(ProjectDir)Bin\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)$(Configuration)</TargetName>
+    <IncludePath>Z:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\Include\ucrt;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files (x86)\Windows Kits\10\Lib\10.0.10150.0\ucrt\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLibrary|x64'">
     <OutDir>$(ProjectDir)Bin\</OutDir>
@@ -144,15 +146,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(SolutionDir)Dependencies\luajit\include;$(ProjectDir)Source;$(UniversalCRT_IncludePath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;$(SolutionDir)Dependencies\bullet\lib;$(SolutionDir)Dependencies\physfs\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Winmm.lib;bgfxDebug.lib;dxguid.lib;dinput8.lib;LinearMath_vs2010_x64_debug.lib;Bullet3Common_vs2010_x64_debug.lib;BulletCollision_vs2010_x64_debug.lib;BulletDynamics_vs2010_x64_debug.lib;physfs_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;$(SolutionDir)Dependencies\bullet\lib;$(SolutionDir)Dependencies\physfs\lib;$(SolutionDir)Dependencies\luajit\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib;bgfxDebug.lib;dxguid.lib;dinput8.lib;LinearMath_vs2010_x64_debug.lib;Bullet3Common_vs2010_x64_debug.lib;BulletCollision_vs2010_x64_debug.lib;BulletDynamics_vs2010_x64_debug.lib;physfs_d.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>$(ProjectDir)Assets\Shaders\build_shaders.bat</Command>
@@ -163,7 +165,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(SolutionDir)Dependencies\luajit\include;$(ProjectDir)Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -195,7 +197,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(ProjectDir)Source;$(DXSDK_DIR)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(SolutionDir)Dependencies\luajit\include;$(ProjectDir)Source;$(DXSDK_DIR)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -204,7 +206,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;$(SolutionDir)Dependencies\bullet\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\bgfx\lib;$(SolutionDir)Dependencies\bx\lib;$(SolutionDir)Dependencies\bullet\lib;$(SolutionDir)Dependencies\luajit\lib;%(AdditionalIncludeDirectories);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Winmm.lib;bgfxRelease.lib;dxguid.lib;dinput8.lib;BulletCollision_x64_release.lib;BulletDyamics_x64_release.lib;LinearMath_x64_release.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkStatus>true</LinkStatus>
       <SubSystem>NotSet</SubSystem>
@@ -219,6 +221,8 @@
     <ClCompile Include="Source\Core\Exceptions.cpp" />
     <ClCompile Include="Source\Core\GameClient.cpp" />
     <ClCompile Include="Source\Core\GameServer.cpp" />
+    <ClCompile Include="Source\Core\Math\Bindings.cpp" />
+    <ClCompile Include="Source\Core\Math\Matrix.cpp" />
     <ClCompile Include="Source\Core\UUID.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
@@ -232,10 +236,10 @@
     <ClCompile Include="Source\Scene\Component.cpp" />
     <ClCompile Include="Source\Scene\SceneGraph.cpp" />
     <ClCompile Include="Source\Scene\TransformableComponent.cpp" />
+    <ClCompile Include="Source\Scripting\LuaState.cpp" />
     <ClCompile Include="Source\Storage\AssetSystem.cpp" />
     <ClCompile Include="Source\Storage\File.cpp" />
     <ClCompile Include="Source\Storage\FileSystem.cpp" />
-    <ClCompile Include="Source\Graphics\Model\Loader\MSH.cpp" />
     <ClCompile Include="Source\Graphics\Model\Loader\OBJ.cpp" />
     <ClCompile Include="Source\Graphics\RenderSystem.cpp" />
     <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
@@ -267,6 +271,7 @@
     <ClInclude Include="Source\Core\ISubsystem.h" />
     <ClInclude Include="Source\Core\Math\AABB.h" />
     <ClInclude Include="Source\Core\Math\AtmosphericScattering.h" />
+    <ClInclude Include="Source\Core\Math\Bindings.h" />
     <ClInclude Include="Source\Core\Math\Color.h" />
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
     <ClInclude Include="Source\Core\Math\Math.h" />
@@ -278,6 +283,7 @@
     <ClInclude Include="Source\Core\Math\Polynomial.h" />
     <ClInclude Include="Source\Core\Math\Sphere.h" />
     <ClInclude Include="Source\Core\Math\Spline.h" />
+    <ClInclude Include="Source\Core\Math\Vector.h" />
     <ClInclude Include="Source\Core\Serialize\Serialize.h" />
     <ClInclude Include="Source\Core\Timing\Stopwatch.h" />
     <ClInclude Include="Source\Core\Timing\Timer.h" />
@@ -301,11 +307,11 @@
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneGraph.h" />
     <ClInclude Include="Source\Scene\TransformableComponent.h" />
+    <ClInclude Include="Source\Scripting\LuaState.h" />
     <ClInclude Include="Source\Storage\AssetSystem.h" />
     <ClInclude Include="Source\Storage\File.h" />
     <ClInclude Include="Source\Storage\FileSystem.h" />
     <ClInclude Include="Source\Graphics\Model\IMeshData.h" />
-    <ClInclude Include="Source\Graphics\Model\Loader\MSH.h" />
     <ClInclude Include="Source\Graphics\Model\Loader\OBJ.h" />
     <ClInclude Include="Source\Graphics\Model\StaticMeshData.h" />
     <ClInclude Include="Source\Graphics\RenderData.h" />
@@ -340,7 +346,10 @@
     <None Include="Assets\Shaders\blueshift\ShadingModel.glsl" />
     <None Include="Assets\Shaders\blueshift\Tonemapping.glsl" />
     <None Include="Assets\Shaders\blueshift\Utility.glsl" />
-    <None Include="Source\Core\Math\Vector.h" />
+    <None Include="Scripts\Blueshift\Vector4.lua" />
+    <None Include="Scripts\poop.lua" />
+    <None Include="Scripts\test.lua" />
+    <None Include="Source\Core\Math\Vector_old.h" />
     <Text Include="user.cfg">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>

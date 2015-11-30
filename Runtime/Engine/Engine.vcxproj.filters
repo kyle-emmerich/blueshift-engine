@@ -75,9 +75,6 @@
     <ClCompile Include="Source\Graphics\Model\Loader\OBJ.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Model\Loader\MSH.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Storage\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -127,6 +124,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\DebugConsole.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scripting\LuaState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Math\Bindings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Math\Matrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,9 +266,6 @@
     <ClInclude Include="Source\Core\Utility\FastParsing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Model\Loader\MSH.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Math\Sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -359,15 +362,29 @@
     <ClInclude Include="Source\Storage\IAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Scripting\LuaState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math\Bindings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source\Core\Math\Vector.h" />
     <None Include="Assets\Shaders\blueshift\Sampling.glsl" />
     <None Include="Assets\Shaders\blueshift\BRDF.glsl" />
     <None Include="Assets\Shaders\blueshift\Utility.glsl" />
     <None Include="Assets\Shaders\blueshift\Tonemapping.glsl" />
     <None Include="Assets\Shaders\blueshift\ShadingModel.glsl" />
     <None Include="Assets\Shaders\Blueshift\Atmosphere.glsl" />
+    <None Include="Scripts\test.lua" />
+    <None Include="Scripts\poop.lua" />
+    <None Include="Source\Core\Math\Vector_old.h">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Scripts\Blueshift\Vector4.lua" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Source\Core\Utility\application.cfg" />
