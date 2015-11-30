@@ -25,8 +25,8 @@ namespace Blueshift {
 			void PreRender();
 			void PostRender();
 
-			inline double GetAspectRatio() {
-				return (double)this->view_width / (double)this->view_height;
+			inline float GetAspectRatio() {
+				return (float)this->view_width / (float)this->view_height;
 			}
 
 			inline void SetCamera(const Scene::Component::Handle& camera) { this->camera = camera; }
