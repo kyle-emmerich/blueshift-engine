@@ -15,11 +15,12 @@ Blueshift seeks to minimize dependencies in order to maximize portability and ke
  - [bx](https://github.com/bkaradzic/bx)
  - [bullet](https://github.com/bulletphysics/bullet3)
  - [physfs](https://icculus.org/physfs)
+ - [LuaJIT](http://luajit.org/)
 
 For all libraries with compiled binaries in the repository, one may expect binaries compiled for x64 systems in debug and release mode with MSVC 2015 build tools.
 
 ###64-bit
-Blueshift is currently 64-bit only. This might change if absolutely necessary, but it's unlikely. Most of the engine will be written using double precision floats and would run badly on 32-bit systems.
+Blueshift is currently 64-bit only. This might change if absolutely necessary, but it's unlikely. Most of the engine is optimized for x86-64 and wouldn't run very nicely on 32-bit systems. 
 
 ###Code Style
 Blueshift's codebase exemplifies the best practices in modern C++. Everything must be exception-safe, const-correct, and free of memory leaks. Raw pointers are not shyed away from, but their use
@@ -51,7 +52,17 @@ There is some confusion in how much this actually matters. The real answer is th
 
     Matrix4 world_transform = parent_transform * local_transform;
 
-However, keep in mind that points and vectors are treated differently. Specifically, translating a vector makes no sense and will produce a "wrong" result. In order to explicitly handle vectors vs points, convert them 4-vectors and use W=0 for vectors and W=1 for points. Helper functions might be added later in order to clarify the procedure.
+    or 
+
+    Matrix4 new = to * from;
+
+###SSE Optimizations
+
+One might also notice that the math library no longer includes any type of vector aside from a 4-component type, and support for double-precision has been dropped. Believe it or not, working with a Vector4 class can be *much* faster than a Vector2 even if you only need two components. The 8 wasted bytes are completely worth it; you can turn some 4-instruction operations into one using Blueshift's SIMD optimizations.
+
+This optimization also filters into matrices, which use unioned Vector4s to perform some operations such as multiplication. Don't try to sidestep this; it *will* be slower.
+
+If for some crazy reason your target CPU doesn't support SSE, you'll have to look elsewhere. There is no alternative code at this time. This might change in the future, though, as the API is written to fully encapsulate the optimizations in the cleanest fashion possible.
 
 ###Documentation
 There is a project underway with the purpose of documenting Blueshift's APIs and structure. You can find it [here](https://noxastra.com/engine/docs).
