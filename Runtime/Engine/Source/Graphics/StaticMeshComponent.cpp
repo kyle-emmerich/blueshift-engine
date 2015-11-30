@@ -22,6 +22,6 @@ void StaticMeshComponent::Render(RenderSystem* system) {
 	if (normal != nullptr) {
 		(*program)["normal"] = normal;
 	}
-	(*program)["u_lightPos"] = Core::Math::Vector3f(0.0f, 10.0f, 10.0f);
+	(*program)["u_lightPos"] = Core::Math::Vector4(0.0f, 10.0f, 10.0f);
 	mesh->MeshData->Render(system, program, mesh);
 }

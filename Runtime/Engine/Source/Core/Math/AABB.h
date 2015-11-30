@@ -7,54 +7,51 @@ namespace Blueshift {
 	namespace Core {
 		namespace Math {
 
-			template<typename T>
 			struct AABB {
-				Vector<3, T> Center;
-				Vector<3, T> HalfWidth;
+				Vector4 Center;
+				Vector4 HalfWidth;
 
 				constexpr AABB() 
-					: Center(Vector<3, T>()), HalfWidth(Vector<3, T>()) { }
+					: Center(Vector4()), HalfWidth(Vector4()) { }
 
-				constexpr AABB(Vector<3, T> center, Vector<3, T> halfwidth)
+				constexpr AABB(Vector4 center, Vector4 halfwidth)
 					: Center(center), HalfWidth(halfwidth) {}
 
-				inline Vector<3, T> Min() const {
+				inline Vector4 Min() const {
 					return Center - HalfWidth;
 				}
-				inline Vector<3, T> Max() const {
+				inline Vector4 Max() const {
 					return Center + HalfWidth;
 				}
-				inline Vector<3, T> Extents() const {
+				inline Vector4 Extents() const {
 					return HalfWidth * 2;
 				}
 
-				constexpr T Volume() const {
+				constexpr float Volume() const {
 					return HalfWidth.X * HalfWidth.Y * HalfWidth.Z * 8;
 				}
 			};
 
-			template<typename T>
-			bool Intersection(const AABB<T>& a, const AABB<T>& b) {
+			inline bool Intersection(const AABB& a, const AABB& b) {
 				return	Absolute(a.Center.X - b.Center.X) <= (a.HalfWidth.X + b.HalfWidth.X) &&
 						Absolute(a.Center.Y - b.Center.Y) <= (a.HalfWidth.Y + b.HalfWidth.Y) &&
 						Absolute(a.Center.Z - b.Center.Z) <= (a.HalfWidth.Z + b.HalfWidth.Z);
 
 			}
+			/*
+			bool Intersection(const Ray& ray, const AABB& a, float& NearOut, float& FarOut) {
+				Vector4 bmin = a.Min();
+				Vector4 bmax = a.Max();
 
-			template<typename T>
-			bool Intersection(const Ray_<3, T>& ray, const AABB<T>& a, T& NearOut, T& FarOut) {
-				Vector<3, T> bmin = a.Min();
-				Vector<3, T> bmax = a.Max();
+				float t0 = (bmin.data[0] - ray.Origin.data[0]) * ray.InvDirection.data[0];
+				float t1 = (bmax.data[0] - ray.Origin.data[0]) * ray.InvDirection.data[0];
+				float t2 = (bmin.data[1] - ray.Origin.data[1]) * ray.InvDirection.data[1];
+				float t3 = (bmax.data[1] - ray.Origin.data[1]) * ray.InvDirection.data[1];
+				float t4 = (bmin.data[2] - ray.Origin.data[2]) * ray.InvDirection.data[2];
+				float t5 = (bmax.data[2] - ray.Origin.data[2]) * ray.InvDirection.data[2];
 
-				T t0 = (bmin.data[0] - ray.Origin.data[0]) * ray.InvDirection.data[0];
-				T t1 = (bmax.data[0] - ray.Origin.data[0]) * ray.InvDirection.data[0];
-				T t2 = (bmin.data[1] - ray.Origin.data[1]) * ray.InvDirection.data[1];
-				T t3 = (bmax.data[1] - ray.Origin.data[1]) * ray.InvDirection.data[1];
-				T t4 = (bmin.data[2] - ray.Origin.data[2]) * ray.InvDirection.data[2];
-				T t5 = (bmax.data[2] - ray.Origin.data[2]) * ray.InvDirection.data[2];
-
-				T tmin = max(max(min(t0, t1), min(t2, t3)), min(t4, t5));
-				T tmax = min(min(max(t0, t1), min(t2, t3)), max(t4, t5));
+				float tmin = max(max(min(t0, t1), min(t2, t3)), min(t4, t5));
+				float tmax = min(min(max(t0, t1), min(t2, t3)), max(t4, t5));
 
 				if (tmax < 0) {
 					return false;
@@ -66,6 +63,7 @@ namespace Blueshift {
 				NearOut = tmin;
 				FarOut = tmax;
 			}
+			*/
 		}
 	}
 }

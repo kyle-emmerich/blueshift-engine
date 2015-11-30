@@ -8,7 +8,7 @@ namespace Blueshift {
 	namespace Graphics {
 		namespace Model {
 
-			template<typename VertexT = StaticVertex,
+			template<typename VertexT,
 					 typename IndexT = uint16_t>
 			class StaticMeshData : public IMeshData {
 			protected:
@@ -111,7 +111,7 @@ namespace Blueshift {
 					});
 					return index;
 				}
-				size_t AddBone(MeshBone* parent, Core::Math::Matrix4f& frame, Core::Math::Matrix4f& inverse_frame) {
+				size_t AddBone(MeshBone* parent, Core::Math::Matrix4& frame, Core::Math::Matrix4& inverse_frame) {
 					size_t index = bones.size();
 					bones.push_back({
 						parent,

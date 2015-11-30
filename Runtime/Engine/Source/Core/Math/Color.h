@@ -58,10 +58,10 @@ namespace Blueshift {
 					A = static_cast<uint8_t>(a * 255.0f);
 				}
 
-				inline Vector4f ToFloatingPoint() const {
-					return Vector4f(Red(), Green(), Blue(), Alpha());
+				inline Vector4 ToFloatingPoint() const {
+					return Vector4(Red(), Green(), Blue(), Alpha());
 				}
-				inline void FromFloatingPoint(const Vector4f& rgba) {
+				inline void FromFloatingPoint(const Vector4& rgba) {
 					R = static_cast<uint8_t>(rgba.X * 255.0f);
 					G = static_cast<uint8_t>(rgba.Y * 255.0f);
 					B = static_cast<uint8_t>(rgba.Z * 255.0f);

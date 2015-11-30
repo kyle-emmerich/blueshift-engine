@@ -45,12 +45,12 @@ namespace Blueshift {
 				: Scene::TransformableComponent(graph, object) {}
 			virtual ~ColliderComponent();
 
-			void BoxShape(Core::Math::Vector3f half_extents);
+			void BoxShape(Core::Math::Vector4 half_extents);
 			void SphereShape(float radius);
 			void CapsuleShape(float radius, float height, Core::Math::CardinalAxis axis = Core::Math::CardinalAxis::Up);
-			void CylinderShape(Core::Math::Vector3f half_extents, Core::Math::CardinalAxis axis = Core::Math::CardinalAxis::Up);
+			void CylinderShape(Core::Math::Vector4 half_extents, Core::Math::CardinalAxis axis = Core::Math::CardinalAxis::Up);
 			void ConeShape(float radius, float height, Core::Math::CardinalAxis axis = Core::Math::CardinalAxis::Up);
-			void ConvexHullShape(std::vector<Core::Math::Vector3f>& vertices);
+			void ConvexHullShape(std::vector<Core::Math::Vector4>& vertices);
 			
 			inline ColliderShapeType GetType() const {
 				return type;

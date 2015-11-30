@@ -25,10 +25,10 @@ namespace Blueshift {
 
 				bool buttons[(size_t)ButtonName::MouseMax];
 
-				Core::Math::Vector3 translation_accumulator;
-				Core::Math::Vector3 polled_translation;
+				Core::Math::Vector4 translation_accumulator;
+				Core::Math::Vector4 polled_translation;
 
-				Core::Math::Vector2 last_position;
+				Core::Math::Vector4 last_position;
 
 				HANDLE device_handle;
 			public:
@@ -41,10 +41,10 @@ namespace Blueshift {
 				virtual bool IsButtonDown(ButtonName Button);
 
 				//Implement positional capability
-				virtual Core::Math::Vector2 GetPosition(size_t index = 0) { return last_position; }
+				virtual Core::Math::Vector4 GetPosition(size_t index = 0) { return last_position; }
 
 				//Implement translational capability
-				virtual Core::Math::Vector3 GetDelta(size_t index = 0) { return polled_translation; }
+				virtual Core::Math::Vector4 GetDelta(size_t index = 0) { return polled_translation; }
 
 				//Implement device
 				virtual std::string GetName() { return "Mouse"; }
@@ -56,8 +56,8 @@ namespace Blueshift {
 				}
 				static void _set_last_position(long x, long y) {
 					for (Mouse* mouse : all_mouse_devices) {
-						mouse->last_position.X = (double)x;
-						mouse->last_position.Y = (double)y;
+						mouse->last_position.X = (float)x;
+						mouse->last_position.Y = (float)y;
 					}
 				}
 				void _pass_event(RAWMOUSE* data);

@@ -7,9 +7,9 @@ namespace Blueshift {
 
 			template<typename T>
 			struct OBB {
-				Vector<3, T> Center;
-				Vector<3, T> HalfWidth;
-				Vector<3, T> Axis;
+				Vector4 Center;
+				Vector4 HalfWidth;
+				Vector4 Axis;
 			};
 
 		}

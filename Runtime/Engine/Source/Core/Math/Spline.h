@@ -3,19 +3,19 @@
 #include <cmath>
 #include "Core/Math/Polynomial.h"
 #include "Core/Math/Misc.h"
+#include "Core/Math/Vector.h"
 
 namespace Blueshift {
 	namespace Core {
 		namespace Math {
 
-			template<size_t n, typename T>
 			class Spline {
 			private:
-				Polynomial<T> dimensions[n];
-				Polynomial<T> derivatives[n];
+				Polynomial<float> dimensions[4];
+				Polynomial<float> derivatives[4];
 				bool dirty;
 
-				std::vector<Vector<n, T>> points;
+				std::vector<Vector4> points;
 
 				inline void ensure_coefficients() {
 					if (!dirty) {
@@ -28,7 +28,7 @@ namespace Blueshift {
 					for (size_t dimension; dimension < n; dimension++) {
 						dimensions[dimension].coefficients.clear();
 						for (size_t j = 0; j < o; j++) {
-							T sum = 0;
+							float sum = 0;
 							for (size_t i = 0; i < j; i++) {
 								sum += (
 									std::pow(-1, i + j) * points[i].data[dimension]

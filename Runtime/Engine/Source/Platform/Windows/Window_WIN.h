@@ -23,28 +23,29 @@ namespace Blueshift {
 			Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement = true);
 			virtual ~Window();
 
-			void Resize(uint32_t Width, uint32_t Height, bool IsInnerMeasurement = true);
-			void Position(uint32_t X, uint32_t Y);
+			virtual void Resize(uint32_t Width, uint32_t Height, bool IsInnerMeasurement = true);
+			virtual void SetPosition(uint32_t X, uint32_t Y);
+			virtual void GetPosition(uint32_t&, uint32_t&) const;
 
-			void Close();
-			bool IsClosed() const;
+			virtual void Close();
+			virtual bool IsClosed() const;
 
-			void SetMaximized(bool IsMaximized);
-			bool IsMaximized() const;
+			virtual void SetMaximized(bool IsMaximized);
+			virtual bool IsMaximized() const;
 
-			void SetMinimized(bool IsMinimized);
-			bool IsMinimized() const;
+			virtual void SetMinimized(bool IsMinimized);
+			virtual bool IsMinimized() const;
 
-			void SetFullscreen(bool IsFullscreen);
-			bool IsFullscreen() const;
+			virtual void SetFullscreen(bool IsFullscreen);
+			virtual bool IsFullscreen() const;
 
-			void SetFullscreenDesktop(bool IsFullscreen, bool SpanAllDisplays = false);
-			bool IsFullscreenDesktop() const;
+			virtual void SetFullscreenDesktop(bool IsFullscreen, bool SpanAllDisplays = false);
+			virtual bool IsFullscreenDesktop() const;
 
-			void SetTitle(std::string Title);
-			std::string GetTitle() const;
+			virtual void SetTitle(std::string Title);
+			virtual std::string GetTitle() const;
 
-			bool ProcessEvents();
+			virtual bool ProcessEvents();
 
 			inline HWND GetHWND() const {
 				return handle;

@@ -19,9 +19,9 @@ namespace Blueshift {
 					struct o {
 						std::string name;
 						bool complete = false;
-						std::vector<Core::Math::Vector3f> p;
-						std::vector<Core::Math::Vector2f> t;
-						std::vector<Core::Math::Vector3f> n;
+						std::vector<Core::Math::Vector4> p;
+						std::vector<Core::Math::Vector4> t;
+						std::vector<Core::Math::Vector4> n;
 
 						std::vector<OBJVertex> verts;
 						std::vector<OBJIndex> indices;

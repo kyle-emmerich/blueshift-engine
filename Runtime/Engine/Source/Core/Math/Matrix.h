@@ -7,152 +7,136 @@ namespace Blueshift {
 	namespace Core {
 		namespace Math {
 
-			template<size_t rows, typename T>
-			struct Matrix {
+			__declspec(align(16)) struct Matrix4 {
 				union {
-					T data[rows * rows];
-					T m[rows][rows];
-					Vector<rows, T> vec[rows];
+					float data[4 * 4];
+					float m[4][4];
+					Vector4 vec[4];
 				};
-				constexpr explicit Matrix(T s) {
-					for (size_t i = 0; i < rows * rows; i++) { data[i] = s; }
+				Matrix4() = default;
+				explicit Matrix4(float s) {
+					for (size_t i = 0; i < 4 * 4; i++) { data[i] = s; }
 				}
-				Matrix() {
-					for (size_t i = 0; i < rows * rows; i++) { data[i] = 0; }
-				}
-				Matrix(const std::initializer_list<T> list) {
-					if (list.size() == rows * rows) {
-						size_t i = 0;
-						for (auto it : list) {
-							data[i++] = it;
-						}
-					} else {
-						if (list.size() == 9 && rows == 4) {
-							//given 3x3 data for a 4x4 matrix, we can handle this as a fun special case
-							//however, initializer_list provides no [] operator, so we REALLY get creative...
-							const T* x = list.begin();
-
-							data[0] = *x++;
-							data[1] = *x++;
-							data[2] = *x++;
-							data[3] = 0.0;
-
-							data[4] = *x++;
-							data[5] = *x++;
-							data[6] = *x++;
-							data[7] = 0.0;
-
-							data[8] = *x++;
-							data[9] = *x++;
-							data[10] = *x++;
-							data[11] = 0.0;
-
-							data[12] = 0.0;
-							data[13] = 0.0;
-							data[14] = 0.0;
-							data[15] = 1.0;
-						}
+				
+				Matrix4(const std::initializer_list<float> list) {
+					if (list.size() == 4 * 4) {
+						memcpy(&data[0], list.begin(), list.size() * sizeof(float));
 					}
 					
 				}
 
-				Vector<rows, T>& operator[](const size_t& idx) { 
+				Vector4& operator[](const size_t& idx) { 
 					//static_assert(idx >= 0 && idx < rows, "Matrix subscript index out of bounds");
 					return vec[idx];
 				}
-				const Vector<rows, T>& operator[](const size_t& idx) const { 
+				const Vector4& operator[](const size_t& idx) const { 
 					//static_assert(idx >= 0 && idx < rows, "Matrix subscript index out of bounds");
 					return vec[idx]; 
 				}
 
-				constexpr T operator()(size_t i, size_t j) const {
-					return data[i * rows + j];
+				constexpr float operator()(size_t i, size_t j) const {
+					return data[i * 4 + j];
 				}
 
-				constexpr Matrix<rows, T> Transpose() const {
-					Matrix<rows, T> out;
-					for (size_t i = 0; i < rows; i++) {
-						for (size_t j = 0; j < rows; j++) {
-							out.data[j * rows + i] = data[i * rows + j];
+				Matrix4 Transpose() const {
+					Matrix4 out;
+					for (size_t i = 0; i < 4; i++) {
+						for (size_t j = 0; j < 4; j++) {
+							out.data[j * 4 + i] = data[i * 4 + j];
 						}
 					}
 					return out;
 				}
+
+				static const Matrix4 Identity;
 			};
 
-			template<size_t rows, typename T>
-			Matrix<rows, T> operator +(const Matrix<rows, T>& lhs, const Matrix<rows, T>& rhs) {
-				Matrix<rows, T> out;
-				for (size_t i = 0; i < rows * rows; i++) {
-					out.data[i] = lhs.data[i] + rhs.data[i];
+			inline Matrix4 Transpose(const Matrix4& matrix) {
+				Matrix4 rv;
+				for (int i = 0; i < 4; i++) {
+					for (int j = 0; j < 4; j++) {
+						rv[i][j] = matrix[j][i];
+					}
 				}
+				return rv;
+			}
+
+			inline Matrix4 operator +(const Matrix4& lhs, const Matrix4& rhs) {
+				Matrix4 out {
+					lhs[0][0] + rhs[0][0],
+					lhs[0][1] + rhs[0][1],
+					lhs[0][2] + rhs[0][2],
+					lhs[0][3] + rhs[0][3],
+
+					lhs[1][0] + rhs[1][0],
+					lhs[1][1] + rhs[1][1],
+					lhs[1][2] + rhs[1][2],
+					lhs[1][3] + rhs[1][3],
+
+					lhs[2][0] + rhs[2][0],
+					lhs[2][1] + rhs[2][1],
+					lhs[2][2] + rhs[2][2],
+					lhs[2][3] + rhs[2][3],
+
+					lhs[3][0] + rhs[3][0],
+					lhs[3][1] + rhs[3][1],
+					lhs[3][2] + rhs[3][2],
+					lhs[3][3] + rhs[3][3],
+				};
+				
 				return out;
 			}
 
-			template<size_t rows, typename T>
-			Matrix<rows, T> operator -(const Matrix<rows, T>& lhs, const Matrix<rows, T>& rhs) {
-				Matrix<rows, T> out;
-				for (size_t i = 0; i < rows; i++) {
-					out.data[i] = lhs.data[i] - rhs.data[i];
-				}
+			inline Matrix4 operator -(const Matrix4& lhs, const Matrix4& rhs) {
+				Matrix4 out {
+					lhs[0][0] - rhs[0][0],
+					lhs[0][1] - rhs[0][1],
+					lhs[0][2] - rhs[0][2],
+					lhs[0][3] - rhs[0][3],
+
+					lhs[1][0] - rhs[1][0],
+					lhs[1][1] - rhs[1][1],
+					lhs[1][2] - rhs[1][2],
+					lhs[1][3] - rhs[1][3],
+
+					lhs[2][0] - rhs[2][0],
+					lhs[2][1] - rhs[2][1],
+					lhs[2][2] - rhs[2][2],
+					lhs[2][3] - rhs[2][3],
+
+					lhs[3][0] - rhs[3][0],
+					lhs[3][1] - rhs[3][1],
+					lhs[3][2] - rhs[3][2],
+					lhs[3][3] - rhs[3][3],
+				};
+
 				return out;
 			}
 
-
-			template<size_t rows, typename T>
-			inline Matrix<rows, T> operator *(const Matrix<rows, T>& lhs, const Matrix<rows, T>& rhs) {
-				Matrix<rows, T> out;
-				for (size_t i = 0; i < rows; i++) {
-					for (size_t j = 0; j < rows; j++) {
+			inline Matrix4 operator *(const Matrix4& lhs, const Matrix4& rhs) {
+				Matrix4 out;
+				for (size_t j = 0; j < 4; j++) {
+					for (size_t i = 0; i < 4; i++) {
 						//The value at i,j is just the dot product of
 						//row i of a and row j of b.
-						out[i][j] = 0;
-						for (size_t k = 0; k < rows; k++)
+						out[i][j] = 0.0f;
+						for (size_t k = 0; k < 4; k++)
 							out[i][j] += lhs[i][k] * rhs[k][j];
 					}
 				}
 				return out;
 			}
 
-			template<size_t rows, typename T>
-			inline Vector<rows, T> operator *(const Matrix<rows, T>& lhs, const Vector<rows, T>& rhs) {
-				Vector<rows, T> out;
-				Matrix<rows, T>& transposed = Transpose(lhs);
-				for (size_t i = 0; i < rows; i++) {
+			inline Vector4 operator *(const Matrix4& lhs, const Vector4& rhs) {
+				Vector4 out;
+				Matrix4 transposed = lhs.Transpose();
+				for (size_t i = 0; i < 4; i++) {
 					out[i] = DotProduct(rhs, transposed.vec[i]);
 				}
 				return out;
 			}
 
-			typedef Matrix<2, double> Matrix2; typedef Matrix<2, float> Matrix2f;
-			typedef Matrix<3, double> Matrix3; typedef Matrix<3, float> Matrix3f;
-			typedef Matrix<4, double> Matrix4; typedef Matrix<4, float> Matrix4f;
-
-			template <size_t rows, typename T>
-			inline T Determinant(const Matrix<rows, T>& matrix) {
-				throw 0;
-			}
-
-			template <typename T>
-			inline T Determinant(const Matrix<1, T>& matrix) {
-				return matrix(0, 0);
-			}
-
-			template <typename T>
-			inline T Determinant(const Matrix<2, T>& matrix) {
-				return matrix(0, 0) * matrix(1, 1) - matrix(0, 1) * matrix(1, 0);
-			}
-			template <typename T>
-			inline T Determinant(const Matrix<3, T>& matrix) {
-				return matrix(0, 0) * matrix(1, 1) * matrix(2, 2) +
-					matrix(1, 0) * matrix(2, 1) * matrix(0, 2) +
-					matrix(2, 0) * matrix(0, 1) * matrix(1, 2) -
-					matrix(2, 0) * matrix(1, 1) * matrix(0, 2) -
-					matrix(1, 0) * matrix(0, 1) * matrix(2, 2) -
-					matrix(0, 0) * matrix(2, 1) * matrix(1, 2);
-			}
-			template<typename T>
-			inline T Determinant(const Matrix<4, T>& matrix) {
+			inline float Determinant(const Matrix4& matrix) {
 				return
 					matrix(0, 3) * matrix(1, 2) * matrix(2, 1) * matrix(3, 0) - matrix(0, 2) * matrix(1, 3) * matrix(2, 1) * matrix(3, 0) -
 					matrix(0, 3) * matrix(1, 1) * matrix(2, 2) * matrix(3, 0) + matrix(0, 1) * matrix(1, 3) * matrix(2, 2) * matrix(3, 0) +
@@ -168,56 +152,11 @@ namespace Blueshift {
 					matrix(0, 1) * matrix(1, 0) * matrix(2, 2) * matrix(3, 3) + matrix(0, 0) * matrix(1, 1) * matrix(2, 2) * matrix(3, 3);
 			}
 
-			template<size_t rows, typename T>
-			inline Matrix<rows, T> Transpose(const Matrix<rows, T>& matrix) {
-				Matrix<rows, T> rv;
-				for (int i = 0; i < rows; i++) {
-					for (int j = 0; j < rows; j++) {
-						rv[i][j] = matrix[j][i];
-					}
-				}
-				return rv;
-			}
-
-			template<typename T>
-			inline Matrix<1, T> Inverse(const Matrix<1, T>& matrix) {
-				return Matrix<1, T>(1 / matrix.data[0]);
-			}
-			template<typename T>
-			inline Matrix<2, T> Inverse(const Matrix<2, T>& matrix) {
-				double determinant = Determinant(matrix);
-				double inv = 1 / determinant;
-
-				Matrix<2, T> out{
-					matrix(1, 1) * inv, matrix(1, 0) * -1 * inv,
-					matrix(0, 1) * -1 * inv, matrix(0, 0) * inv
-				};
-				return out;
-			}
-			template<typename T>
-			inline Matrix<3, T> Inverse(const Matrix<3, T>& matrix) {
-				double determinant = Determinant(matrix);
-				double inv = 1 / determinant;
-
-				Matrix<3, T> out{
-					(matrix(1, 1) * matrix(2, 2) - matrix(2, 1) * matrix(1, 2)) * inv,
-					(matrix(0, 2) * matrix(2, 1) - matrix(0, 1) * matrix(2, 2)) * inv,
-					(matrix(0, 1) * matrix(1, 2) - matrix(0, 2) * matrix(1, 1)) * inv,
-					(matrix(1, 2) * matrix(2, 0) - matrix(1, 0) * matrix(2, 2)) * inv,
-					(matrix(0, 0) * matrix(2, 2) - matrix(0, 2) * matrix(2, 0)) * inv,
-					(matrix(1, 0) * matrix(0, 2) - matrix(0, 0) * matrix(1, 2)) * inv,
-					(matrix(1, 0) * matrix(2, 1) - matrix(2, 0) * matrix(1, 1)) * inv,
-					(matrix(2, 0) * matrix(0, 1) - matrix(0, 0) * matrix(2, 1)) * inv,
-					(matrix(0, 0) * matrix(1, 1) - matrix(1, 0) * matrix(0, 1)) * inv
-				};
-				return out;
-			}
-			template<typename T>
-			inline Matrix<4, T> Inverse(const Matrix<4, T>& matrix) {
+			inline Matrix4 Inverse(const Matrix4& matrix) {
 				//thanks to gluInvertMatrix, here is the fastest and most concise version of this code you're ever going to find.
 				//yuck.
-				const T* m = &matrix.data[0];
-				Matrix<4, T> out; T* inv = &out.data[0];
+				const float* m = &matrix.data[0];
+				Matrix4 out; float* inv = &out.data[0];
 
 				inv[0] = m[5] * m[10] * m[15] - m[5] * m[11] * m[14] - m[9] * m[6] * m[15] + m[9] * m[7] * m[14] + m[13] * m[6] * m[11] - m[13] * m[7] * m[10];
 				inv[4] = -m[4] * m[10] * m[15] + m[4] * m[11] * m[14] + m[8] * m[6] * m[15] - m[8] * m[7] * m[14] - m[12] * m[6] * m[11] + m[12] * m[7] * m[10];
@@ -236,12 +175,12 @@ namespace Blueshift {
 				inv[11] = -m[0] * m[5] * m[11] + m[0] * m[7] * m[9] + m[4] * m[1] * m[11] - m[4] * m[3] * m[9] - m[8] * m[1] * m[7] + m[8] * m[3] * m[5];
 				inv[15] = m[0] * m[5] * m[10] - m[0] * m[6] * m[9] - m[4] * m[1] * m[10] + m[4] * m[2] * m[9] + m[8] * m[1] * m[6] - m[8] * m[2] * m[5];
 
-				T det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
+				float det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
 
-				if (det == 0) {
+				if (det == 0.0f) {
 					throw 0; //TODO actual exception?
 				}
-				det = 1 / det;
+				det = 1.0f / det;
 
 				for (size_t i = 0; i < 16; i++) {
 					out.data[i] = out.data[i] * det;
@@ -250,100 +189,68 @@ namespace Blueshift {
 				return out;
 			}
 
-			template<typename T = double>
-			inline Matrix<4, T> ScaleMatrix(const Vector<3, T>& t) {
-				return Matrix<4, T> {
-					t.data[0], 0.0, 0.0, 0.0,
-					0.0, t.data[1], 0.0, 0.0,
-					0.0, 0.0, t.data[2], 0.0,
-					0.0, 0.0, 0.0, 1.0
+			inline Matrix4 ScaleMatrix(const Vector4& s) {
+				Matrix4 out {
+					 s.X, 0.0f, 0.0f, 0.0f,
+					0.0f,  s.Y, 0.0f, 0.0f,
+					0.0f, 0.0f,  s.Z, 0.0f,
+					0.0f, 0.0f, 0.0f, 1.0f
 				};
+				return out;
 			}
 
-			template<typename T = double, size_t n = 3>
-			inline Matrix<4, T> TranslationMatrix(const Vector<n, T>& t) {
-				return Matrix<4, T> {
-					1.0, 0.0, 0.0, 0.0,
-					0.0, 1.0, 0.0, 0.0,
-					0.0, 0.0, 1.0, 0.0,
-					t.data[0], t.data[1], t.data[2], 1.0
+			inline Matrix4 TranslationMatrix(const Vector4& t) {
+				Matrix4 out {
+					1.0f, 0.0f, 0.0f, 0.0f,
+					0.0f, 1.0f, 0.0f, 0.0f,
+					0.0f, 0.0f, 1.0f, 0.0f,
+					t.X, t.Y, t.Z, 1.0f
 				};
+				return out;
 			}
 
-			template<size_t n, typename T = double>
-			inline Matrix<n, T> RotationMatrix(const Vector<3, T>& axis, T angle) {
-				if (axis.SquaredLength() < 1 - 1e-5 || axis.SquaredLength() > 1 + 1e-5) {
-					axis /= axis.Length();
+			inline Matrix4 RotationMatrix(Vector4 axis, float angle) {
+				if (LengthSquared(axis) < 1 - 1e-5 || LengthSquared(axis) > 1 + 1e-5) {
+					axis = axis / Length(axis);
 				}
-				T y = sin(angle);
-				T x = cos(angle);
-				T ix = T(1.0) - x;
+				float y = sin(angle);
+				float x = cos(angle);
+				float ix = 1.0f - x;
 
-				T ax = axis.data[0];
-				T ay = axis.data[1];
-				T az = axis.data[2];
+				float ax = axis.data[0];
+				float ay = axis.data[1];
+				float az = axis.data[2];
 
-				return Matrix<n, T> {
+				Matrix4 rv {
 					ix * ax * ax + x,
 					ix * ax * ay - az * y,
 					ix * az * ax + ay * y,
+					0.0f,
 
 					ix * ax * ay + az * y,
 					ix * ay * ay + x,
 					ix * ay * az - ax * y,
+					0.0f,
 
 					ix * az * ax - ay * y,
 					ix * ay * az + ax * y,
-					ix * az * az + x
+					ix * az * az + x,
+					0.0f,
+
+					0.0f, 0.0f, 0.0f, 1.0f
 				};
+				return rv;
 			}
-
-			inline Matrix<4, float> Downgrade(Matrix<4, double>& m) {
-				return Matrix<4, float> {
-					float(m.data[0]), float(m.data[1]), float(m.data[2]), float(m.data[3]),
-					float(m.data[4]), float(m.data[5]), float(m.data[6]), float(m.data[7]),
-					float(m.data[8]), float(m.data[9]), float(m.data[10]), float(m.data[11]),
-					float(m.data[12]), float(m.data[13]), float(m.data[14]), float(m.data[15])
-				};
-			}
-
-
-			static const Matrix3 IdentityMatrix3 {
-				1.0, 0.0, 0.0,
-				0.0, 1.0, 0.0,
-				0.0, 0.0, 1.0
-			};
-
-			static const Matrix4 IdentityMatrix4 {
-				1.0, 0.0, 0.0, 0.0,
-				0.0, 1.0, 0.0, 0.0,
-				0.0, 0.0, 1.0, 0.0,
-				0.0, 0.0, 0.0, 1.0
-			};
-
-			static const Matrix3f IdentityMatrix3f {
-				1.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f,
-				0.0f, 0.0f, 1.0f
-			};
-
-			static const Matrix4f IdentityMatrix4f {
-				1.0f, 0.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f, 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f
-			};
 
 		}
 	}
 }
 
-template<size_t rows, typename T>
-inline std::ostream& operator<<(std::ostream& os, const Blueshift::Core::Math::Matrix<rows, T>& rhs) {
-	os << "(" << rows << "x" << rows << " matrix: ";
-	for (size_t i = 0; i < rows * rows; i++) {
+inline std::ostream& operator<<(std::ostream& os, const Blueshift::Core::Math::Matrix4& rhs) {
+	os << "(matrix4: ";
+	for (size_t i = 0; i < 16; i++) {
 		os << rhs.data[i];
-		if (i < (rows * rows) - 1) {
+		if (i < 15) {
 			os << ", ";
 		}
 	}

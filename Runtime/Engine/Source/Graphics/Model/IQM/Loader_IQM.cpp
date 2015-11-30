@@ -123,11 +123,11 @@ void Loader::load_meshes(iqmheader& header, uint8_t* buffer) {
 	iqmmesh* meshes = reinterpret_cast<iqmmesh*>(&buffer[header.ofs_meshes]);
 	for (uint32_t i = 0; i < header.num_meshes; i++) {
 		iqmmesh& mesh = meshes[i];
-		Vector3f min_pos(0.0f, 0.0f, 0.0f);
-		Vector3f max_pos(0.0f, 0.0f, 0.0f);
+		Vector4 min_pos(0.0f, 0.0f, 0.0f);
+		Vector4 max_pos(0.0f, 0.0f, 0.0f);
 
 		for (uint32_t i = mesh.first_vertex; i < mesh.first_vertex + mesh.num_vertexes; i++) {
-			Vector3f& pos = reinterpret_cast<Vector3f*>(vertices->data[i * type.getStride()])[0];
+			Vector4& pos = reinterpret_cast<Vector4*>(vertices->data[i * type.getStride()])[0];
 			
 			min_pos.X = min(pos.X, min_pos.X);
 			min_pos.X = min(pos.Y, min_pos.Y);
@@ -138,10 +138,10 @@ void Loader::load_meshes(iqmheader& header, uint8_t* buffer) {
 			max_pos.Z = max(pos.Z, max_pos.Z);
 		}
 
-		AABB<float> aabb;
+		AABB aabb;
 		aabb.HalfWidth = (max_pos - min_pos) / 2.0f;
 		aabb.Center = min_pos + aabb.HalfWidth;
-		float radius = aabb.HalfWidth.Length();
+		float radius = Length(aabb.HalfWidth);
 		meshdata->AddSection(mesh.first_vertex, mesh.num_vertexes, mesh.first_triangle, mesh.num_triangles * 3, {
 			aabb,
 			radius
@@ -150,12 +150,17 @@ void Loader::load_meshes(iqmheader& header, uint8_t* buffer) {
 
 	iqmjoint* joints = reinterpret_cast<iqmjoint*>(&buffer[header.ofs_joints]);
 	for (uint32_t i = 0; i < header.num_joints; i++) {
-		Quaternionf* rotation = reinterpret_cast<Quaternionf*>(joints[i].rotate);
-		Vector3f* position = reinterpret_cast<Vector3f*>(joints[i].translate);
-		Vector3f* scale = reinterpret_cast<Vector3f*>(joints[i].scale);
+		Quaternion rotation;
+		memcpy(&rotation, &joints[i].rotate[0], 4 * sizeof(float));
+		
+		Vector4 scale(0.0f);
+		memcpy(&scale, &joints[i].scale[0], 3 * sizeof(float));
 
-		Matrix4f frame = ScaleMatrix(*scale) * QuaternionToMatrix4(*rotation) * TranslationMatrix(*position);
-		Matrix4f inverse_frame = Inverse(frame);
+		Vector4 translate(0.0f);
+		memcpy(&translate, &joints[i].translate[0], 4 * sizeof(float));
+
+		Matrix4 frame = ScaleMatrix(scale) * QuaternionToMatrix4(rotation) * TranslationMatrix(translate);
+		Matrix4 inverse_frame = Inverse(frame);
 		MeshBone* parent = nullptr;
 		if (joints[i].parent >= 0) {
 			parent = &meshdata->GetBone(static_cast<size_t>(joints[i].parent));

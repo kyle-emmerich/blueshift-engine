@@ -5,27 +5,23 @@ namespace Blueshift {
 	namespace Core {
 		namespace Math {
 
-			template<size_t n, typename T>
-			struct Ray_ {
-				Vector<n, T> Origin;
-				Vector<n, T> Direction;
-				Vector<n, T> InvDirection;
+			struct Ray {
+				Vector4 Origin;
+				Vector4 Direction;
+				Vector4 InvDirection;
 
-				T MaxDistance;
+				float MaxDistance;
 
-				Ray_(Vector<n, T> origin, Vector<n, T> direction, T max_distance)
+				Ray(Vector4 origin, Vector4 direction, float max_distance)
 					: Origin(origin), Direction(direction), MaxDistance(max_distance) {
-					InvDirection = T(1) / Direction;
+					InvDirection = 1.0f / Direction;
 				}
 
-				void SetDirection(Vector<n, T> direction) {
+				void SetDirection(Vector4 direction) {
 					Direction = direction;
-					InvDirection = T(1) / Direction;
+					InvDirection = 1.0f / Direction;
 				}
 			};
-
-			typedef Ray_<3, double> Ray;
-			typedef Ray_<3, float> Rayf;
 		}
 	}
 }

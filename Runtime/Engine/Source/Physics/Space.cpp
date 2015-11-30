@@ -16,7 +16,7 @@ Space::Space() {
 	//Finally, the world
 	_internal.world = new btDiscreteDynamicsWorld(_internal.dispatcher, _internal.pair_cache, _internal.solver, _internal.collision_config);
 	//For debug, let's set gravity.
-	_internal.world->setGravity(btVector3(0, -9.81, 0));
+	_internal.world->setGravity(btVector3(0, btScalar(-9.81), 0));
 }
 
 Space::~Space() {

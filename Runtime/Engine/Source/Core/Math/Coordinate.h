@@ -6,8 +6,11 @@ namespace Blueshift {
 	namespace Core {
 		namespace Math {
 			struct Coordinate {
-				Vector<3, int64_t> km;
-				Vector<3, double> m;
+				int64_t X;
+				int64_t Y;
+				int64_t Z;
+
+				Vector4 m;
 			};
 		}
 	}

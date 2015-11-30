@@ -105,7 +105,7 @@ void OBJ::process_v(std::string line, size_t offset) {
 	x = (float)strtod(*pos, pos);
 	y = (float)strtod(*pos, pos);
 	z = (float)strtod(*pos, nullptr);
-	current->p.push_back(Vector3f(x, y, z));
+	current->p.push_back(Vector4(x, y, z));
 }
 
 void OBJ::process_vt(std::string line, size_t offset) {
@@ -114,7 +114,7 @@ void OBJ::process_vt(std::string line, size_t offset) {
 	float x, y;
 	x = (float)strtod(*pos, pos);
 	y = (float)strtod(*pos, nullptr);
-	current->t.push_back(Vector2f(x, y));
+	current->t.push_back(Vector4(x, y));
 }
 
 void OBJ::process_vn(std::string line, size_t offset) {
@@ -124,7 +124,7 @@ void OBJ::process_vn(std::string line, size_t offset) {
 	x = (float)strtod(*pos, pos);
 	y = (float)strtod(*pos, pos);
 	z = (float)strtod(*pos, nullptr);
-	current->n.push_back(Vector3f(x, y, z));
+	current->n.push_back(Vector4(x, y, z));
 }
 
 void OBJ::process_f(std::string line, size_t offset) {
@@ -154,9 +154,12 @@ void OBJ::process_triplet(std::string line, size_t offset) {
 	}
 
 	OBJVertex vert;
-	vert.Position = idx[0] == 0 ? Vector3f(0.0f) : current->p[idx[0] - 1];
-	vert.TexCoord = idx[1] == 0 ? Vector2f(0.0f) : current->t[idx[1] - 1];
-	vert.Normal = idx[2] == 0 ? Vector3f(0.0f) : current->n[idx[2] - 1];
+	Vector4 position = idx[0] == 0 ? Vector4(0.0f) : current->p[idx[0] - 1];
+	memcpy(&vert.Position, &position, 3 * sizeof(float));
+	Vector4 texcoord = idx[1] == 0 ? Vector4(0.0f) : current->t[idx[1] - 1];
+	memcpy(&vert.TexCoord, &texcoord, 2 * sizeof(float));
+	Vector4 normal = idx[2] == 0 ? Vector4(0.0f) : current->n[idx[2] - 1];
+	memcpy(&vert.Normal, &normal, 3 * sizeof(float));
 
 	OBJIndex vert_idx = static_cast<OBJIndex>(current->verts.size());
 	current->verts.push_back(vert);
@@ -172,7 +175,7 @@ void OBJ::to_mesh_data(std::vector<std::unique_ptr<Model::OBJMeshData>>& meshes)
 	for (std::unique_ptr<o>& obj : objects) {
 		if (obj->complete) {
 			MeshBounds bounds = {
-				AABB<float>(),
+				AABB(),
 				0.0f
 			};
 			meshes.push_back(std::unique_ptr<Model::OBJMeshData>(new OBJMeshData(&obj->verts[0], obj->verts.size(), OBJVertex::Type, &obj->indices[0], obj->indices.size(), bounds)));

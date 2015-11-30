@@ -86,19 +86,19 @@ void RenderSystem::render_thread_func() {
 		bgfx::setDebug(BGFX_DEBUG_TEXT);
 
 		//Create a fullscreen quad
-		Vector2f fs_verts[4] = {
-			Vector2f(-1.0f, -1.0f),
-			Vector2f(1.0f, -1.0f),
-			Vector2f(-1.0f,  1.0f),
-			Vector2f(1.0f,  1.0f)
+		Vector4 fs_verts[4] = {
+			Vector4(-1.0f, -1.0f),
+			Vector4(1.0f, -1.0f),
+			Vector4(-1.0f,  1.0f),
+			Vector4(1.0f,  1.0f)
 		};
 		uint16_t fs_indices[6] = {
 			0, 1, 2, 2, 1, 3
 		};
 		VertexType fs_type;
-		fs_type.begin().add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float).end();
+		fs_type.begin().add(bgfx::Attrib::Position, 4, bgfx::AttribType::Float).end();
 		Model::MeshBounds bounds;
-		Model::StaticMeshData<Vector2f, uint16_t> fs_quad(fs_verts, 4, fs_type, fs_indices, 6, bounds);
+		Model::StaticMeshData<Vector4, uint16_t> fs_quad(fs_verts, 4, fs_type, fs_indices, 6, bounds);
 
 		Shader* fs_vert = new Shader("Shaders/background.vert.win.bin");
 		fs_vert->Complete();

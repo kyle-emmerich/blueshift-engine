@@ -7,7 +7,8 @@ namespace Blueshift {
 		class IWindow {
 		public:
 			virtual void Resize(uint32_t, uint32_t, bool) = 0;
-			virtual void Position(uint32_t, uint32_t) = 0;
+			virtual void SetPosition(uint32_t, uint32_t) = 0;
+			virtual void GetPosition(uint32_t&, uint32_t&) const = 0;
 
 			virtual void Close() = 0;
 			virtual bool IsClosed() const = 0;

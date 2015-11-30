@@ -156,16 +156,16 @@ namespace Blueshift {
 
 			};
 
-			template<size_t dimensions, size_t n = 1>
+			template<size_t n = 1>
 			class Positional {
 			public:
-				virtual Core::Math::Vector<dimensions, double> GetPosition(size_t index = 0) = 0;
+				virtual Core::Math::Vector4 GetPosition(size_t index = 0) = 0;
 			};
 
-			template<size_t dimensions, size_t n = 1>
+			template<size_t n = 1>
 			class Translational {
 			public:
-				virtual Core::Math::Vector<dimensions, double> GetDelta(size_t index = 0) = 0;
+				virtual Core::Math::Vector4 GetDelta(size_t index = 0) = 0;
 			};
 		}
 	}

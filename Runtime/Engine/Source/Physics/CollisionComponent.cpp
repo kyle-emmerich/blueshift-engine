@@ -11,7 +11,7 @@ ColliderComponent::~ColliderComponent() {
 	}
 }
 
-void ColliderComponent::BoxShape(Vector3f half_extents) {
+void ColliderComponent::BoxShape(Vector4 half_extents) {
 	if (shape != nullptr) {
 		throw 0; //TODO: exception; already initialized
 	}
@@ -55,7 +55,7 @@ void ColliderComponent::CapsuleShape(float radius, float height, CardinalAxis ax
 	type = ColliderShapeType::Capsule;
 }
 
-void ColliderComponent::CylinderShape(Vector3f half_extents, CardinalAxis axis) {
+void ColliderComponent::CylinderShape(Vector4 half_extents, CardinalAxis axis) {
 	if (shape != nullptr) {
 		throw 0; //TODO: exception; already initialized
 	}
@@ -107,12 +107,12 @@ void ColliderComponent::ConeShape(float radius, float height, CardinalAxis axis)
 	type = ColliderShapeType::Cone;
 }
 
-void ColliderComponent::ConvexHullShape(std::vector<Vector3f>& vertices) {
+void ColliderComponent::ConvexHullShape(std::vector<Vector4>& vertices) {
 	if (shape != nullptr) {
 		throw 0; //TODO: exception; already initialized
 	}
 	btConvexHullShape* hull = new btConvexHullShape;
-	for (Vector3f v : vertices) {
+	for (Vector4 v : vertices) {
 		hull->addPoint(Interop::ToBullet(v));
 	}
 	shape = hull;

@@ -13,7 +13,7 @@ namespace Blueshift {
 			class DebugDraw : btIDebugDraw {
 			private:
 				struct debug_vertex {
-					Core::Math::Vector3f position;
+					Core::Math::Vector4 position;
 					Core::Math::ColorRGBA8 color;
 				};
 				static const size_t max_verts = 4096;
@@ -32,7 +32,7 @@ namespace Blueshift {
 
 				void drawLine(const btVector3& from, const btVector3& to, const btVector3& color);
 
-				void Render(Core::Math::Matrix4f view, Core::Math::Matrix4f projection);
+				void Render(Core::Math::Matrix4 view, Core::Math::Matrix4 projection);
 			};
 
 		}

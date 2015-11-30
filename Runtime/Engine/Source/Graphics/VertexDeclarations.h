@@ -10,11 +10,12 @@ namespace Blueshift {
 		struct BaseVertex {};
 
 		struct SimpleVertex : public BaseVertex {
-			Blueshift::Core::Math::Vector3f Position;
-			Blueshift::Core::Math::Vector3f Normal;
-
-			SimpleVertex(Blueshift::Core::Math::Vector3f position, Blueshift::Core::Math::Vector3f normal)
-				: Position(position), Normal(normal) {}
+			struct {
+				float X, Y, Z;
+			} Position;
+			struct {
+				float X, Y, Z;
+			} Normal;
 
 			static void init() {
 				Type.begin()
@@ -26,57 +27,21 @@ namespace Blueshift {
 		};
 
 		struct OBJVertex : public BaseVertex {
-			Blueshift::Core::Math::Vector3f Position;
-			Blueshift::Core::Math::Vector2f TexCoord;
-			Blueshift::Core::Math::Vector3f Normal;
+			struct {
+				float X, Y, Z;
+			} Position;
+			struct {
+				float X, Y;
+			} TexCoord;
+			struct {
+				float X, Y, Z;
+			} Normal;
 
 			static void init() {
 				Type.begin()
 					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
 					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
-					.end();
-			}
-			static VertexType Type;
-		};
-
-		struct StaticVertex : public BaseVertex {
-			Blueshift::Core::Math::Vector3f Position;
-			Blueshift::Core::Math::Vector2f TexCoord;
-			Blueshift::Core::Math::Vector3f Normal;
-			Blueshift::Core::Math::Vector3f Tangent;
-			Blueshift::Core::Math::Vector3f Bitangent;
-
-			static void init() {
-				Type.begin()
-					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float)
-					.end();
-			}
-			static VertexType Type;
-		};
-
-		struct SkeletalVertex : public BaseVertex {
-			Blueshift::Core::Math::Vector3f Position;
-			Blueshift::Core::Math::Vector2f TexCoord;
-			Blueshift::Core::Math::Vector3f Normal;
-			Blueshift::Core::Math::Vector3f Tangent;
-			Blueshift::Core::Math::Vector3f Bitangent;
-			uint16_t Indices[8];
-			double Weights[8];
-
-			static void init() {
-				Type.begin()
-					.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float)
-					.add(bgfx::Attrib::Indices, 8, bgfx::AttribType::Int16)
-					.add(bgfx::Attrib::Weight, 8, bgfx::AttribType::Float)
 					.end();
 			}
 			static VertexType Type;
@@ -85,8 +50,6 @@ namespace Blueshift {
 		inline void InitializeVertexDeclarations() {
 			SimpleVertex::init();
 			OBJVertex::init();
-			StaticVertex::init();
-			SkeletalVertex::init();
 		}
 	}
 }

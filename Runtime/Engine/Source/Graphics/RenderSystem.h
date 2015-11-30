@@ -42,6 +42,7 @@ namespace Blueshift {
 			const Platform::DisplayInfo& GetPrimaryDisplay() const;
 			const Platform::DisplayInfo& GetDisplay(size_t index) const;
 			const std::vector<Platform::DisplayInfo>& GetDisplays() const;
+			inline const size_t GetPrimaryDisplayID() const { return primary_display_index; }
 
 			void SetPrimaryDisplay(const Platform::DisplayInfo& info);
 			void SetPrimaryDisplay(size_t index);

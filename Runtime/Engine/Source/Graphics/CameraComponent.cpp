@@ -11,7 +11,7 @@ void CameraComponent::UpdateWorldTransform() {
 	inverse_transform = Core::Math::Inverse(world_transform);
 }
 
-Core::Math::Matrix4f CameraComponent::CreatePerspectiveTransform(float AspectRatio, float VerticalFieldOfViewDeg, float Near, float Far) {
+Core::Math::Matrix4 CameraComponent::CreatePerspectiveTransform(float AspectRatio, float VerticalFieldOfViewDeg, float Near, float Far) {
 	//https://www.opengl.org/sdk/docs/man2/xhtml/gluPerspective.xml
 
 	float height = 1.0f / tan(Core::Math::ToRadians(VerticalFieldOfViewDeg) * 0.5f);
@@ -20,7 +20,7 @@ Core::Math::Matrix4f CameraComponent::CreatePerspectiveTransform(float AspectRat
 	float aa = (Far + Near) / (Near - Far);
 	float bb = (2.0f * Far * Near) / (Near - Far);
 
-	return Core::Math::Matrix4f {
+	return Core::Math::Matrix4 {
 		width,	0.0f,	0.0f,	0.0f,
 		0.0f,	height, 0.0f,	0.0f,
 		0.0f,	0.0f,  -aa,		1.0f,
@@ -28,10 +28,10 @@ Core::Math::Matrix4f CameraComponent::CreatePerspectiveTransform(float AspectRat
 	};
 }
 
-Core::Math::Matrix4f CameraComponent::CreateOrthographicTransform(float Width, float Height, float Near, float Far) {
+Core::Math::Matrix4 CameraComponent::CreateOrthographicTransform(float Width, float Height, float Near, float Far) {
 	//https://www.opengl.org/sdk/docs/man2/xhtml/glOrtho.xml
 	//Left is assumed to be 0, and Width is the same as right. Same goes for Height.
-	return Core::Math::Matrix4f {
+	return Core::Math::Matrix4 {
 		2.0f / Width,	0.0f,			 0.0f,					-1.0f,
 		0.0f,			2.0f / Height,	 0.0f,					-1.0f,
 		0.0f,			0.0f,			-2.0f / (Far - Near),	-(Far + Near) / (Far - Near),

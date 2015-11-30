@@ -42,15 +42,15 @@ void DebugDraw::drawLine(const btVector3& from, const btVector3& to, const btVec
 	);
 
 	//2 new vertices
-	vb_vertices[pos].position = FromBullet<float>(from);
+	vb_vertices[pos].position = FromBullet(from);
 	vb_vertices[pos].color = c;
 	pos++;
-	vb_vertices[pos].position = FromBullet<float>(to);
+	vb_vertices[pos].position = FromBullet(to);
 	vb_vertices[pos].color = c;
 	pos++;
 }
 
-void DebugDraw::Render(Matrix4f view, Matrix4f projection) {
+void DebugDraw::Render(Matrix4 view, Matrix4 projection) {
 	bgfx::setState(
 		BGFX_STATE_RGB_WRITE |
 		BGFX_STATE_ALPHA_WRITE |

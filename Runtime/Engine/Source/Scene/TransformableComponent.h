@@ -6,11 +6,13 @@ namespace Blueshift {
 	namespace Scene {
 
 		class SceneGraph;
+
+		__declspec(align(16))
 		class TransformableComponent : public Component {
 		protected:
-			Core::Math::Vector3f position = Core::Math::Vector3f(0.0f, 0.0f, 0.0f);
-			Core::Math::Quaternionf orientation = Core::Math::Quaternionf(0.0f, 0.0f, 0.0f, 1.0f);
-			Core::Math::Matrix4f world_transform = Core::Math::IdentityMatrix4f;
+			Core::Math::Vector4 position = Core::Math::Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			Core::Math::Quaternion orientation = Core::Math::Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+			Core::Math::Matrix4 world_transform = Core::Math::Matrix4::Identity;
 			bool local_dirty = true;
 
 			friend class SceneGraph;
@@ -22,28 +24,28 @@ namespace Blueshift {
 		public:
 			TransformableComponent(SceneGraph* scene, Object* object);
 
-			inline virtual void SetPosition(const Core::Math::Vector3f& Position) {
+			inline virtual void SetPosition(const Core::Math::Vector4& Position) {
 				position.X = Position.X;
 				position.Y = Position.Y;
 				position.Z = Position.Z;
 				local_dirty = true;
 			}
-			inline virtual const Core::Math::Vector3f& GetPosition() const {
+			inline virtual const Core::Math::Vector4& GetPosition() const {
 				return position;
 			}
 
-			inline virtual void SetOrientation(const Core::Math::Quaternionf& Orientation) {
+			inline virtual void SetOrientation(const Core::Math::Quaternion& Orientation) {
 				orientation.X = Orientation.X;
 				orientation.Y = Orientation.Y;
 				orientation.Z = Orientation.Z;
 				orientation.W = Orientation.W;
 				local_dirty = true;
 			}
-			inline virtual const Core::Math::Quaternionf& GetOrientation() const {
+			inline virtual const Core::Math::Quaternion& GetOrientation() const {
 				return orientation;
 			}
 
-			inline virtual const Core::Math::Matrix4f& GetWorldTransform() const {
+			inline virtual const Core::Math::Matrix4& GetWorldTransform() const {
 				return world_transform;
 			}
 

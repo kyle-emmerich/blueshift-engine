@@ -34,11 +34,11 @@ void Mouse::Poll() {
 
 void Mouse::_pass_event(RAWMOUSE* data) {
 	//Update the mouse state from the data
-	double wheel_delta = 0.0;
+	float wheel_delta = 0.0;
 	if (data->usButtonFlags == RI_MOUSE_WHEEL) {
-		wheel_delta = (double)data->usButtonData;
+		wheel_delta = (float)data->usButtonData;
 	}
-	translation_accumulator += Core::Math::Vector<3>((double)data->lLastX, (double)data->lLastY, wheel_delta);
+	translation_accumulator += Core::Math::Vector4((float)data->lLastX, (float)data->lLastY, wheel_delta, 0.0f);
 	
 	switch (data->usButtonFlags) {
 	case RI_MOUSE_LEFT_BUTTON_DOWN:

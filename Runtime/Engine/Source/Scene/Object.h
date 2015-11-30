@@ -13,7 +13,7 @@ namespace Blueshift {
 		class Object {
 		private:
 			std::vector<Component::Handle> components;
-			Core::Math::Matrix4f transform = Core::Math::IdentityMatrix4f;
+			Core::Math::Matrix4 transform = Core::Math::Matrix4::Identity;
 
 			std::string name;
 		protected:
@@ -22,15 +22,15 @@ namespace Blueshift {
 				Core::Serialize::SerializedString name;
 				Core::Serialize::SerializedList components;
 
-				Core::Math::Matrix4f transform;
+				Core::Math::Matrix4 transform;
 			};
 #pragma pack(pop)
 		public:
 
-			inline const Core::Math::Matrix4f& GetTransform() const {
+			inline const Core::Math::Matrix4& GetTransform() const {
 				return transform;
 			}
-			inline void SetTransform(const Core::Math::Matrix4f& trans) {
+			inline void SetTransform(const Core::Math::Matrix4& trans) {
 				transform = trans;
 			}
 

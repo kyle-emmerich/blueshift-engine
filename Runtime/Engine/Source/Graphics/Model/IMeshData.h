@@ -14,7 +14,7 @@ namespace Blueshift {
 			class IMeshData;
 
 			struct MeshBounds {
-				Core::Math::AABB<float> BoundingBox;
+				Core::Math::AABB BoundingBox;
 				float BoundingRadius;
 			};
 
@@ -31,8 +31,8 @@ namespace Blueshift {
 
 			struct MeshBone {
 				MeshBone* parent;
-				Core::Math::Matrix4f frame;
-				Core::Math::Matrix4f inverse_frame;
+				Core::Math::Matrix4 frame;
+				Core::Math::Matrix4 inverse_frame;
 			};
 
 			class IMeshData : public Storage::IAsset {

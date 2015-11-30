@@ -87,10 +87,16 @@ void Window::Resize(uint32_t Width, uint32_t Height, bool IsInnerMeasurement) {
 	last_height = Height;
 }
 
-void Window::Position(uint32_t X, uint32_t Y) {
+void Window::SetPosition(uint32_t X, uint32_t Y) {
 	//Get our original rect, so we don't change size
 	RECT rect; GetWindowRect(handle, &rect);
 	MoveWindow(handle, X, Y, rect.right - rect.left, rect.bottom - rect.top, false);
+}
+
+void Window::GetPosition(uint32_t& X, uint32_t& Y) const {
+	RECT rect; GetWindowRect(handle, &rect);
+	X = rect.left;
+	Y = rect.top;
 }
 
 void Window::Close() {

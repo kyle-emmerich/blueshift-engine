@@ -51,12 +51,12 @@ void RigidbodyComponent::Initialize() {
 }
 
 void RigidbodyComponent::getWorldTransform(btTransform& transform) const {
-	const Matrix4f& world = this->object->GetTransform();
+	const Matrix4& world = this->object->GetTransform();
 	transform.setFromOpenGLMatrix(world.data);
 }
 
 void RigidbodyComponent::setWorldTransform(const btTransform& transform) {
-	Matrix4f trans;
+	Matrix4 trans;
 	transform.getOpenGLMatrix(trans.data);
 	this->object->SetTransform(trans);
 }

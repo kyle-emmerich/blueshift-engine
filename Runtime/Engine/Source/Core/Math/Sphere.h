@@ -7,10 +7,9 @@ namespace Blueshift {
 	namespace Core {
 		namespace Math {
 
-			template<typename T>
 			struct Sphere {
-				Vector<3, T> Center;
-				T Radius;
+				Vector4 Center;
+				float Radius;
 			};
 
 		}

@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Engine.h"
 #include <typeindex>
 
 namespace Blueshift {
@@ -6,6 +7,8 @@ namespace Blueshift {
 
 		class Object;
 		class SceneGraph;
+
+		__declspec(align(16))
 		class Component {
 		protected:
 			Object* object;
