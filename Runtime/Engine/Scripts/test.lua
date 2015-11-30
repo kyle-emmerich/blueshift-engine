@@ -1,3 +1,1 @@
-local poop = require 'poop'
-print(poop.x)
-print("I'm test.lua!")
+print("Hello from LuaJIT 2.0.4")
