@@ -50,24 +50,6 @@ Core::EngineParameters* TestClient::GetEngineSetup() {
 void TestClient::Initialize() {
 	GameClient::Initialize();
 
-	Matrix4 m = Core::Math::Matrix4::Identity;
-	float x = m[0][0];
-	float y = m[1][1];
-	Vector4 v = m[2];
-
-	size_t ox = offsetof(Vector4, X);
-	size_t oy = offsetof(Vector4, Y);
-	size_t oz = offsetof(Vector4, Z);
-	size_t ow = offsetof(Vector4, W);
-
-	size_t svec = sizeof(Vector4);
-	size_t sfloat = sizeof(float);
-	size_t sdata = sizeof(v.mm);
-
-	size_t ovec = offsetof(Matrix4, vec);
-	size_t om = offsetof(Matrix4, m);
-
-
 	Scene::Object* obj = new Scene::Object;
 	Scene::Component::Handle handle = graph->AllocateComponent<Graphics::CameraComponent>(obj);
 	Graphics::CameraComponent* camera = handle;
