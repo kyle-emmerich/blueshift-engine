@@ -4,12 +4,12 @@ using namespace Blueshift;
 using namespace Core;
 using namespace Math;
 
-static Vector4* CheckVector4(lua_State* L, int n) {
+Core::Math::Vector4* Blueshift::Core::Math::CheckVector4(lua_State* L, int n) {
 	const void* ud = lua_topointer(L, n);
 	luaL_argcheck(L, ud != NULL, n, "'Vector4' expected");
 	return (Vector4*)ud;
 }
-static void* CheckVector4OrMatrix4(lua_State* L, int n, bool& is_matrix) {
+void* CheckVector4OrMatrix4(lua_State* L, int n, bool& is_matrix) {
 	void* ud = lua_touserdata(L, n);
 	if (lua_getmetatable(L, n)) {
 		lua_getfield(L, LUA_REGISTRYINDEX, "Vector4");
@@ -27,22 +27,13 @@ static void* CheckVector4OrMatrix4(lua_State* L, int n, bool& is_matrix) {
 	luaL_argcheck(L, ud != NULL, n, "'Vector4' or 'Matrix4' expected");
 	return nullptr;
 }
-static Vector4* PushVector4(lua_State* L, float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 0.0f) {
-	Vector4* rv = reinterpret_cast<Vector4*>(lua_newuserdata(L, sizeof(Vector4)));
-	luaL_getmetatable(L, "Vector4");
-	lua_setmetatable(L, -2);
 
-	rv->X = static_cast<float>(x);
-	rv->Y = static_cast<float>(y);
-	rv->Z = static_cast<float>(z);
-	rv->W = static_cast<float>(w);
-
-	return rv;
-}
-
-static int __new(lua_State* L) {
+static Vector4* Blueshift::Core::Math::PushVector4(lua_State* L) {
 	Vector4* v = new Vector4;
 	lua_pushlightuserdata(L, v);
+}
+static int __new(lua_State* L) {
+	PushVector4(L);
 	return 1;
 }
 static int __delete(lua_State* L) {
@@ -159,7 +150,7 @@ static int Vector4_Lerp(lua_State* L) {
 	Vector4* a = CheckVector4(L, 1);
 	Vector4* b = CheckVector4(L, 2);
 	float m = static_cast<float>(luaL_checknumber(L, 3));
-	Vector4* rv = PushVector4(L);
+	Vector4* rv = __new(L);
 
 	LerpInplace(*a, *b, m, *rv);
 

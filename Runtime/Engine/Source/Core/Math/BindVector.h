@@ -8,6 +8,8 @@ namespace Blueshift {
 
 			void BindVector4(Scripting::LuaState* State);
 
+			Core::Math::Vector4* CheckVector4(lua_State* L, int n);
+			Core::Math::Vector4* Blueshift::Core::Math::PushVector4(lua_State* L);
 		}
 	}
 }
