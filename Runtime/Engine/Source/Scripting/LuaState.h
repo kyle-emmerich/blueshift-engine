@@ -11,7 +11,7 @@ namespace Blueshift {
 		class LuaState {
 		protected:
 			lua_State* lua_state;
-
+			int err_func = 0;
 		public:
 			LuaState();
 			~LuaState();

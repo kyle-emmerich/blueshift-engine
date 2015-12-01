@@ -9,3 +9,5 @@
 #include "Core/Math/Coordinate.h"
 #include "Core/Math/Color.h"
 #include "Core/Math/Misc.h"
+
+#include "Core/Math/BindVector.h"

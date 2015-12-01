@@ -1,6 +1,7 @@
 #include "Scripting/LuaState.h"
 #include "Core/Engine.h"
 #include "Storage/FileSystem.h"
+#include "Core/Math/Math.h"
 
 extern "C" {
 	#include "luajit.h"
@@ -14,6 +15,7 @@ using namespace Scripting;
 std::map<lua_State*, LuaState*> LuaState::states;
 
 static int traceback(lua_State* L);
+static void* allocator(void* ud, void* ptr, size_t osize, size_t nsize);
 
 LuaState::LuaState() {
 	lua_state = luaL_newstate();
@@ -73,6 +75,10 @@ LuaState::LuaState() {
 		return 0;
 	});
 	lua_pushcfunction(lua_state, traceback);
+	err_func = lua_gettop(lua_state);
+
+	Core::Math::BindVector4(this);
+	
 }
 
 LuaState::~LuaState() {
@@ -110,7 +116,8 @@ void LuaState::LoadFromString(std::string str, std::string source) {
 }
 
 bool LuaState::ExecuteChunk() {
-	int result = lua_pcall(lua_state, 0, 0, lua_gettop(lua_state) - 1);
+	
+	int result = lua_pcall(lua_state, 0, 0, err_func);
 	if (result != 0) {
 		lua_gc(lua_state, LUA_GCCOLLECT, 0);
 		return false;
@@ -151,4 +158,22 @@ static int traceback(lua_State* L) {
 	Core::Engine::Get().Log(Core::LogLevel::LuaError, Formatter() << trace);
 	lua_pop(L, 1);
 	return 1;
+}
+
+static void* allocator(void* ud, void* ptr, size_t osize, size_t nsize) {
+	if (nsize == 0) {
+//#ifdef _WIN32
+		_aligned_free(ptr);
+//#endif
+		//TODO: support other platforms?
+		return nullptr;
+	} else {
+//#ifdef _WIN32
+		if (osize == LUA_TUSERDATA) {
+			return _aligned_realloc(ptr, nsize, 16);
+		} else {
+			return realloc(ptr, nsize);
+		}
+//#endif
+	}
 }

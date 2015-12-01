@@ -48,6 +48,13 @@ namespace Blueshift {
 				rv.mm = _mm_add_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
 			}
+			inline void AddInplace(const Vector4& a, const Vector4& b, Vector4& rv) {
+				rv.mm = _mm_add_ps(a.mm, b.mm);
+			}
+			inline void AddInplace(const Vector4& a, float s, Vector4& rv) {
+				rv.mm = _mm_add_ps(a.mm, _mm_load1_ps(&s));
+			}
+
 			inline Vector4 operator-(const Vector4& a, const Vector4& b) {
 				Vector4 rv;
 				rv.mm = _mm_sub_ps(a.mm, b.mm);
@@ -58,6 +65,13 @@ namespace Blueshift {
 				rv.mm = _mm_sub_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
 			}
+			inline void SubInplace(const Vector4& a, const Vector4& b, Vector4& rv) {
+				rv.mm = _mm_sub_ps(a.mm, b.mm);
+			}
+			inline void SubInplace(const Vector4& a, float s, Vector4& rv) {
+				rv.mm = _mm_sub_ps(a.mm, _mm_load1_ps(&s));
+			}
+
 			inline Vector4 operator*(const Vector4& a, const Vector4& b) {
 				Vector4 rv;
 				rv.mm = _mm_mul_ps(a.mm, b.mm);
@@ -68,6 +82,13 @@ namespace Blueshift {
 				rv.mm = _mm_mul_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
 			}
+			inline void MulInplace(const Vector4& a, const Vector4& b, Vector4& rv) {
+				rv.mm = _mm_mul_ps(a.mm, b.mm);
+			}
+			inline void MulInplace(const Vector4& a, float s, Vector4& rv) {
+				rv.mm = _mm_mul_ps(a.mm, _mm_load1_ps(&s));
+			}
+
 			inline Vector4 operator/(const Vector4& a, const Vector4& b) {
 				Vector4 rv;
 				rv.mm = _mm_div_ps(a.mm, b.mm);
@@ -77,6 +98,12 @@ namespace Blueshift {
 				Vector4 rv;
 				rv.mm = _mm_div_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
+			}
+			inline void DivInplace(const Vector4& a, const Vector4& b, Vector4& rv) {
+				rv.mm = _mm_div_ps(a.mm, b.mm);
+			}
+			inline void DivInplace(const Vector4& a, float s, Vector4& rv) {
+				rv.mm = _mm_div_ps(a.mm, _mm_load1_ps(&s));
 			}
 
 			inline Vector4& operator+=(Vector4& a, const Vector4& b) {
@@ -150,13 +177,30 @@ namespace Blueshift {
 			}
 
 			inline Vector4 CrossProduct(const Vector4& a, const Vector4& b) {
-				return Vector4(
+				Vector4 out(
 					a.Y * b.Z - a.Z * b.Y,
 					a.Z * b.X - a.X * b.Z,
 					a.X * b.Y - a.Y * b.X,
 					1.0f
 				);
+				return out;
 			}
+
+			inline void LerpInplace(const Vector4& a, const Vector4& b, float m, Vector4& out) {
+				float inv_m = 1.0f - m;
+				__m128 mm_m = _mm_load1_ps(&m);
+				__m128 mm_inv_m = _mm_load1_ps(&inv_m);
+				out.mm = _mm_add_ps(
+					_mm_mul_ps(a.mm, mm_inv_m),
+					_mm_mul_ps(b.mm, mm_m)
+				);
+			}
+			inline Vector4 Lerp(const Vector4& a, const Vector4& b, float m) {
+				Vector4 out;
+				LerpInplace(a, b, m, out);
+				return out;
+			}
+
 			/*
 			class Vector4Pool {
 			private:
