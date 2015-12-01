@@ -129,10 +129,10 @@
     <ClCompile Include="Source\Scripting\LuaState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Math\Bindings.cpp">
+    <ClCompile Include="Source\Core\Math\Matrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Math\Matrix.cpp">
+    <ClCompile Include="Source\Core\Math\BindVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -368,7 +368,7 @@
     <ClInclude Include="Source\Core\Math\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Math\Bindings.h">
+    <ClInclude Include="Source\Core\Math\BindVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

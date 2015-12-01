@@ -221,7 +221,7 @@
     <ClCompile Include="Source\Core\Exceptions.cpp" />
     <ClCompile Include="Source\Core\GameClient.cpp" />
     <ClCompile Include="Source\Core\GameServer.cpp" />
-    <ClCompile Include="Source\Core\Math\Bindings.cpp" />
+    <ClCompile Include="Source\Core\Math\BindVector.cpp" />
     <ClCompile Include="Source\Core\Math\Matrix.cpp" />
     <ClCompile Include="Source\Core\UUID.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
@@ -271,7 +271,7 @@
     <ClInclude Include="Source\Core\ISubsystem.h" />
     <ClInclude Include="Source\Core\Math\AABB.h" />
     <ClInclude Include="Source\Core\Math\AtmosphericScattering.h" />
-    <ClInclude Include="Source\Core\Math\Bindings.h" />
+    <ClInclude Include="Source\Core\Math\BindVector.h" />
     <ClInclude Include="Source\Core\Math\Color.h" />
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
     <ClInclude Include="Source\Core\Math\Math.h" />

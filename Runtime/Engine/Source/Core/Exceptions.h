@@ -33,7 +33,7 @@ namespace Blueshift {
 		RuntimeError(std::string str);
 	};
 
-	class LuaError : public std::runtime_error {
+	class LuaError : public RuntimeError {
 	public:
 		LuaError(std::string str);
 	};
