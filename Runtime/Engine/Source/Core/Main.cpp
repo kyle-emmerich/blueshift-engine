@@ -70,7 +70,9 @@ void TestClient::Initialize() {
 	Engine->Console.SetLuaState(lua);
 	try {
 		lua->ExecuteFile("test.lua");
-	} catch (...) {}
+	} catch (LuaError& e) {
+		Engine->Log(e);
+	}
 
 
 }
