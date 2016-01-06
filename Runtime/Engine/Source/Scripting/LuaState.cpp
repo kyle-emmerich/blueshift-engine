@@ -2,6 +2,7 @@
 #include "Core/Engine.h"
 #include "Storage/FileSystem.h"
 #include "Core/Math/Math.h"
+#include "Core/Math/Bindings.h"
 
 extern "C" {
 	#include "luajit.h"
@@ -29,23 +30,26 @@ LuaState::LuaState() {
 		Storage::FileSystem* fs = Core::Engine::Get().GetSystem<Storage::FileSystem>();
 
 		std::string filename;
+		std::string module;
 		const char* name = luaL_checkstring(L, 1);
-		filename = luaL_gsub(L, name, ".", "/");
+		module = luaL_gsub(L, name, ".", "/");
 
-		if (fs->IsDirectory(filename)) {
-			filename += "/init.lua";
+		if (fs->IsDirectory(module)) {
+			filename = module + "/init.lua";
 		} else {
-			filename += ".lua";
+			filename = module + ".lua";
 		}
 
 		if (!fs->FileExists(filename)) {
 			//not found here!
+			lua_pushfstring(L, "\n\tno file %s in Scripts", filename.c_str());
 			return 1;
 		}
 		
 		try {
 			LuaState* state = LuaState::states[L];
 			state->LoadFromFile(filename);
+			
 		} catch (...) {}
 		return 1;
 	});
@@ -77,8 +81,10 @@ LuaState::LuaState() {
 	lua_pushcfunction(lua_state, traceback);
 	err_func = lua_gettop(lua_state);
 
+	this->ExecuteFile("Blueshift/Setup.lua");
 	Core::Math::BindVector4(this);
-	
+	Core::Math::BindMatrix4(this);
+	Core::Math::BindQuaternion(this);
 }
 
 LuaState::~LuaState() {

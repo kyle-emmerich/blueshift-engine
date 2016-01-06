@@ -6,32 +6,16 @@ using namespace Math;
 
 Core::Math::Vector4* Blueshift::Core::Math::CheckVector4(lua_State* L, int n) {
 	const void* ud = lua_topointer(L, n);
-	luaL_argcheck(L, ud != NULL, n, "'Vector4' expected");
+	luaL_argcheck(L, ud != nullptr, n, "'Vector4' expected");
 	return (Vector4*)ud;
 }
-void* CheckVector4OrMatrix4(lua_State* L, int n, bool& is_matrix) {
-	void* ud = lua_touserdata(L, n);
-	if (lua_getmetatable(L, n)) {
-		lua_getfield(L, LUA_REGISTRYINDEX, "Vector4");
-		lua_getfield(L, LUA_REGISTRYINDEX, "Matrix4");
-		if (lua_rawequal(L, -2, -3)) {
-			is_matrix = false;
-			lua_pop(L, 3);
-			return ud;
-		} else if (lua_rawequal(L, -1, -3)) {
-			is_matrix = true;
-			lua_pop(L, 1);
-			return ud;
-		}
-	} 
-	luaL_argcheck(L, ud != NULL, n, "'Vector4' or 'Matrix4' expected");
-	return nullptr;
-}
 
-static Vector4* Blueshift::Core::Math::PushVector4(lua_State* L) {
+Vector4* Blueshift::Core::Math::PushVector4(lua_State* L) {
 	Vector4* v = new Vector4;
 	lua_pushlightuserdata(L, v);
+	return v;
 }
+
 static int __new(lua_State* L) {
 	PushVector4(L);
 	return 1;
@@ -47,7 +31,7 @@ static int __get(lua_State* L) {
 	Vector4* vec = CheckVector4(L, 1);
 	int idx = luaL_checkint(L, 2);
 
-	lua_pushnumber(L, vec->data[idx]);
+	lua_pushnumber(L, vec->data[idx - 1]);
 
 	return 1;
 }
@@ -56,7 +40,7 @@ static int __set(lua_State* L) {
 	int idx = luaL_checkint(L, 2);
 	float num = static_cast<float>(luaL_checknumber(L, 3));
 
-	vec->data[idx] = num;
+	vec->data[idx - 1] = num;
 
 	return 0;
 }
@@ -150,7 +134,7 @@ static int Vector4_Lerp(lua_State* L) {
 	Vector4* a = CheckVector4(L, 1);
 	Vector4* b = CheckVector4(L, 2);
 	float m = static_cast<float>(luaL_checknumber(L, 3));
-	Vector4* rv = __new(L);
+	Vector4* rv = PushVector4(L);
 
 	LerpInplace(*a, *b, m, *rv);
 
