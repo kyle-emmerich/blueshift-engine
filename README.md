@@ -8,6 +8,9 @@ Kyle will stream Blueshift/NoxAstra development almost daily. There's no set tim
 
 [Twitch Link](http://twitch.tv/noxastra)
 
+# IRC Channel
+We have an IRC channel on [irc.oftc.net](http://webchat.oftc.net) at #blueshift. Drop by and say hi! If no one is around, anyone is welcome to ping kyle__.
+
 ## Dependencies
 Blueshift seeks to minimize dependencies in order to maximize portability and keep the codebase size down. Right now, we're using the following dependencies:
 
