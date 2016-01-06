@@ -1,12 +1,8 @@
 #pragma once
 #include "Core/Engine.h"
 #include "Platform/DisplayInfo.h"
-#include "Core/BasicTypes/Array.h"
-#include "Core/Utility/ConfigFile.h"
 #include "Graphics/RenderWindow.h"
-#include "Graphics/Model/StaticMeshData.h"
-#include "Graphics/StaticMeshComponent.h"
-#include "bgfx/bgfx.h"
+
 #include <thread>
 #include <memory>
 #include <vector>
@@ -54,7 +50,7 @@ namespace Blueshift {
 			void WaitRenderThread();
 
 			inline uint8_t GetCurrentViewID() const {
-				return current_view_id;
+				return this->current_view_id;
 			}
 		};
 

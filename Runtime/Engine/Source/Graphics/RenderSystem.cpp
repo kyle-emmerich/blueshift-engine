@@ -2,7 +2,9 @@
 #include "Graphics/VertexDeclarations.h"
 #include "Graphics/RenderableComponent.h"
 #include "Core/Engine.h"
+#include "bgfx/bgfx.h"
 
+#include "Graphics/StaticMeshComponent.h"
 #include "Graphics/Model/Loader/OBJ.h"
 #include "Graphics/Texture/Texture.h"
 #include <fstream>
@@ -122,15 +124,14 @@ void RenderSystem::render_thread_func() {
 			application->IsFrameReady = false;
 			
 			for (RenderWindow* window : render_windows) {
-				current_view_id = window->GetViewID();
+				this->current_view_id = window->GetViewID();
 				Scene::SceneGraph* scene = window->GetSceneGraph();
-				CameraComponent* camera = window->GetCamera();
-				if (scene == nullptr || camera == nullptr) {
+				if (scene == nullptr) {
 					continue;
 				}
 
 				window->PreRender();
-				bgfx::setViewTransform(current_view_id, camera->GetViewTransform().data, camera->GetProjection().data);
+				
 				//draw the background
 				//TODO: move this to... camera? scenegraph?
 				tex.AssignTo(0, fs_program["u_cubemap"]);

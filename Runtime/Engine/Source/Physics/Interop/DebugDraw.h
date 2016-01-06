@@ -4,6 +4,8 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Color.h"
 #include "Graphics/RenderSystem.h"
+#include "Graphics/Shader.h"
+#include "Graphics/ShaderProgram.h"
 #include <vector>
 
 namespace Blueshift {

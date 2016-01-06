@@ -214,8 +214,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\BaseApplication.cpp" />
-    <ClCompile Include="Source\Core\BasicTypes\StaticString.cpp" />
-    <ClCompile Include="Source\Core\BasicTypes\String.cpp" />
     <ClCompile Include="Source\Core\DebugConsole.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\Exceptions.cpp" />
@@ -228,6 +226,7 @@
     <ClCompile Include="Source\Core\UUID.cpp" />
     <ClCompile Include="Source\Core\Main.cpp" />
     <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
+    <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\Model\IQM\Loader_IQM.cpp" />
     <ClCompile Include="Source\Graphics\StaticMeshComponent.cpp" />
     <ClCompile Include="Source\Graphics\Texture\DDS\Loader_DDS.cpp" />
@@ -258,10 +257,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\BaseApplication.h" />
-    <ClInclude Include="Source\Core\BasicTypes\Array.h" />
-    <ClInclude Include="Source\Core\BasicTypes\BaseString.h" />
-    <ClInclude Include="Source\Core\BasicTypes\StaticString.h" />
-    <ClInclude Include="Source\Core\BasicTypes\String.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Core\DebugConsole.h" />
     <ClInclude Include="Source\Core\Engine.h" />
@@ -295,6 +290,7 @@
     <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
     <ClInclude Include="Source\Core\Utility\FastParsing.h" />
     <ClInclude Include="Source\Core\UUID.h" />
+    <ClInclude Include="Source\Graphics\Framebuffer.h" />
     <ClInclude Include="Source\Graphics\Graphics.h" />
     <ClInclude Include="Source\Graphics\Model\IQM\iqm.h" />
     <ClInclude Include="Source\Graphics\Model\IQM\Loader.h" />

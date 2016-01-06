@@ -80,7 +80,7 @@ void TestClient::InitializeRenderData() {
 	Graphics::Model::Loader::OBJ loader;
 	
 	meshes = new std::vector<std::unique_ptr<Graphics::Model::OBJMeshData>>;
-	loader.Load("ship2.obj", *meshes);
+	loader.Load("cube.obj", *meshes);
 	mesh = &(*(*meshes)[0]);
 	Scene::Component::Handle mesh_handle = graph->AllocateComponent<Graphics::StaticMeshComponent>(model);
 	Graphics::StaticMeshComponent* mesh_comp = mesh_handle;
