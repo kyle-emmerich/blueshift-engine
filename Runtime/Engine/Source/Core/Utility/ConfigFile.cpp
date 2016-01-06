@@ -29,9 +29,9 @@ ConfigFile::ConfigFile(std::string path) {
 	std::stringstream ss;
 	ss << data;
 	std::string line;
-	while (!std::getline(ss, line).eof()) {
+	do {
 		read_line(line);
-	}
+	} while (!std::getline(ss, line).eof());
 
 	ss.clear();
 	delete[] data;

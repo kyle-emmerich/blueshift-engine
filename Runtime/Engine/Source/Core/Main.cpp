@@ -74,7 +74,6 @@ void TestClient::Initialize() {
 		Engine->Log(e);
 	}
 
-
 }
 
 void TestClient::InitializeRenderData() {
