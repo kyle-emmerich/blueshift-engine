@@ -7,6 +7,7 @@ $input v_worldpos, v_normal
 const int specular_samples = 2;
 int mips_count = 1;
 
+//uniform sampler2D diffuse_tex;
 uniform vec3 u_lightPos = vec3(0.0, 25.0, 50.0);
 
 mat3 GenerateFrame(vec3 norm) {
@@ -75,7 +76,7 @@ void main() {
 	float VdH = max(0, dot(V, H));
 
 	//material values to be read in some time
-	vec3 albedo = vec3(0.95, 0.64, 0.54);
+	vec3 albedo = vec3(0.5, 0.5, 0.5);//texture(diffuse_tex).xyz;
 	float metallic = 1.0;
 	float ior = 1.2;
 	float roughness = 0.8;
@@ -102,6 +103,6 @@ void main() {
 	vec3 cook_torrance = (fresnel * distribution * geometry) / (3.14159 * NdV);
 
 	//gl_FragColor = vec4((k_s * cook_torrance) + (k_d * diffuse), 1.0);
-	gl_FragColor = vec4(((NdL * albedo)) + pow(NdH * NdL, 4.0), 1.0);
+	gl_FragColor = vec4(diffuse + pow(NdH * NdL, 4.0), 1.0);
 	//gl_FragColor = vec4(distribution * vec3(1.0, 1.0, 1.0),1.0);
 }	
