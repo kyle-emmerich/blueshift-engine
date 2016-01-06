@@ -27,7 +27,7 @@ namespace Blueshift {
 
 			void* allocate_component(size_t type_size, const std::type_index& type, size_t& idx);
 			void  delete_component(const std::type_index& type, void* at);
-			void evaluate_capacity(component_list& list);
+			void  evaluate_capacity(component_list& list);
 
 			friend class Component;
 			friend struct Component::Handle;
