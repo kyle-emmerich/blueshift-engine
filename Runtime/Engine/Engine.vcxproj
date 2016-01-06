@@ -221,6 +221,8 @@
     <ClCompile Include="Source\Core\Exceptions.cpp" />
     <ClCompile Include="Source\Core\GameClient.cpp" />
     <ClCompile Include="Source\Core\GameServer.cpp" />
+    <ClCompile Include="Source\Core\Math\BindMatrix.cpp" />
+    <ClCompile Include="Source\Core\Math\BindQuaternion.cpp" />
     <ClCompile Include="Source\Core\Math\BindVector.cpp" />
     <ClCompile Include="Source\Core\Math\Matrix.cpp" />
     <ClCompile Include="Source\Core\UUID.cpp" />
@@ -271,6 +273,9 @@
     <ClInclude Include="Source\Core\ISubsystem.h" />
     <ClInclude Include="Source\Core\Math\AABB.h" />
     <ClInclude Include="Source\Core\Math\AtmosphericScattering.h" />
+    <ClInclude Include="Source\Core\Math\Bindings.h" />
+    <ClInclude Include="Source\Core\Math\BindMatrix.h" />
+    <ClInclude Include="Source\Core\Math\BindQuaternion.h" />
     <ClInclude Include="Source\Core\Math\BindVector.h" />
     <ClInclude Include="Source\Core\Math\Color.h" />
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
@@ -346,7 +351,16 @@
     <None Include="Assets\Shaders\blueshift\ShadingModel.glsl" />
     <None Include="Assets\Shaders\blueshift\Tonemapping.glsl" />
     <None Include="Assets\Shaders\blueshift\Utility.glsl" />
+    <None Include="Scripts\Blueshift\Matrix4.lua" />
+    <None Include="Scripts\Blueshift\Quaternion.lua" />
+    <None Include="Scripts\Blueshift\Setup.lua" />
     <None Include="Scripts\Blueshift\Vector4.lua" />
+    <None Include="Scripts\socket\init.lua" />
+    <None Include="Scripts\socket\ftp.lua" />
+    <None Include="Scripts\socket\http.lua" />
+    <None Include="Scripts\socket\smtp.lua" />
+    <None Include="Scripts\socket\tp.lua" />
+    <None Include="Scripts\socket\url.lua" />
     <None Include="Scripts\test.lua" />
     <None Include="Source\Core\Math\Vector_old.h" />
     <Text Include="user.cfg">

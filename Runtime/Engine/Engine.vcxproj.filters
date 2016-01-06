@@ -135,6 +135,12 @@
     <ClCompile Include="Source\Core\Math\BindVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Math\BindMatrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Math\BindQuaternion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Platform\IWindow.h">
@@ -371,6 +377,15 @@
     <ClInclude Include="Source\Core\Math\BindVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Math\BindMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math\Bindings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math\BindQuaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\blueshift\Sampling.glsl" />
@@ -384,6 +399,15 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="Scripts\Blueshift\Vector4.lua" />
+    <None Include="Scripts\Blueshift\Matrix4.lua" />
+    <None Include="Scripts\Blueshift\Setup.lua" />
+    <None Include="Scripts\socket\ftp.lua" />
+    <None Include="Scripts\socket\http.lua" />
+    <None Include="Scripts\socket\smtp.lua" />
+    <None Include="Scripts\socket\tp.lua" />
+    <None Include="Scripts\socket\url.lua" />
+    <None Include="Scripts\socket\init.lua" />
+    <None Include="Scripts\Blueshift\Quaternion.lua" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Source\Core\Utility\application.cfg" />
