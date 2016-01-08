@@ -63,6 +63,17 @@ namespace Blueshift {
 			Error		= 4  /// Only engine errors will be logged, no warnings and no Lua errors or output.
 		};
 
+		/*! \class Engine
+			\brief The core of the Blueshift Engine.
+
+			Core::Engine is a singleton class. It will automatically set its internal instance upon creation.
+
+			The Engine class is responsible for managing subsystems and logging information and errors. It
+			also provides an always-present Stopwatch timer and a DebugConsole instance. Typically, an application
+			will configure the engine by returning an instance of EngineParameters in its GetEngineParameters method.
+
+			\sa ISubsystem, Stopwatch, DebugConsole, EngineParameters.
+		*/
 		class Engine {
 		private:
 			std::map<std::type_index, ISubsystem*> subsystems;
