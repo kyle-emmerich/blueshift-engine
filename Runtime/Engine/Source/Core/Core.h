@@ -21,7 +21,7 @@
 
 /*! \page porting Porting Blueshift
 	
-	\section intro_sec Porting
+	\section porting_sec Porting
 
 	If you're reading this, you're probably cursing me for not porting Blueshift to your favored operating system.
 	However, I'm just one guy and I have a full-time job developing someone else's game engine entirely! Blueshift
