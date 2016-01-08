@@ -15,9 +15,6 @@ namespace Blueshift {
 			std::type_index end_type;
 			Component(SceneGraph*, Object* obj = nullptr) : object(obj), end_type(typeid(Component)) {}
 
-#pragma pack(push, 8)
-			struct serialized {};
-#pragma pack(pop)
 		public:
 			virtual ~Component() {}
 
