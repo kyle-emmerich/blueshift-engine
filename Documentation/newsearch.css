@@ -1,0 +1,262 @@
+/*---------------- Search Box */
+
+#FSearchBox {
+    float: right;
+
+    height: 48px;
+    line-height: 48px;
+}
+
+#MSearchBox {
+    display: inline-block;
+ 
+    z-index: 102;
+    background-color: white;
+}
+
+#MSearchBox .left
+{
+    display: table-cell;
+
+    float: left;
+
+    height: 48px;
+    line-height: 48px;
+
+    vertical-align: middle;
+}
+
+#MSearchSelect {
+    display: inline-block;
+    float: left;
+
+    width: 20px;
+    height: 19px;
+    
+    margin-top: calc(48px/2 - 19px/2);
+}
+
+#MSearchField {
+    display: inline-block;
+
+    float: left;
+
+    height: 48px;
+    line-height: 48px;
+    border: 0px;
+
+    padding: 0px;
+    margin: 0px;
+
+    color: #909090;
+    outline: none;
+}
+
+#MSearchBox .right {
+    display: none;
+    clear: both;
+}
+
+#MSearchClose {
+    display: none;
+
+    top: 4px;
+    background : none;
+    border: none;
+    margin: 0px 4px 0px 0px;
+    padding: 0px 0px;
+    outline: none;
+}
+
+.left #MSearchClose {
+    left: 6px;
+}
+
+.right #MSearchClose {
+    right: 2px;
+}
+
+.MSearchBoxActive #MSearchField {
+    color: #000000;
+}
+
+/*---------------- Search filter selection */
+
+#MSearchSelectWindow {
+    display: none;
+
+    position: absolute;
+    left: auto !important; top: -5px !important;
+    border: 1px solid rgb(230, 230, 230, 0.95);
+    background-color: rgba(240, 240, 240, 0.95);
+    z-index: 1;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+.SelectItem {
+    font: 8pt Arial, Verdana, sans-serif;
+    padding-left:  2px;
+    padding-right: 12px;
+    border: 0px;
+}
+
+span.SelectionMark {
+    margin-right: 4px;
+    font-family: monospace;
+    outline-style: none;
+    text-decoration: none;
+}
+
+a.SelectItem {
+    display: block;
+    outline-style: none;
+    color: #000000; 
+    text-decoration: none;
+    padding-left:   6px;
+    padding-right: 12px;
+}
+
+a.SelectItem:focus,
+a.SelectItem:active {
+    color: #000000; 
+    outline-style: none;
+    text-decoration: none;
+}
+
+a.SelectItem:hover {
+    color: #FFFFFF;
+    background-color: #3D578C;
+    outline-style: none;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+}
+
+/*---------------- Search results window */
+
+iframe#MSearchResults {
+    width: 200px;
+    height: 5em;
+}
+
+#MSearchResultsWindow {
+    display: none;
+    position: absolute;
+    left: auto !important; top: -5px !important;
+    background-color: rgba(240, 240, 240, 1);
+    border-radius: 5px;
+    border: 1px solid rgba(230, 230, 230, 1);
+    box-shadow: 0px 2px 5px 2px rgba(0, 0, 0, 0.2);
+    z-index: 101;
+}
+div#doc-content
+{
+    overflow: visible;
+    position: relative;
+}
+
+/* ----------------------------------- */
+
+
+#SRIndex {
+    clear:both; 
+    padding-bottom: 15px;
+}
+
+.SREntry {
+    font-size: 10pt;
+    padding-left: 1ex;
+}
+
+.SRPage .SREntry {
+    font-size: 8pt;
+    padding: 1px 5px;
+}
+
+body.SRPage {
+    margin: 5px 2px;
+    font-family: Helvetica, sans-serif !important;
+}
+
+.SRChildren {
+    padding-left: 3ex; padding-bottom: .5em 
+}
+
+.SRPage .SRChildren {
+    display: none;
+}
+
+.SRSymbol {
+    font-weight: bold; 
+    color: #425E97;
+    font-family: Arial, Verdana, sans-serif;
+    text-decoration: none;
+    outline: none;
+}
+
+a.SRScope {
+    display: block;
+    color: #425E97; 
+    font-family: Arial, Verdana, sans-serif;
+    text-decoration: none;
+    outline: none;
+}
+
+a.SRSymbol:focus, a.SRSymbol:active,
+a.SRScope:focus, a.SRScope:active {
+    text-decoration: underline;
+}
+
+span.SRScope {
+    padding-left: 4px;
+}
+
+.SRPage .SRStatus {
+    padding: 2px 5px;
+    font-size: 8pt;
+    font-style: italic;
+}
+
+.SRResult {
+    display: none;
+}
+
+DIV.searchresults {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/*---------------- External search page results */
+
+.searchresult {
+    background-color: #F0F3F8;
+}
+
+.pages b {
+   color: white;
+   padding: 5px 5px 3px 5px;
+   background-repeat: repeat-x;
+   text-shadow: 0 1px 1px #000000;
+}
+
+.pages {
+    line-height: 17px;
+    margin-left: 4px;
+    text-decoration: none;
+}
+
+.hl {
+    font-weight: bold;
+}
+
+#searchresults {
+    margin-bottom: 20px;
+}
+
+.searchpages {
+    margin-top: 10px;
+}
+

@@ -200,3 +200,4 @@ Bin/
 
 #Want to upload shaderc.exe, very useful for any windows devs
 !**/shaderc.exe
+Documentation/html/
