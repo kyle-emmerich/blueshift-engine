@@ -10,6 +10,14 @@
 namespace Blueshift {
 	namespace Scene {
 
+		/*! \class SceneGraph
+			\brief A subsystem that handles all object components in the engine and provides access to lists of components by type.
+
+			The SceneGraph is responsible for managing all components, including memory allocation and access to lists sorted by component type.
+			It functions via a liberal application of black magic, known as C++ memory management.
+
+			Author is not responsible for any damages caused by use of this class.
+		*/
 		class SceneGraph : public Core::ISubsystem {
 		protected:
 			struct component_list {
@@ -35,6 +43,15 @@ namespace Blueshift {
 			SceneGraph(Core::Engine* engine);
 			virtual ~SceneGraph();
 
+			/*! \brief Allocates a component of type T in the appropriate list, ensuring that the list exists in one contiguous block of memory for fast access.
+
+				This method performs a placement new on memory allocated for the list ahead of time. If the type has never been allocated before,
+				a list will be created, and if the list runs out of space, it will resize.
+
+				Try not to call this too much each frame, since it carries the overhead of potentially resizing a component list.
+
+				\param object A pointer to an object to attach the component to, can be nullptr for an unattached component.
+			*/
 			template<typename T>
 			inline Component::Handle AllocateComponent(Object* object = nullptr) {
 				//keep track of transformables
@@ -56,6 +73,10 @@ namespace Blueshift {
 				return handle;
 			}
 
+			/*!	\brief Deallocates a component in the list for type T and shuffles everything after it to fill the gap.
+
+				This method could potentially cause a reallocation, so use it sparingly whenever possible.
+			*/
 			template<typename T>
 			inline void DeleteComponent(T* component) {
 				//when placement new is used, the programmer is responsible for calling
@@ -82,13 +103,24 @@ namespace Blueshift {
 				delete_component(typeid(T), static_cast<void*>(component));
 			}
 
+			/*! \brief Gets a pointer to the start of a list of the type given; be careful!
+
+				This method is not type-safe. It's smarter to not use it whenever possible.
+
+				\param type Call typeid(T) to get this. (#include <typeindex>)
+				\param out_size This will be filled with the size of the list in bytes.
+			*/
 			void* GetComponents(std::type_index& type, size_t& out_size);
+
+			/*!	\brief Gets a pointer to the start of a list of components of type T.
+			*/
 			template<typename T>
 			inline T* GetComponents() {
 				size_t size = 0;
 				return static_cast<T*>(GetComponents(typeid(T), size));
 			}
 
+			/*! \brief Destroys an entire list of components at once. */
 			template<typename T>
 			inline void DestroyComponents() {
 				auto it = Begin<T>();
