@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Math/Vector.h"
+#include "Core/Math/Vector4.h"
 #include <stdint.h>
 
 namespace Blueshift {

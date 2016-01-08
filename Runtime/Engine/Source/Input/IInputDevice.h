@@ -3,7 +3,7 @@
 
 #include <string>
 #include "Core/Event.h"
-#include "Core/Math/Vector.h"
+#include "Core/Math/Vector4.h"
 #include "Platform/IWindow.h"
 
 namespace Blueshift {

@@ -1,6 +1,6 @@
 #pragma once
 #include "bgfx/bgfx.h"
-#include "Core/Math/Vector.h"
+#include "Core/Math/Vector4.h"
 
 namespace Blueshift {
 	namespace Graphics {

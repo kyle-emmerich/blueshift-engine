@@ -1,6 +1,6 @@
 #pragma once
 #include <inttypes.h>
-#include "Core/Math/Vector.h"
+#include "Core/Math/Vector4.h"
 
 namespace Blueshift {
 	namespace Core {

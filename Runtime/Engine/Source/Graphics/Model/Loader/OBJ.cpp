@@ -1,5 +1,5 @@
 #include "Graphics/Model/Loader/OBJ.h"
-#include "Core/Math/Vector.h"
+#include "Core/Math/Vector4.h"
 #include "Core/Utility/FastParsing.h"
 #include "Storage/File.h"
 #include <sstream>

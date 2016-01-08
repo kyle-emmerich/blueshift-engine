@@ -239,6 +239,7 @@
     <ClCompile Include="Source\Scene\TransformableComponent.cpp" />
     <ClCompile Include="Source\Scripting\LuaState.cpp" />
     <ClCompile Include="Source\Storage\AssetSystem.cpp" />
+    <ClCompile Include="Source\Storage\Database.cpp" />
     <ClCompile Include="Source\Storage\File.cpp" />
     <ClCompile Include="Source\Storage\FileSystem.cpp" />
     <ClCompile Include="Source\Graphics\Model\Loader\OBJ.cpp" />
@@ -254,6 +255,8 @@
     <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
     <ClCompile Include="Source\Graphics\CameraComponent.cpp" />
+    <ClCompile Include="Source\Storage\sqlite3\sqlite3.c" />
+    <ClCompile Include="Source\Storage\Statement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\BaseApplication.h" />
@@ -310,6 +313,7 @@
     <ClInclude Include="Source\Scene\TransformableComponent.h" />
     <ClInclude Include="Source\Scripting\LuaState.h" />
     <ClInclude Include="Source\Storage\AssetSystem.h" />
+    <ClInclude Include="Source\Storage\Database.h" />
     <ClInclude Include="Source\Storage\File.h" />
     <ClInclude Include="Source\Storage\FileSystem.h" />
     <ClInclude Include="Source\Graphics\Model\IMeshData.h" />
@@ -334,6 +338,9 @@
     <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Storage\IAsset.h" />
     <ClInclude Include="Source\Storage\ILoader.h" />
+    <ClInclude Include="Source\Storage\Statement.h" />
+    <ClInclude Include="Source\Storage\sqlite3\sqlite3.h" />
+    <ClInclude Include="Source\Storage\sqlite3\sqlite3ext.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="app.cfg">

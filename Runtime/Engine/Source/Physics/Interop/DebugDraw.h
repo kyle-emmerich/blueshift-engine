@@ -1,7 +1,7 @@
 #pragma once
 #include "bgfx/bgfx.h"
 #include "btBulletDynamicsCommon.h"
-#include "Core/Math/Vector.h"
+#include "Core/Math/Vector4.h"
 #include "Core/Math/Color.h"
 #include "Graphics/RenderSystem.h"
 #include "Graphics/Shader.h"

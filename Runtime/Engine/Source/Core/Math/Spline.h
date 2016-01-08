@@ -3,7 +3,7 @@
 #include <cmath>
 #include "Core/Math/Polynomial.h"
 #include "Core/Math/Misc.h"
-#include "Core/Math/Vector.h"
+#include "Core/Math/Vector4.h"
 
 namespace Blueshift {
 	namespace Core {
