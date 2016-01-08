@@ -1,4 +1,5 @@
 #include "Storage/FileSystem.h"
+#include "Storage/Database.h"
 
 using namespace Blueshift;
 using namespace Storage;
@@ -12,7 +13,8 @@ FileSystem::FileSystem(Core::Engine* engine) {
 	if (success == 0) {
 		throw FileSystemNotInitiatedError(PHYSFS_getLastError());
 	}
-	
+
+	//We only allow writing to a specific directory via this interface.
 	std::string write_dir = PHYSFS_getUserDir();
 	if (0 == PHYSFS_setWriteDir(write_dir.c_str())) {
 		throw FileError(Formatter() << "Could not set write directory to \"" << write_dir <<"\": " << PHYSFS_getLastError());
@@ -25,6 +27,7 @@ FileSystem::FileSystem(Core::Engine* engine) {
 		throw FileError(Formatter() << "Could not set write directory to \"" << write_dir << "\": " << PHYSFS_getLastError());
 	}
 
+	//Mount some defaults, like Assets and Scripts
 	std::string base = PHYSFS_getBaseDir();
 	base += "..";
 	MountPackage(base.c_str());
@@ -35,6 +38,7 @@ FileSystem::FileSystem(Core::Engine* engine) {
 	scripts += "../Scripts";
 	MountPackage(scripts.c_str());
 
+	//Now mount everything the application asked for
 	for (auto path : SearchPaths) {
 		MountPackage(path);
 	}
