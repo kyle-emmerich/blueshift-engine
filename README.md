@@ -68,4 +68,4 @@ This optimization also filters into matrices, which use unioned Vector4s to perf
 If for some crazy reason your target CPU doesn't support SSE, you'll have to look elsewhere. There is no alternative code at this time. This might change in the future, though, as the API is written to fully encapsulate the optimizations in the cleanest fashion possible.
 
 ###Documentation
-There is a project underway with the purpose of documenting Blueshift's APIs and structure. You can find it [here](https://noxastra.com/engine/docs).
+We have automatically generated documentation [here](http://blueshift-engine.xyz/docs). It is generated using doxygen and is run every time a commit happens.
