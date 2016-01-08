@@ -7,6 +7,14 @@
 namespace Blueshift {
 	namespace Core {
 
+		/*! \class GameClient
+			\brief Encapsulates behavior typical in a game application.
+
+			The GameClient is the basis of any real-time game with graphics. It initializes a RenderSystem and a
+			RenderWindow for you according to the configuration file "app.cfg" found in any readable directory.
+
+			\sa BaseApplication, RenderSystem, RenderWindow
+		*/
 		class GameClient : public BaseApplication {
 		protected:
 			Graphics::RenderWindow* main_window;
