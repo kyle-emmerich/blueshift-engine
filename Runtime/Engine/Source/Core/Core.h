@@ -35,7 +35,7 @@
 	\section components Components to be replaced
 
 	As a rough overview, Blueshift requires platform-specific code for the Core::Timing::IStopwatch interface, 
-	for Graphics::DisplayInfo, for Graphics::IWindow, and most of the Input namespace.
+	for Graphics::IWindow, for the entire Platform namespace, and most of the Input namespace.
 
 	I will update this page as time goes on with more information, including how to port these components. For now,
 	feel free to jump in and figure out how my existing Windows code works, and let me know if you have any questions
