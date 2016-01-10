@@ -389,10 +389,17 @@
     <ClInclude Include="Source\Storage\Statement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Source\Core\Math\Vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Math\Matrix4.h">
+=======
+    <ClInclude Include="Source\Core\Math\Matrix4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math\Vector4.h">
+>>>>>>> 8e84ae7b2b0cec196c4a7c8e8f0e5aab721adb34
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,7 +6,14 @@ namespace Blueshift {
 	namespace Core {
 		namespace Math {
 
-			struct Quaternion {
+			/*! \class Quaternion
+				\brief Represents a 3-dimensional rotation using four complex numbers; you don't have to understand it to use it.
+
+				Quaternions can be best explained related to an axis and a rotation around that axis, but this is not technically 
+				correct. The important part is that rotations may be combined by multiplying two quaternions.
+			*/
+			class Quaternion {
+			public:
 				union {
 					float data[4];
 					__m128 mm;
@@ -20,6 +27,9 @@ namespace Blueshift {
 					: X(0), Y(0), Z(0), W(1) {}
 			};
 
+			/*! \relates Quaternion
+				\brief Multiply two quaternions to combine the rotations; not commutative (a*b != b*a).
+			*/
 			inline Quaternion operator*(const Quaternion& a, const Quaternion& b) {
 				Quaternion rv;
 				rv.X = (b.W * a.X) + (b.X * a.W) + (b.Y * a.Z) - (b.Z * a.Y);
@@ -29,12 +39,18 @@ namespace Blueshift {
 				return rv;
 			}
 
+			/*! \relates Quaternion
+				\brief Multiply two quaternions to combine the rotations; not commutative (a*b != b*a).
+			*/
 			inline Quaternion operator* (const Quaternion& a, const float& s) {
 				Quaternion rv;
 				rv.mm = _mm_mul_ps(a.mm, _mm_load1_ps(&s));
 				return rv;
 			}
 
+			/*! \relates Quaternion
+				\brief Multiply two quaternions to combine the rotations; not commutative (a*b != b*a).
+			*/
 			inline Quaternion& operator*=(Quaternion& a, const float& s) {
 				a.mm = _mm_mul_ps(a.mm, _mm_load1_ps(&s));
 				return a;
@@ -52,10 +68,18 @@ namespace Blueshift {
 				return a;
 			}
 
-			inline Vector4 QuaternionToVector(const Quaternion& q) {
+			/*! \relates Quaternion
+				\brief Converts a quaternion to a vector4; this is a raw conversion, no math applied.
+				\sa Vector4
+			*/
+			inline Vector4 QuaternionToVector4(const Quaternion& q) {
 				return q.vec;
 			}
 
+			/*!	\relates Quaternion
+				\brief Converts a quaternion to a rotation matrix with 0,0,0 translation.
+				\sa Matrix4
+			*/
 			inline Matrix4 QuaternionToMatrix4(const Quaternion& q) {
 				float x = q.X + q.X;
 				float y = q.Y + q.Y;
@@ -82,6 +106,10 @@ namespace Blueshift {
 				return out;
 			}
 
+			/*!	\relates Quaternion
+				\brief Converts a rotation matrix to a quaternion; translation component is ignored.
+				\sa Matrix4
+			*/
 			inline Quaternion Matrix4ToQuaternion(const Matrix4& m) {
 				float w = sqrt(1.0f + m[0][0] + m[1][1] + m[2][2]) / 2.0f;
 				float w4 = 4.0f * w;
@@ -93,6 +121,9 @@ namespace Blueshift {
 				);
 			}
 
+			/*! \relates Quaternion
+				\brief Normalizes a quaternion; non-unit quaternions are not valid, so use this to combat floating point errors.
+			*/
 			inline void Normalize(Quaternion& q) {
 				float magnitude = sqrt(q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W);
 				if (magnitude == 0.0) 
@@ -103,6 +134,9 @@ namespace Blueshift {
 				q.W /= magnitude;
 			}
 
+			/*!	\relates Quaternion
+				\brief Returns a normalized version of the quaternion copied into a new instance.
+			*/
 			inline Quaternion Unit(const Quaternion& q) {
 				float magnitude = sqrt(q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W);
 				if (magnitude == 0.0)
@@ -111,6 +145,9 @@ namespace Blueshift {
 				return Quaternion(q.X / magnitude, q.Y / magnitude, q.Z / magnitude, q.W / magnitude);
 			}
 
+			/*! \relates Quaternion
+				\brief Creates a new quaternion from an axis and an angle in radians.
+			*/
 			inline Quaternion QuaternionFromAxisAngle(const Vector4& Axis, const float& Angle) {
 				float sin_half = sin(Angle * 0.5f);
 				float cos_half = cos(Angle * 0.5f);
@@ -122,6 +159,9 @@ namespace Blueshift {
 				);
 			}
 
+			/*! \relates Quaternion
+				\brief Creates a new quaternion from an axis whose magnitude represents the amount of counter-clockwise rotation in radians.
+			*/
 			inline Quaternion QuaternionFromMagnitudeAxis(const Vector4& r) {
 				Quaternion rv;
 				float sq_mag = LengthSquared(r);
@@ -140,6 +180,9 @@ namespace Blueshift {
 				return rv;
 			}
 
+			/*!	\relates Quaternion
+				\brief Returns an interpolated rotation between q0 and q1 by the fraction alpha; a unit vector rotated by this would follow the surface of a sphere.
+			*/
 			inline Quaternion SLerp(const Quaternion& q0, const Quaternion& q1, float alpha) {
 				float omega = std::acos(Clamp(
 					q0.X * q1.X +
