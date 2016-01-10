@@ -1,50 +1,51 @@
 #include "EventStream.h"
 #include <iostream>
 #include <thread>
+#include <chrono>
 
-__declspec(align(16)) struct TestEvent {
+using namespace std;
+using namespace std::chrono_literals;
+
+struct TestEvent {
 	int x;
-	int frame;
 };
 
 void write(EventStream<TestEvent>* stream) {
-	for (int n = 0; n < 10; n++) {
-		stream->BeginWrite();
-		std::cout << "Began writing frame " << n << std::endl;
-		for (int i = 0; i < 10; i++) {
-			TestEvent* ev_in = stream->PushEvent();
-			ev_in->x = i;
-			ev_in->frame = n;
-			std::cout << "wrote " << ev_in->x << " during frame " << ev_in->frame << std::endl;
+	int base = 0;
+	while (true) {
+		//keep writing events til the end of time
+		for (int i = 0; i < 5; i++) {
+			TestEvent* ev = stream->Lock();
+			ev->x = base + i;
+			cout << "Writing " << ev->x << std::endl;
+			stream->Unlock();
 		}
-		std::cout << "Done writing frame " << n << std::endl;
-		stream->EndWrite();
+		base += 5;
+
+		//guess we can lighten the cpu load though
+		std::this_thread::sleep_for(1000ms);
 	}
-	
 }
 
 void read(EventStream<TestEvent>* stream) {
-	for (int n = 0; n < 10; n++) {
-		stream->BeginRead();
-		std::cout << "Began reading frame " << n << std::endl;
-		for (int i = 0; i < 10; i++) {
-			TestEvent* ev_out = stream->PopEvent();
-			if (ev_out != nullptr) {
-				std::cout << "read " << ev_out->x << " from frame " << ev_out->frame << std::endl;
+	while (true) {
+		for (int i = 0; i < 5; i++) {
+			TestEvent* ev = stream->Read();
+			if (ev) {
+				cout << "Read " << ev->x << endl;
 			}
 		}
-		std::cout << "Done reading frame " << n << std::endl;
-		stream->EndRead();
+
+		std::this_thread::sleep_for(900ms);
 	}
 }
 
 int main(int argc, char* argv[]) {
-	EventStream<TestEvent> stream(5);
+	EventStream<TestEvent> stream(25);
 
-	std::thread write_thread(write, &stream);
-	std::thread read_thread(read, &stream);
+	thread write_thread(write, &stream);
+	thread read_thread(read, &stream);
 
-	stream.Initialize();
 
 	write_thread.join();
 	read_thread.join();
