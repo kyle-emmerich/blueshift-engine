@@ -10,6 +10,11 @@
 namespace Blueshift {
 	namespace Graphics {
 
+		/*!	\class RenderSystem
+			\brief Subsystem that handles all rendering in the engine and keeps track of active RenderWindow instances.
+
+			This system also implements a rendering thread on which all render commands are sent.
+		*/
 		class RenderSystem : public Core::ISubsystem {
 		private:
 			std::vector<Platform::DisplayInfo> displays;
@@ -33,10 +38,17 @@ namespace Blueshift {
 				}
 			}
 
+			/*!	\brief Adds information about an available display. Should only be called by engine code.
+			*/
 			void AddAvailableDisplayInfo(Platform::DisplayInfo&& Display);
 
+			/*! \brief Retrieves the current primary display. Created windows will move to this display.
+			*/
 			const Platform::DisplayInfo& GetPrimaryDisplay() const;
+			/*! \brief Retrieves a display by the order in which it was added to the list; usually assigned by the OS.
+			*/
 			const Platform::DisplayInfo& GetDisplay(size_t index) const;
+
 			const std::vector<Platform::DisplayInfo>& GetDisplays() const;
 			inline const size_t GetPrimaryDisplayID() const { return primary_display_index; }
 

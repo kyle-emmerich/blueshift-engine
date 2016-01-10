@@ -279,6 +279,7 @@
     <ClInclude Include="Source\Core\Math\Coordinate.h" />
     <ClInclude Include="Source\Core\Math\Math.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
+    <ClInclude Include="Source\Core\Math\Matrix4.h" />
     <ClInclude Include="Source\Core\Math\Misc.h" />
     <ClInclude Include="Source\Core\Math\OBB.h" />
     <ClInclude Include="Source\Core\Math\Quaternion.h" />
@@ -287,6 +288,7 @@
     <ClInclude Include="Source\Core\Math\Sphere.h" />
     <ClInclude Include="Source\Core\Math\Spline.h" />
     <ClInclude Include="Source\Core\Math\Vector.h" />
+    <ClInclude Include="Source\Core\Math\Vector4.h" />
     <ClInclude Include="Source\Core\Serialize\Serialize.h" />
     <ClInclude Include="Source\Core\Timing\Stopwatch.h" />
     <ClInclude Include="Source\Core\Timing\Timer.h" />
