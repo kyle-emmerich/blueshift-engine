@@ -3,8 +3,7 @@
 #include "Core/Engine.h"
 #include "Graphics/RenderSystem.h"
 #include "Platform/DisplayInfo.h"
-#include "Input/Windows/Mouse_WIN.h"
-#include "Input/Windows/Keyboard_WIN.h"
+#include "Input/InputSystem.h"
 #include "bgfx/bgfxplatform.h"
 #include <string>
 #include <clocale>
@@ -65,6 +64,17 @@ Window::~Window() {
 
 void Window::setup_platform() {
 	bgfx::winSetHwnd(this->handle);
+
+	//now is an opportune time to register the input devices.
+	RAWINPUTDEVICE device;
+	device.usUsagePage = 0x01;  //standard PC controls
+	device.usUsage = 0x06;		//keyboard
+	device.dwFlags = RIDEV_NOLEGACY; //no legacy messages like WM_KEYDOWN
+	device.hwndTarget = this->handle;
+	RegisterRawInputDevices(&device, 1, sizeof(device));
+
+	device.usUsage = 0x02; //mouse
+	RegisterRawInputDevices(&device, 1, sizeof(device));
 }
 
 void Window::resize_viewport(uint32_t width, uint32_t height) {
@@ -243,6 +253,8 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 		return DefWindowProc(handle, msg, wParam, lParam);
 	}
 
+	Input::InputSystem* inputsystem = Core::Engine::Get().GetSystem<Input::InputSystem>();
+
 	switch (msg) {
 		case WM_DESTROY:
 			break;
@@ -265,16 +277,13 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 			}
 			break;
 		case WM_MOUSEMOVE:
-			//Tell the input subsystem where the mouse cursor is; device doesn't matter,
-			//cursor is OS-level on Windows. Might change for other OSes; watch this space.
-			//TODO: update mouse cursor input if API changes during porting 
-			Input::Devices::Mouse::_set_last_position(
-				GET_X_LPARAM(lParam),
-				GET_Y_LPARAM(lParam)
-			);
+			Input::MouseEvent* ev = inputsystem->MouseEvents.Next();
+			ev->type = Input::MouseEvent::Type::MoveTo;
+			ev->x = GET_X_LPARAM(lParam);
+			ev->y = GET_Y_LPARAM(lParam);
 			break;
 		case WM_CHAR:
-			Input::Devices::Keyboard::TextInput((char)wParam);
+			
 			break;
 		case WM_INPUT:
 			//Make sure we have focus; we don't want to be grabbing input and doing stuff
@@ -286,17 +295,160 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 			UINT size = sizeof(input), size_header = sizeof(RAWINPUTHEADER);
 
 			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &input, &size, size_header);		
-			if (input.header.dwType == RIM_TYPEMOUSE) {
-				//no multimouse support right now
-				Input::Devices::Mouse::_pass_all((RAWMOUSE*)&input.data);
-			//	Input::Devices::Mouse* mouse = Input::Devices::Mouse::_get_from_handle(input.header.hDevice);
-			//	if (mouse != nullptr) {
-			//		mouse->_pass_event((RAWMOUSE*)&input.data);
-			//	}
-			} else if (input.header.dwType == RIM_TYPEKEYBOARD) {
-				Input::Devices::Keyboard* keyboard = Input::Devices::Keyboard::_get_from_handle(input.header.hDevice);
-				if (keyboard != nullptr) {
-					keyboard->_pass_event((RAWKEYBOARD*)&input.data);
+			if (input.header.dwType == RIM_TYPEKEYBOARD) {
+				const RAWKEYBOARD& kb = input.data.keyboard;
+				UINT vkey = kb.VKey;
+				UINT scancode = kb.MakeCode;
+				UINT flags = kb.Flags;
+
+				if (vkey == 255) {
+					return 0;
+				} else if (vkey == VK_SHIFT) {
+					vkey = MapVirtualKey(scancode, MAPVK_VSC_TO_VK_EX);
+				} else if (vkey == VK_NUMLOCK) {
+					vkey = MapVirtualKey(scancode, MAPVK_VK_TO_VSC) | 0x100;
+				}
+
+				const bool E0 = (flags & RI_KEY_E0) != 0;
+				const bool E1 = (flags & RI_KEY_E1) != 0;
+
+				if (E1) {
+					if (vkey == VK_PAUSE) {
+						scancode = 0x45;
+					} else {
+						scancode = MapVirtualKey(vkey, MAPVK_VK_TO_VSC);
+					}
+				}
+
+				Input::KeyboardEvent* ev = inputsystem->KeyboardEvents.Next();
+				ev->is_down = (flags & RI_KEY_BREAK) == 0;
+				UINT key_scancode = (scancode << 16) | (E0 << 24);
+				GetKeyNameText((LONG)key_scancode, ev->name, 16);
+
+				switch (vkey) {
+				case VK_CONTROL:
+					ev->key = E0 ? Input::Button::RightControl : Input::Button::LeftControl;
+					break;
+				case VK_MENU:
+					ev->key = E0 ? Input::Button::RightAlt : Input::Button::LeftAlt;
+					break;
+				case VK_RETURN:
+					ev->key = E0 ? Input::Button::NumPadEnter : Input::Button::Enter;
+					break;
+				case VK_INSERT:
+					ev->key = E0 ? Input::Button::Insert : Input::Button::NumPad0;
+					break;
+				case VK_DELETE:
+					ev->key = E0 ? Input::Button::Delete : Input::Button::NumPadDecimal;
+					break;
+				case VK_HOME:
+					ev->key = E0 ? Input::Button::Home : Input::Button::NumPad7;
+					break;
+				case VK_END:
+					ev->key = E0 ? Input::Button::End : Input::Button::NumPad1;
+					break;
+				case VK_PRIOR:
+					if (!E0) ev->key = Input::Button::NumPad9;
+					break;
+				case VK_NEXT:
+					if (!E0) ev->key = Input::Button::NumPad3;
+					break;
+				case VK_LEFT:
+					ev->key = E0 ? Input::Button::Left : Input::Button::NumPad4;
+					break;
+				case VK_RIGHT:
+					ev->key = E0 ? Input::Button::Right : Input::Button::NumPad6;
+					break;
+				case VK_UP:
+					ev->key = E0 ? Input::Button::Up : Input::Button::NumPad8;
+					break;
+				case VK_DOWN:
+					ev->key = E0 ? Input::Button::Down : Input::Button::NumPad2;
+					break;
+				case VK_CLEAR:
+					if (!E0) ev->key = Input::Button::NumPad5;
+					break;
+
+				//Now for the non-weirdos
+				case VK_CAPITAL:	ev->key = Input::Button::CapsLock;	break;
+				case VK_ESCAPE:		ev->key = Input::Button::Esc;		break;
+				case VK_TAB:		ev->key = Input::Button::Tab;		break;
+				case VK_SPACE:		ev->key = Input::Button::Space;		break;
+				case VK_BACK:		ev->key = Input::Button::Backspace;	break;
+
+				case VK_MULTIPLY:	ev->key = Input::Button::Multiply;	break;
+				case VK_DIVIDE:		ev->key = Input::Button::Divide;	break;
+				case VK_ADD:		ev->key = Input::Button::Add;		break;
+				case VK_SUBTRACT:	ev->key = Input::Button::Subtract;	break;
+
+				case VK_NUMLOCK:	ev->key = Input::Button::NumLock;	break;
+				
+				case VK_SNAPSHOT:	ev->key = Input::Button::PrintScreen; break;
+				case VK_DECIMAL:	ev->key = Input::Button::Period;	break;
+				case VK_OEM_102:	ev->key = Input::Button::Backslash;	break;
+				case VK_OEM_3:		ev->key = Input::Button::Tilde;		break;
+
+				case VK_OEM_4:		ev->key = Input::Button::LeftBracket; break;
+				case VK_OEM_7:		ev->key = Input::Button::RightBracket; break;
+
+				default:
+					//Decode anything else; typically key ranges like A-Z and numbers.
+					//0 key is 0x30, 9 key is 0x39 
+					if (vkey >= 0x30 && vkey <= 0x39) {
+						ev->key = (Input::Button)((vkey - 0x30) + (int)Input::Button::Key0);
+					}
+					//A key is 0x41, Z key is 0x5A
+					if (vkey >= 0x41 && vkey <= 0x5A) {
+						ev->key = (Input::Button)((vkey - 0x41) + (int)Input::Button::KeyA);
+					}
+					//NP0 is 0x60, NP9 is 0x69
+					if (vkey >= 0x60 && vkey <= 0x69) {
+						ev->key = (Input::Button)((vkey - 0x60) + (int)Input::Button::NumPad0);
+					}
+					//F1 is 0x70, F12 is 0x7B
+					if (vkey >= 0x70 && vkey <= 0x7B) {
+						ev->key = (Input::Button)((vkey - 0x70) + (int)Input::Button::F1);
+					}
+				}
+
+			} else if (input.header.dwType == RIM_TYPEMOUSE) {
+				RAWMOUSE& ms = input.data.mouse;
+				Input::MouseEvent* ev = inputsystem->MouseEvents.Next();
+				ev->type = Input::MouseEvent::Type::StateUpdate;
+
+				ev->x = 0;
+				ev->y = 0;
+				if (ms.usFlags & MOUSE_MOVE_RELATIVE != 0) {
+					ev->x = ms.lLastX;
+					ev->y = ms.lLastY;
+				}
+
+				ev->buttons[0] = false;
+				if (ms.usFlags & MOUSE_ATTRIBUTES_CHANGED != 0) {
+					ev->buttons[0] = true;
+					switch (ms.usButtonFlags) {
+					case RI_MOUSE_LEFT_BUTTON_DOWN:
+						ev->buttons[(size_t)Input::Button::MouseLeft] = true;
+						break;
+					case RI_MOUSE_LEFT_BUTTON_UP:
+						ev->buttons[(size_t)Input::Button::MouseLeft] = false;
+						break;
+					case RI_MOUSE_RIGHT_BUTTON_DOWN:
+						ev->buttons[(size_t)Input::Button::MouseRight] = true;
+						break;
+					case RI_MOUSE_RIGHT_BUTTON_UP:
+						ev->buttons[(size_t)Input::Button::MouseRight] = false;
+						break;
+					case RI_MOUSE_MIDDLE_BUTTON_DOWN:
+						ev->buttons[(size_t)Input::Button::MouseMiddle] = true;
+						break;
+					case RI_MOUSE_MIDDLE_BUTTON_UP:
+						ev->buttons[(size_t)Input::Button::MouseMiddle] = false;
+						break;
+					case RI_MOUSE_WHEEL:
+						ev->scroll_amount = ms.usButtonData;
+						break;
+					}
 				}
 			}
 			break;
