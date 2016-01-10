@@ -16,11 +16,6 @@ namespace Blueshift {
 			bool local_dirty = true;
 
 			friend class SceneGraph;
-#pragma pack(push, 8)
-			struct serialized {
-				Component::serialized component;
-			};
-#pragma pack(pop)
 		public:
 			TransformableComponent(SceneGraph* scene, Object* object);
 

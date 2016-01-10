@@ -32,14 +32,6 @@ namespace Blueshift {
 			float mass = 1.0f;
 
 			friend class RigidbodyComponent;
-#pragma pack(push, 8)
-			struct serialized {
-				Scene::TransformableComponent::serialized transformable;
-				btCollisionShapeData data;
-				float mass;
-				Core::Math::CardinalAxis alignment;
-			};
-#pragma pack(pop)
 		public:
 			ColliderComponent(Scene::SceneGraph* graph, Scene::Object* object) 
 				: Scene::TransformableComponent(graph, object) {}
