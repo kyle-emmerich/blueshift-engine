@@ -1,6 +1,6 @@
 #include "Core/DebugConsole.h"
 #include "Core/Engine.h"
-#include "Input/Windows/Keyboard_WIN.h"
+
 #include "bgfx/bgfx.h"
 
 using namespace Blueshift;
@@ -9,9 +9,10 @@ using namespace Core;
 DebugConsole::DebugConsole(size_t num_shown, size_t max_size)
 	: start(0), show(num_shown), max_size(max_size), visible(false) {
 	memset(input, ' ', 256);
-	Input::Devices::Keyboard::TextInput.Subscribe([this](const char& c) {
+/*	Input::Devices::Keyboard::TextInput.Subscribe([this](const char& c) {
 		this->text_input(c);
 	});
+*/
 }
 
 DebugConsole::~DebugConsole() {
@@ -43,7 +44,7 @@ void DebugConsole::Render() {
 		}
 		y++;
 	}
-	y = 3 + show + 2;
+	y = 3 + (uint16_t)show + 2;
 	bgfx::dbgTextPrintf(2, y, 0x0f, "> %s", input);
 	bgfx::dbgTextPrintf(2 + 2 + input_cursor, y, 0xf0, " ");
 }
