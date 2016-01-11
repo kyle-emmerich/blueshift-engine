@@ -1,8 +1,8 @@
-#include "Graphics/Texture/DDS/Loader.h"
+#include "Graphics/Image/DDS/Loader.h"
 
 using namespace Blueshift;
 using namespace Graphics;
-using namespace Texture;
+using namespace Image;
 using namespace DDS;
 
 Loader::Loader(Storage::File* f)

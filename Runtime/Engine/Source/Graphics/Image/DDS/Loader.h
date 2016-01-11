@@ -1,10 +1,10 @@
 #pragma once
-#include "Graphics/Texture/Texture.h"
+#include "Graphics/Texture.h"
 #include "Storage/ILoader.h"
 
 namespace Blueshift {
 	namespace Graphics {
-		namespace Texture {
+		namespace Image {
 			namespace DDS {
 				 
 				class Loader : public Storage::ILoader {

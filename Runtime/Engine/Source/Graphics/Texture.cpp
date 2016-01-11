@@ -1,10 +1,10 @@
-#include "Graphics/Texture/Texture.h"
+#include "Graphics/Texture.h"
 #include "Storage/File.h"
 
 using namespace Blueshift;
 using namespace Graphics;
 
-Texture::Texture::Texture(
+Texture::Texture(
 	TextureType Type,
 	TextureFormat Format,
 	uint16_t Width, uint16_t Height, uint16_t Depth,
@@ -29,8 +29,14 @@ Texture::Texture::Texture(
 		texture = bgfx::createTextureCube(width, num_mips, (bgfx::TextureFormat::Enum)format, flags, Data);
 	}
 	case TextureType::Framebuffer:
-	{
-		throw 0; //not implemented exception
+	{	
+		flags = BGFX_TEXTURE_RT			| 
+				BGFX_TEXTURE_MIN_POINT	|
+				BGFX_TEXTURE_MAG_POINT	|
+				BGFX_TEXTURE_MIP_POINT	|
+				BGFX_TEXTURE_U_CLAMP	|
+				BGFX_TEXTURE_V_CLAMP;
+		texture = bgfx::createTexture2D(width, height, num_mips, (bgfx::TextureFormat::Enum)format, flags, Data);
 	}
 	break;
 	default:
@@ -38,15 +44,25 @@ Texture::Texture::Texture(
 	}
 }
 
-Texture::Texture::Texture(std::string path, bool keep_copy) {
+Texture::Texture(TextureFormat Format, BackbufferRatio Ratio, uint8_t NumMips) {
+	flags = BGFX_TEXTURE_RT |
+		BGFX_TEXTURE_MIN_POINT |
+		BGFX_TEXTURE_MAG_POINT |
+		BGFX_TEXTURE_MIP_POINT |
+		BGFX_TEXTURE_U_CLAMP |
+		BGFX_TEXTURE_V_CLAMP;
+	texture = bgfx::createTexture2D((bgfx::BackbufferRatio::Enum)Ratio, NumMips, (bgfx::TextureFormat::Enum)format, flags);
+}
+
+Texture::Texture(std::string path, bool keep_copy) {
 	Storage::File f(path);
 	from_file(f, keep_copy);
 }
-Texture::Texture::Texture(Storage::File* file, bool keep_copy) {
+Texture::Texture(Storage::File* file, bool keep_copy) {
 	from_file(*file, keep_copy);
 }
 
-void Texture::Texture::from_file(Storage::File& file, bool keep_copy) {
+void Texture::from_file(Storage::File& file, bool keep_copy) {
 	size_t length = file.GetLength();
 	RenderData Data = AllocateRenderData(length);
 	file.Read(Data->data, length);
@@ -78,12 +94,9 @@ void Texture::Texture::from_file(Storage::File& file, bool keep_copy) {
 	num_mips = info.numMips;
 }
 
-Texture::Texture::~Texture() {
+Texture::~Texture() {
 	if (texture.idx != bgfx::invalidHandle) {
 		bgfx::destroyTexture(texture);
-	}
-	if (framebuffer.idx != bgfx::invalidHandle) {
-		bgfx::destroyFrameBuffer(framebuffer);
 	}
 
 	if (data != nullptr) {
@@ -91,6 +104,6 @@ Texture::Texture::~Texture() {
 	}
 }
 
-void Texture::Texture::AssignTo(uint8_t Unit, const Shader::Uniform& Uniform) {
+void Texture::AssignTo(uint8_t Unit, const Shader::Uniform& Uniform) {
 	bgfx::setTexture(Unit, Uniform.Handle, texture);
 }
