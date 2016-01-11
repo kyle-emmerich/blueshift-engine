@@ -15,6 +15,10 @@ namespace Blueshift {
 
 			Example creation:
 
+				Framebuffer fb;
+				fb	.AddTexture(TextureFormat::RGBA8)		//Diffuse Color
+					.AddTexture(TextureFormat::Single24)	//Depth
+					.Complete();
 
 		*/
 		class Framebuffer {
