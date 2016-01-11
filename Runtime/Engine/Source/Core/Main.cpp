@@ -4,6 +4,7 @@
 #include "Scene/Scene.h"
 #include "Physics/RigidbodyComponent.h"
 #include "Scripting/LuaState.h"
+#include "Input/InputSystem.h"
 #include <iostream>
 
 using namespace Blueshift;
@@ -57,8 +58,7 @@ void TestClient::Initialize() {
 	camera->UpdateWorldTransform();
 	main_window->SetCamera(handle);
 
-	Input::Devices::Keyboard::Register(main_window);
-	Input::Devices::Mouse::Register(main_window);
+
 
 	model = new Scene::Object;
 	//	Scene::Component::Handle phys_handle = graph->AllocateComponent<Physics::RigidbodyComponent>(model);
@@ -107,13 +107,7 @@ void TestClient::Shutdown() {
 
 bool TestClient::Update(double dt) {
 	Graphics::CameraComponent* camera = main_window->GetCamera();
-	auto mouse = Input::Devices::Mouse::Primary();
-	mouse->Poll();
-	auto keyboard = Input::Devices::Keyboard::Primary();
-	if (keyboard->WasButtonPressed(Input::ButtonName::Tilde)) {
-		Engine->Console.SetVisible(!Engine->Console.IsVisible());
-	}
-	keyboard->Poll();
+	Engine->GetSystem<Input::InputSystem>()->PollDevices();
 
 	Vector4 camera_dv(0.0f, 0.0f, 0.0f, 0.0f);
 	if (!Engine->Console.IsVisible()) {
@@ -121,31 +115,8 @@ bool TestClient::Update(double dt) {
 		//TODO: write better input API because this SUCKS
 		//TODO: move this to a component
 		
-		if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyW)) {
-			camera_dv.Z += 1.0f;
-		}
-		if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyS)) {
-			camera_dv.Z -= 1.0f;
-		}
-		if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyA)) {
-			camera_dv.X -= 1.0f;
-		}
-		if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyD)) {
-			camera_dv.X += 1.0f;
-		}
-		if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyR)) {
-			camera_dv.Y += 1.0f;
-		}
-		if (Input::Devices::Keyboard::Primary()->IsButtonDown(Input::ButtonName::KeyF)) {
-			camera_dv.Y -= 1.0f;
-		}
 
-		
-		if (mouse->IsButtonDown(Input::ButtonName::MouseRight)) {
-			Vector4 mouse_delta = mouse->GetDelta();
-			pitch += static_cast<float>(mouse_delta.Y * dt) * look_sensitivity;
-			yaw += static_cast<float>(mouse_delta.X * dt) * look_sensitivity;
-		}
+
 	}
 	
 	

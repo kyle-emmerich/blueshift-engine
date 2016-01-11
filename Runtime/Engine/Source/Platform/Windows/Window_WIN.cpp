@@ -3,7 +3,6 @@
 #include "Core/Engine.h"
 #include "Graphics/RenderSystem.h"
 #include "Platform/DisplayInfo.h"
-#include "Input/InputSystem.h"
 #include "bgfx/bgfxplatform.h"
 #include <string>
 #include <clocale>
@@ -263,9 +262,11 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 			PostQuitMessage(0);
 			break;
 		case WM_SIZE:
+		{
 			RECT rect; GetClientRect(handle, &rect);
 			window->resize_viewport(rect.right - rect.left, rect.bottom - rect.top);
 			break;
+		}
 		case WM_KILLFOCUS:
 			if (window->fullscreen && window->fullscreen_desktop) {
 				SetWindowPos(handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOREPOSITION | SWP_NOSIZE);
@@ -277,15 +278,18 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 			}
 			break;
 		case WM_MOUSEMOVE:
+		{
 			Input::MouseEvent* ev = inputsystem->MouseEvents.Next();
 			ev->type = Input::MouseEvent::Type::MoveTo;
 			ev->x = GET_X_LPARAM(lParam);
 			ev->y = GET_Y_LPARAM(lParam);
 			break;
+		}
 		case WM_CHAR:
 			
 			break;
 		case WM_INPUT:
+		{
 			//Make sure we have focus; we don't want to be grabbing input and doing stuff
 			//if the user isn't looking. Kinda creepy if we do.
 			if (GetFocus() != handle) {
@@ -294,7 +298,7 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 			RAWINPUT input;
 			UINT size = sizeof(input), size_header = sizeof(RAWINPUTHEADER);
 
-			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &input, &size, size_header);		
+			GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &input, &size, size_header);
 			if (input.header.dwType == RIM_TYPEKEYBOARD) {
 				const RAWKEYBOARD& kb = input.data.keyboard;
 				UINT vkey = kb.VKey;
@@ -320,95 +324,109 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 					}
 				}
 
-				Input::KeyboardEvent* ev = inputsystem->KeyboardEvents.Next();
-				ev->is_down = (flags & RI_KEY_BREAK) == 0;
-				UINT key_scancode = (scancode << 16) | (E0 << 24);
-				GetKeyNameText((LONG)key_scancode, ev->name, 16);
+				Input::Button key = Input::Button::None;
 
 				switch (vkey) {
 				case VK_CONTROL:
-					ev->key = E0 ? Input::Button::RightControl : Input::Button::LeftControl;
+					key = E0 ? Input::Button::RightControl : Input::Button::LeftControl;
 					break;
 				case VK_MENU:
-					ev->key = E0 ? Input::Button::RightAlt : Input::Button::LeftAlt;
+					key = E0 ? Input::Button::RightAlt : Input::Button::LeftAlt;
 					break;
 				case VK_RETURN:
-					ev->key = E0 ? Input::Button::NumPadEnter : Input::Button::Enter;
+					key = E0 ? Input::Button::NumPadEnter : Input::Button::Enter;
 					break;
 				case VK_INSERT:
-					ev->key = E0 ? Input::Button::Insert : Input::Button::NumPad0;
+					key = E0 ? Input::Button::Insert : Input::Button::NumPad0;
 					break;
 				case VK_DELETE:
-					ev->key = E0 ? Input::Button::Delete : Input::Button::NumPadDecimal;
+					key = E0 ? Input::Button::Delete : Input::Button::NumPadDecimal;
 					break;
 				case VK_HOME:
-					ev->key = E0 ? Input::Button::Home : Input::Button::NumPad7;
+					key = E0 ? Input::Button::Home : Input::Button::NumPad7;
 					break;
 				case VK_END:
-					ev->key = E0 ? Input::Button::End : Input::Button::NumPad1;
+					key = E0 ? Input::Button::End : Input::Button::NumPad1;
 					break;
 				case VK_PRIOR:
-					if (!E0) ev->key = Input::Button::NumPad9;
+					if (!E0) key = Input::Button::NumPad9;
 					break;
 				case VK_NEXT:
-					if (!E0) ev->key = Input::Button::NumPad3;
+					if (!E0) key = Input::Button::NumPad3;
 					break;
 				case VK_LEFT:
-					ev->key = E0 ? Input::Button::Left : Input::Button::NumPad4;
+					key = E0 ? Input::Button::Left : Input::Button::NumPad4;
 					break;
 				case VK_RIGHT:
-					ev->key = E0 ? Input::Button::Right : Input::Button::NumPad6;
+					key = E0 ? Input::Button::Right : Input::Button::NumPad6;
 					break;
 				case VK_UP:
-					ev->key = E0 ? Input::Button::Up : Input::Button::NumPad8;
+					key = E0 ? Input::Button::Up : Input::Button::NumPad8;
 					break;
 				case VK_DOWN:
-					ev->key = E0 ? Input::Button::Down : Input::Button::NumPad2;
+					key = E0 ? Input::Button::Down : Input::Button::NumPad2;
 					break;
 				case VK_CLEAR:
-					if (!E0) ev->key = Input::Button::NumPad5;
+					if (!E0) key = Input::Button::NumPad5;
 					break;
 
-				//Now for the non-weirdos
-				case VK_CAPITAL:	ev->key = Input::Button::CapsLock;	break;
-				case VK_ESCAPE:		ev->key = Input::Button::Esc;		break;
-				case VK_TAB:		ev->key = Input::Button::Tab;		break;
-				case VK_SPACE:		ev->key = Input::Button::Space;		break;
-				case VK_BACK:		ev->key = Input::Button::Backspace;	break;
+					//Now for the non-weirdos
+				case VK_CAPITAL:	key = Input::Button::CapsLock;	break;
+				case VK_ESCAPE:		key = Input::Button::Esc;		break;
+				case VK_TAB:		key = Input::Button::Tab;		break;
+				case VK_SPACE:		key = Input::Button::Space;		break;
+				case VK_BACK:		key = Input::Button::Backspace;	break;
 
-				case VK_MULTIPLY:	ev->key = Input::Button::Multiply;	break;
-				case VK_DIVIDE:		ev->key = Input::Button::Divide;	break;
-				case VK_ADD:		ev->key = Input::Button::Add;		break;
-				case VK_SUBTRACT:	ev->key = Input::Button::Subtract;	break;
+				case VK_MULTIPLY:	key = Input::Button::NumPadMultiply;	break;
+				case VK_DIVIDE:		key = Input::Button::NumPadDivide;		break;
+				case VK_ADD:		key = Input::Button::NumPadAdd;			break;
+				case VK_SUBTRACT:	key = Input::Button::NumPadSubtract;	break;
 
-				case VK_NUMLOCK:	ev->key = Input::Button::NumLock;	break;
-				
-				case VK_SNAPSHOT:	ev->key = Input::Button::PrintScreen; break;
-				case VK_DECIMAL:	ev->key = Input::Button::Period;	break;
-				case VK_OEM_102:	ev->key = Input::Button::Backslash;	break;
-				case VK_OEM_3:		ev->key = Input::Button::Tilde;		break;
+				case VK_NUMLOCK:	key = Input::Button::NumLock;	break;
 
-				case VK_OEM_4:		ev->key = Input::Button::LeftBracket; break;
-				case VK_OEM_7:		ev->key = Input::Button::RightBracket; break;
+				case VK_SNAPSHOT:	key = Input::Button::PrintScreen; break;
+				case VK_DECIMAL:	key = Input::Button::NumPadDecimal;	break;
+				case VK_OEM_102:	key = Input::Button::Backslash;	break;
+				case VK_OEM_3:		key = Input::Button::Tilde;		break;
+
+				case VK_OEM_PERIOD: key = Input::Button::Period;	break;
+				case VK_OEM_4:		key = Input::Button::LeftBracket; break;
+				case VK_OEM_5:		key = Input::Button::Pipe;		break;
+				case VK_OEM_6:		key = Input::Button::RightBracket; break;
+
+				case VK_OEM_MINUS:	key = Input::Button::Hyphen; break;
+				case VK_OEM_PLUS:	key = Input::Button::Equals; break;
 
 				default:
 					//Decode anything else; typically key ranges like A-Z and numbers.
 					//0 key is 0x30, 9 key is 0x39 
 					if (vkey >= 0x30 && vkey <= 0x39) {
-						ev->key = (Input::Button)((vkey - 0x30) + (int)Input::Button::Key0);
+						key = (Input::Button)((vkey - 0x30) + (int)Input::Button::Key0);
 					}
 					//A key is 0x41, Z key is 0x5A
 					if (vkey >= 0x41 && vkey <= 0x5A) {
-						ev->key = (Input::Button)((vkey - 0x41) + (int)Input::Button::KeyA);
+						key = (Input::Button)((vkey - 0x41) + (int)Input::Button::KeyA);
 					}
 					//NP0 is 0x60, NP9 is 0x69
 					if (vkey >= 0x60 && vkey <= 0x69) {
-						ev->key = (Input::Button)((vkey - 0x60) + (int)Input::Button::NumPad0);
+						key = (Input::Button)((vkey - 0x60) + (int)Input::Button::NumPad0);
 					}
 					//F1 is 0x70, F12 is 0x7B
 					if (vkey >= 0x70 && vkey <= 0x7B) {
-						ev->key = (Input::Button)((vkey - 0x70) + (int)Input::Button::F1);
+						key = (Input::Button)((vkey - 0x70) + (int)Input::Button::F1);
 					}
+				}
+				bool down = (flags & RI_KEY_BREAK) == 0;
+				if (window->key_state[(size_t)key] == true && down) {
+					break;
+				} else {
+					Input::KeyboardEvent* ev = inputsystem->KeyboardEvents.Next();
+					ev->is_down = down;
+					UINT key_scancode = (scancode << 16) | (E0 << 24);
+					GetKeyNameText((LONG)key_scancode, ev->name, 16);
+					ev->key = key;
+
+					window->key_state[(size_t)key] = down;
 				}
 
 			} else if (input.header.dwType == RIM_TYPEMOUSE) {
@@ -418,13 +436,13 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 
 				ev->x = 0;
 				ev->y = 0;
-				if (ms.usFlags & MOUSE_MOVE_RELATIVE != 0) {
+				if ((ms.usFlags & MOUSE_MOVE_RELATIVE) != 0) {
 					ev->x = ms.lLastX;
 					ev->y = ms.lLastY;
 				}
 
 				ev->buttons[0] = false;
-				if (ms.usFlags & MOUSE_ATTRIBUTES_CHANGED != 0) {
+				if ((ms.usFlags & MOUSE_ATTRIBUTES_CHANGED) != 0) {
 					ev->buttons[0] = true;
 					switch (ms.usButtonFlags) {
 					case RI_MOUSE_LEFT_BUTTON_DOWN:
@@ -452,7 +470,7 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 				}
 			}
 			break;
-		
+		}
 	}
 
 	return DefWindowProc(handle, msg, wParam, lParam);

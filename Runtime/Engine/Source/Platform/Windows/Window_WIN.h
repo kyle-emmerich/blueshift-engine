@@ -1,6 +1,6 @@
 #pragma once
 #ifdef _WIN32 //Windows platform
-
+#include "Input/InputSystem.h"
 #include "Platform/IWindow.h"
 #include <Windows.h>
 
@@ -19,6 +19,8 @@ namespace Blueshift {
 
 			virtual void setup_platform();
 			virtual void resize_viewport(uint32_t width, uint32_t height);
+
+			bool key_state[(size_t)Input::Button::KeyboardMax];
 		public:
 			Window(uint32_t Width, uint32_t Height, bool IsInnerMeasurement = true);
 			virtual ~Window();

@@ -2,6 +2,7 @@
 #include "Core/Engine.h"
 #include "Graphics/RenderSystem.h"
 #include "Graphics/RenderWindow.h"
+#include "Input/InputSystem.h"
 #include "Storage/FileSystem.h"
 
 using namespace Blueshift;
@@ -18,6 +19,7 @@ EngineParameters* GameClient::GetEngineSetup() {
 
 void GameClient::Initialize() {
 	Engine->CreateSystem<Graphics::RenderSystem>();
+	Engine->CreateSystem<Input::InputSystem>();
 	Engine->SetLogFile(new Storage::File("log.txt", Storage::FileOpenMode::Append));
 
 	Engine->GetSystem<Graphics::RenderSystem>()->SetPrimaryDisplay(AppConfig->Get<size_t>("Window", "DisplayID", 0));
