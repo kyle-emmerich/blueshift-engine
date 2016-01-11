@@ -5,7 +5,7 @@ using namespace Blueshift;
 using namespace Storage;
 
 Statement::Statement(Database& db, const std::string& sql) {
-	sqlite3_prepare(db.connection, sql.c_str(), sql.length() + 1, &this->statement, nullptr);
+	sqlite3_prepare(db.connection, sql.c_str(), (int)sql.length() + 1, &this->statement, nullptr);
 	
 	int num_cols = sqlite3_column_count(this->statement);
 	this->col_names.resize(num_cols);

@@ -88,7 +88,7 @@ static int Matrix4_Invert(lua_State* L) {
 
 static int Matrix4_FromAxisAngle(lua_State* L) {
 	Vector4* axis = CheckVector4(L, 1);
-	float angle = luaL_checknumber(L, 2);
+	float angle = (float)luaL_checknumber(L, 2);
 
 	Matrix4* m = PushMatrix4(L);
 	*m = RotationMatrix(*axis, angle);
