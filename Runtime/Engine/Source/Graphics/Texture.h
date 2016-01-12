@@ -15,10 +15,20 @@ namespace Blueshift {
 			Sixteenth = bgfx::BackbufferRatio::Sixteenth
 		};
 
+		/*! \enum TextureFormat
+			\brief A list of supported texture formats.
+
+			For more information on block compression formats, please see [this link](https://msdn.microsoft.com/en-us/library/windows/desktop/hh308955%28v=vs.85%29.aspx).
+
+		*/
 		enum class TextureFormat {
-			DXT1 = bgfx::TextureFormat::BC1,
-			DXT3 = bgfx::TextureFormat::BC2,
-			DXT5 = bgfx::TextureFormat::BC3,
+			BC1 = bgfx::TextureFormat::BC1,		//!< Block Compression 1, 3-color with boolean alpha
+			BC2 = bgfx::TextureFormat::BC2,		//!< Block Compression 2, 3-color with 4-bit alpha
+			BC3 = bgfx::TextureFormat::BC3,		//!< Block Compression 3, 3-color with 8-bit alpha
+			BC4 = bgfx::TextureFormat::BC4,		//!< Block Compression 4, 1-color
+			BC5 = bgfx::TextureFormat::BC5,		//!< Block Compression 5, 2-color
+			BC6H = bgfx::TextureFormat::BC6H,	//!< Block Compression 6H, 3-color, minimum 16-bits each; HDR support
+			BC7 = bgfx::TextureFormat::BC7,		//!< Block Compression 7, 3-color with optional 8-bit alpha
 
 			Unknown = bgfx::TextureFormat::Unknown,
 
