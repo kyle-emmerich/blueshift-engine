@@ -9,8 +9,6 @@ namespace Blueshift {
 	namespace Core {
 		namespace Math {
 
-			const size_t Vector4PoolSize = 1024 * 10;
-
 			/*! \class Vector4
 				\brief Provides 2D, 3D, or 4D vector math in an easy to use interface.
 
@@ -18,6 +16,8 @@ namespace Blueshift {
 				for 2D math than it is to use two separate floats because of SIMD optimizations. However, it can be faster
 				to write your own SIMD optimizations if you have a lot of 2-component vectors to process, but it's unlikely
 				that you'd find a reason for that.
+
+				\todo Decide if it's worth it to implement a Vector2 and Vector3 class
 
 				\sa Matrix4, Quaternion
 			*/

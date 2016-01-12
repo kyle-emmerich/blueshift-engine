@@ -181,6 +181,18 @@ namespace Blueshift {
 			}
 
 			/*!	\relates Quaternion
+				\brief Creates a new quaternion from a direction and an upwards vector.
+
+				Thanks, CPML. I don't know why this works.
+				https://github.com/excessive/cpml/blob/master/modules/quat.lua#L286
+			*/
+			inline Quaternion QuaternionFromDirection(const Vector4& direction, const Vector4& up) {
+				Vector4 axis = CrossProduct(direction, up);
+				float dot = DotProduct(up, direction);
+				return Quaternion(axis.X, axis.Y, axis.Z, dot + 1.0f);
+			}
+
+			/*!	\relates Quaternion
 				\brief Returns an interpolated rotation between q0 and q1 by the fraction alpha; a unit vector rotated by this would follow the surface of a sphere.
 			*/
 			inline Quaternion SLerp(const Quaternion& q0, const Quaternion& q1, float alpha) {
