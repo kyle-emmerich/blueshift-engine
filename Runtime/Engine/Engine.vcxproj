@@ -150,6 +150,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -254,7 +255,6 @@
     <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
     <ClCompile Include="Source\Graphics\CameraComponent.cpp" />
-    <ClCompile Include="Source\Storage\sqlite3\sqlite3.c" />
     <ClCompile Include="Source\Storage\Statement.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -339,8 +339,6 @@
     <ClInclude Include="Source\Storage\IAsset.h" />
     <ClInclude Include="Source\Storage\ILoader.h" />
     <ClInclude Include="Source\Storage\Statement.h" />
-    <ClInclude Include="Source\Storage\sqlite3\sqlite3.h" />
-    <ClInclude Include="Source\Storage\sqlite3\sqlite3ext.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="app.cfg">
