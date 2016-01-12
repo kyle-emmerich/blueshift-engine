@@ -22,7 +22,7 @@ namespace Blueshift {
 			T* read_ptr;
 			T* write_ptr;
 
-			std::vector<std::function<T*>> listeners;
+			//std::vector<std::function<T*>> listeners;
 
 			std::mutex request_mtx;
 		public:
