@@ -1,433 +1,159 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="Source\Core\BaseApplication.cpp" />
+    <ClCompile Include="Source\Core\DebugConsole.cpp" />
+    <ClCompile Include="Source\Core\Engine.cpp" />
+    <ClCompile Include="Source\Core\Exceptions.cpp" />
+    <ClCompile Include="Source\Core\GameClient.cpp" />
+    <ClCompile Include="Source\Core\GameServer.cpp" />
+    <ClCompile Include="Source\Core\Math\BindMatrix.cpp" />
+    <ClCompile Include="Source\Core\Math\BindQuaternion.cpp" />
+    <ClCompile Include="Source\Core\Math\BindVector.cpp" />
+    <ClCompile Include="Source\Core\Math\Matrix.cpp" />
+    <ClCompile Include="Source\Core\UUID.cpp" />
+    <ClCompile Include="Source\Core\Main.cpp" />
+    <ClCompile Include="Source\Core\Utility\ConfigFile.cpp" />
+    <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
+    <ClCompile Include="Source\Graphics\Model\IQM\Loader_IQM.cpp" />
+    <ClCompile Include="Source\Graphics\StaticMeshComponent.cpp" />
+    <ClCompile Include="Source\Physics\CollisionComponent.cpp" />
+    <ClCompile Include="Source\Physics\Interop\DebugDraw.cpp" />
+    <ClCompile Include="Source\Physics\RigidbodyComponent.cpp" />
+    <ClCompile Include="Source\Physics\Space.cpp" />
+    <ClCompile Include="Source\Scene\Component.cpp" />
+    <ClCompile Include="Source\Scene\SceneGraph.cpp" />
+    <ClCompile Include="Source\Scene\TransformableComponent.cpp" />
+    <ClCompile Include="Source\Scripting\LuaState.cpp" />
+    <ClCompile Include="Source\Storage\AssetSystem.cpp" />
+    <ClCompile Include="Source\Storage\Database.cpp" />
+    <ClCompile Include="Source\Storage\File.cpp" />
+    <ClCompile Include="Source\Storage\FileSystem.cpp" />
+    <ClCompile Include="Source\Graphics\Model\Loader\OBJ.cpp" />
+    <ClCompile Include="Source\Graphics\RenderSystem.cpp" />
+    <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
+    <ClCompile Include="Source\Graphics\Shader.cpp" />
+    <ClCompile Include="Source\Graphics\ShaderProgram.cpp" />
+    <ClCompile Include="Source\Graphics\VertexDeclarations.cpp" />
+    <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
+    <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
+    <ClCompile Include="Source\Graphics\CameraComponent.cpp" />
+    <ClCompile Include="Source\Storage\sqlite3\sqlite3.c" />
+    <ClCompile Include="Source\Storage\Statement.cpp" />
+    <ClCompile Include="Source\Input\InputSystem.cpp" />
+    <ClCompile Include="Source\Graphics\Texture.cpp" />
+    <ClCompile Include="Source\Graphics\Image\DDS\Loader_DDS.cpp" />
+    <ClCompile Include="..\..\Dependencies\sqlite3\sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Core\Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\RenderWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\VertexDeclarations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Utility\ConfigFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Input\Windows\Keyboard_WIN.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Input\Windows\Mouse_WIN.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Input\Windows\Joystick_WIN.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\RenderSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\GameClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\GameServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\BaseApplication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\UUID.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\ShaderProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Model\Loader\OBJ.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\File.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\FileSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Exceptions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics\Interop\DebugDraw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics\Space.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\SceneGraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\StaticMeshComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\TransformableComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics\RigidbodyComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics\CollisionComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene\Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\CameraComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\AssetSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Texture\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Texture\DDS\Loader_DDS.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Model\IQM\Loader_IQM.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\DebugConsole.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scripting\LuaState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Math\Matrix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Math\BindVector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Math\BindMatrix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Math\BindQuaternion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\sqlite3\sqlite3.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\Database.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\Statement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="Source\Core\BaseApplication.h" />
+    <ClInclude Include="Source\Core\Core.h" />
+    <ClInclude Include="Source\Core\DebugConsole.h" />
+    <ClInclude Include="Source\Core\Engine.h" />
+    <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\Exceptions.h" />
+    <ClInclude Include="Source\Core\GameClient.h" />
+    <ClInclude Include="Source\Core\GameServer.h" />
+    <ClInclude Include="Source\Core\IApplication.h" />
+    <ClInclude Include="Source\Core\ISubsystem.h" />
+    <ClInclude Include="Source\Core\Math\AABB.h" />
+    <ClInclude Include="Source\Core\Math\AtmosphericScattering.h" />
+    <ClInclude Include="Source\Core\Math\Bindings.h" />
+    <ClInclude Include="Source\Core\Math\BindMatrix.h" />
+    <ClInclude Include="Source\Core\Math\BindQuaternion.h" />
+    <ClInclude Include="Source\Core\Math\BindVector.h" />
+    <ClInclude Include="Source\Core\Math\Color.h" />
+    <ClInclude Include="Source\Core\Math\Coordinate.h" />
+    <ClInclude Include="Source\Core\Math\Math.h" />
+    <ClInclude Include="Source\Core\Math\Matrix.h" />
+    <ClInclude Include="Source\Core\Math\Matrix4.h" />
+    <ClInclude Include="Source\Core\Math\Misc.h" />
+    <ClInclude Include="Source\Core\Math\OBB.h" />
+    <ClInclude Include="Source\Core\Math\Quaternion.h" />
+    <ClInclude Include="Source\Core\Math\Ray.h" />
+    <ClInclude Include="Source\Core\Math\Polynomial.h" />
+    <ClInclude Include="Source\Core\Math\Sphere.h" />
+    <ClInclude Include="Source\Core\Math\Spline.h" />
+    <ClInclude Include="Source\Core\Math\Vector.h" />
+    <ClInclude Include="Source\Core\Math\Vector4.h" />
+    <ClInclude Include="Source\Core\Serialize\Serialize.h" />
+    <ClInclude Include="Source\Core\Timing\Stopwatch.h" />
+    <ClInclude Include="Source\Core\Timing\Timer.h" />
+    <ClInclude Include="Source\Core\Utility\ConfigFile.h" />
+    <ClInclude Include="Source\Core\Utility\FastParsing.h" />
+    <ClInclude Include="Source\Core\UUID.h" />
+    <ClInclude Include="Source\Graphics\Framebuffer.h" />
+    <ClInclude Include="Source\Graphics\Graphics.h" />
+    <ClInclude Include="Source\Graphics\Model\IQM\iqm.h" />
+    <ClInclude Include="Source\Graphics\Model\IQM\Loader.h" />
+    <ClInclude Include="Source\Graphics\Model\Model.h" />
+    <ClInclude Include="Source\Graphics\StaticMeshComponent.h" />
+    <ClInclude Include="Source\Graphics\RenderableComponent.h" />
+    <ClInclude Include="Source\Physics\ColliderComponent.h" />
+    <ClInclude Include="Source\Physics\Interop\DebugDraw.h" />
+    <ClInclude Include="Source\Physics\Interop\Math.h" />
+    <ClInclude Include="Source\Physics\PhysicsSystem.h" />
+    <ClInclude Include="Source\Physics\RigidbodyComponent.h" />
+    <ClInclude Include="Source\Physics\Space.h" />
+    <ClInclude Include="Source\Scene\Component.h" />
+    <ClInclude Include="Source\Scene\Scene.h" />
+    <ClInclude Include="Source\Scene\SceneGraph.h" />
+    <ClInclude Include="Source\Scene\TransformableComponent.h" />
+    <ClInclude Include="Source\Scripting\LuaState.h" />
+    <ClInclude Include="Source\Storage\AssetSystem.h" />
+    <ClInclude Include="Source\Storage\Database.h" />
+    <ClInclude Include="Source\Storage\File.h" />
+    <ClInclude Include="Source\Storage\FileSystem.h" />
+    <ClInclude Include="Source\Graphics\Model\IMeshData.h" />
+    <ClInclude Include="Source\Graphics\Model\Loader\OBJ.h" />
+    <ClInclude Include="Source\Graphics\Model\StaticMeshData.h" />
+    <ClInclude Include="Source\Graphics\RenderData.h" />
+    <ClInclude Include="Source\Graphics\RenderSystem.h" />
+    <ClInclude Include="Source\Graphics\RenderWindow.h" />
+    <ClInclude Include="Source\Graphics\Shader.h" />
+    <ClInclude Include="Source\Graphics\ShaderProgram.h" />
+    <ClInclude Include="Source\Graphics\VertexDeclarations.h" />
+    <ClInclude Include="Source\Input\IInputDevice.h" />
+    <ClInclude Include="Source\Platform\DisplayInfo.h" />
+    <ClInclude Include="Source\Platform\IWindow.h" />
+    <ClInclude Include="Source\Platform\PlatformSpecific.h" />
+    <ClInclude Include="Source\Platform\Windows\Window_WIN.h" />
+    <ClInclude Include="Source\Graphics\CameraComponent.h" />
+    <ClInclude Include="Source\Scene\Object.h" />
+    <ClInclude Include="Source\Storage\IAsset.h" />
+    <ClInclude Include="Source\Storage\ILoader.h" />
+    <ClInclude Include="Source\Storage\Statement.h" />
+    <ClInclude Include="Source\Storage\sqlite3\sqlite3.h" />
+    <ClInclude Include="Source\Storage\sqlite3\sqlite3ext.h" />
+    <ClInclude Include="Source\Input\InputSystem.h" />
+    <ClInclude Include="Source\Core\EventQueue.h" />
+    <ClInclude Include="Source\Graphics\Texture.h" />
+    <ClInclude Include="Source\Graphics\Image\DDS\Loader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Platform\IWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Platform\Windows\Window_WIN.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Platform\DisplayInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\RenderWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Platform\PlatformSpecific.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\VertexDeclarations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Input\IInputDevice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Quaternion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Coordinate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Utility\ConfigFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Input\Windows\Keyboard_WIN.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Input\Windows\Mouse_WIN.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Input\Windows\Joystick_WIN.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\RenderSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\ISubsystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Timing\Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Timing\Stopwatch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\IApplication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\GameClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\GameServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\BaseApplication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\AABB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Misc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\OBB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Ray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene\Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\UUID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Polynomial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Spline.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Model\IMeshData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Model\StaticMeshData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\ShaderProgram.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Model\Loader\OBJ.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Utility\FastParsing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Sphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Color.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\RenderData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\File.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\FileSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Exceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics\Interop\DebugDraw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics\Interop\Math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics\Space.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene\SceneGraph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics\PhysicsSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\RenderableComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\StaticMeshComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene\TransformableComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics\RigidbodyComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics\ColliderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Serialize\Serialize.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\CameraComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Graphics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\AtmosphericScattering.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Model\IQM\iqm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Model\IQM\Loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\ILoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\AssetSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Model\Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Texture\DDS\Loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Texture\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\DebugConsole.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\IAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scripting\LuaState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\BindVector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\BindMatrix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Bindings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\BindQuaternion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Framebuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\sqlite3\sqlite3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\sqlite3\sqlite3ext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\Database.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\Statement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="Source\Core\Math\Vector4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Matrix4.h">
-=======
-    <ClInclude Include="Source\Core\Math\Matrix4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Math\Vector4.h">
->>>>>>> 8e84ae7b2b0cec196c4a7c8e8f0e5aab721adb34
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Shaders\blueshift\Sampling.glsl" />
-    <None Include="Assets\Shaders\blueshift\BRDF.glsl" />
-    <None Include="Assets\Shaders\blueshift\Utility.glsl" />
-    <None Include="Assets\Shaders\blueshift\Tonemapping.glsl" />
-    <None Include="Assets\Shaders\blueshift\ShadingModel.glsl" />
     <None Include="Assets\Shaders\Blueshift\Atmosphere.glsl" />
-    <None Include="Scripts\test.lua" />
-    <None Include="Source\Core\Math\Vector_old.h">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Scripts\Blueshift\Vector4.lua" />
+    <None Include="Assets\Shaders\blueshift\BRDF.glsl" />
+    <None Include="Assets\Shaders\blueshift\Sampling.glsl" />
+    <None Include="Assets\Shaders\blueshift\ShadingModel.glsl" />
+    <None Include="Assets\Shaders\blueshift\Tonemapping.glsl" />
+    <None Include="Assets\Shaders\blueshift\Utility.glsl" />
     <None Include="Scripts\Blueshift\Matrix4.lua" />
+    <None Include="Scripts\Blueshift\Quaternion.lua" />
     <None Include="Scripts\Blueshift\Setup.lua" />
+    <None Include="Scripts\Blueshift\Vector4.lua" />
+    <None Include="Scripts\socket\init.lua" />
     <None Include="Scripts\socket\ftp.lua" />
     <None Include="Scripts\socket\http.lua" />
     <None Include="Scripts\socket\smtp.lua" />
     <None Include="Scripts\socket\tp.lua" />
     <None Include="Scripts\socket\url.lua" />
-    <None Include="Scripts\socket\init.lua" />
-    <None Include="Scripts\Blueshift\Quaternion.lua" />
+    <None Include="Scripts\test.lua" />
+    <None Include="Source\Core\Math\Vector_old.h" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Source\Core\Utility\application.cfg" />
     <Text Include="app.cfg" />
     <Text Include="user.cfg" />
+    <Text Include="Source\Core\Utility\application.cfg" />
   </ItemGroup>
 </Project>

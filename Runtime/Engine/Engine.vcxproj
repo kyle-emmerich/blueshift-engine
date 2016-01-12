@@ -146,7 +146,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(SolutionDir)Dependencies\luajit\include;$(ProjectDir)Source;$(UniversalCRT_IncludePath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies;$(SolutionDir)Dependencies\bgfx\include;$(SolutionDir)Dependencies\bx\include;$(SolutionDir)Dependencies\bullet\include;$(SolutionDir)Dependencies\physfs\include;$(SolutionDir)Dependencies\luajit\include;$(ProjectDir)Source;$(UniversalCRT_IncludePath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -213,6 +213,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Dependencies\sqlite3\sqlite3.c" />
     <ClCompile Include="Source\Core\BaseApplication.cpp" />
     <ClCompile Include="Source\Core\DebugConsole.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
@@ -229,7 +230,8 @@
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\Model\IQM\Loader_IQM.cpp" />
     <ClCompile Include="Source\Graphics\StaticMeshComponent.cpp" />
-    <ClCompile Include="Source\Graphics\Texture\DDS\Loader_DDS.cpp" />
+    <ClCompile Include="Source\Graphics\Image\DDS\Loader_DDS.cpp" />
+    <ClCompile Include="Source\Input\InputSystem.cpp" />
     <ClCompile Include="Source\Physics\CollisionComponent.cpp" />
     <ClCompile Include="Source\Physics\Interop\DebugDraw.cpp" />
     <ClCompile Include="Source\Physics\RigidbodyComponent.cpp" />
@@ -247,11 +249,8 @@
     <ClCompile Include="Source\Graphics\RenderWindow.cpp" />
     <ClCompile Include="Source\Graphics\Shader.cpp" />
     <ClCompile Include="Source\Graphics\ShaderProgram.cpp" />
-    <ClCompile Include="Source\Graphics\Texture\Texture.cpp" />
+    <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Graphics\VertexDeclarations.cpp" />
-    <ClCompile Include="Source\Input\Windows\Joystick_WIN.cpp" />
-    <ClCompile Include="Source\Input\Windows\Keyboard_WIN.cpp" />
-    <ClCompile Include="Source\Input\Windows\Mouse_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
     <ClCompile Include="Source\Graphics\CameraComponent.cpp" />
@@ -264,6 +263,7 @@
     <ClInclude Include="Source\Core\DebugConsole.h" />
     <ClInclude Include="Source\Core\Engine.h" />
     <ClInclude Include="Source\Core\Event.h" />
+    <ClInclude Include="Source\Core\EventQueue.h" />
     <ClInclude Include="Source\Core\Exceptions.h" />
     <ClInclude Include="Source\Core\GameClient.h" />
     <ClInclude Include="Source\Core\GameServer.h" />
@@ -302,7 +302,8 @@
     <ClInclude Include="Source\Graphics\Model\Model.h" />
     <ClInclude Include="Source\Graphics\StaticMeshComponent.h" />
     <ClInclude Include="Source\Graphics\RenderableComponent.h" />
-    <ClInclude Include="Source\Graphics\Texture\DDS\Loader.h" />
+    <ClInclude Include="Source\Graphics\Image\DDS\Loader.h" />
+    <ClInclude Include="Source\Input\InputSystem.h" />
     <ClInclude Include="Source\Physics\ColliderComponent.h" />
     <ClInclude Include="Source\Physics\Interop\DebugDraw.h" />
     <ClInclude Include="Source\Physics\Interop\Math.h" />
@@ -326,12 +327,9 @@
     <ClInclude Include="Source\Graphics\RenderWindow.h" />
     <ClInclude Include="Source\Graphics\Shader.h" />
     <ClInclude Include="Source\Graphics\ShaderProgram.h" />
-    <ClInclude Include="Source\Graphics\Texture\Texture.h" />
+    <ClInclude Include="Source\Graphics\Texture.h" />
     <ClInclude Include="Source\Graphics\VertexDeclarations.h" />
-    <ClInclude Include="Source\Input\Windows\Joystick_WIN.h" />
-    <ClInclude Include="Source\Input\Windows\Keyboard_WIN.h" />
     <ClInclude Include="Source\Input\IInputDevice.h" />
-    <ClInclude Include="Source\Input\Windows\Mouse_WIN.h" />
     <ClInclude Include="Source\Platform\DisplayInfo.h" />
     <ClInclude Include="Source\Platform\IWindow.h" />
     <ClInclude Include="Source\Platform\PlatformSpecific.h" />
@@ -356,6 +354,7 @@
     <None Include="Assets\Shaders\blueshift\ShadingModel.glsl" />
     <None Include="Assets\Shaders\blueshift\Tonemapping.glsl" />
     <None Include="Assets\Shaders\blueshift\Utility.glsl" />
+    <None Include="ClassDiagram.cd" />
     <None Include="Scripts\Blueshift\Matrix4.lua" />
     <None Include="Scripts\Blueshift\Quaternion.lua" />
     <None Include="Scripts\Blueshift\Setup.lua" />
