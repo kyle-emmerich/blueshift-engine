@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Engine.h"
+#include "Scene/Component.h"
 
 namespace Blueshift {
 	namespace Physics {

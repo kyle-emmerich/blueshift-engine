@@ -1,10 +1,10 @@
 #include "Core/GameClient.h"
-#include "Graphics/Model/Loader/OBJ.h"
-#include "Graphics/StaticMeshComponent.h"
 #include "Scene/Scene.h"
 #include "Physics/RigidbodyComponent.h"
 #include "Scripting/LuaState.h"
 #include "Input/InputSystem.h"
+#include "Graphics/Model/Loader/OBJ.h"
+#include "Graphics/StaticMeshComponent.h"
 #include <iostream>
 
 using namespace Blueshift;

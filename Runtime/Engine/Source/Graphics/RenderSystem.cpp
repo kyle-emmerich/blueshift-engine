@@ -6,7 +6,7 @@
 
 #include "Graphics/StaticMeshComponent.h"
 #include "Graphics/Model/Loader/OBJ.h"
-#include "Graphics/Texture/Texture.h"
+#include "Graphics/Texture.h"
 #include <fstream>
 
 using namespace Blueshift;
@@ -110,7 +110,7 @@ void RenderSystem::render_thread_func() {
 			->AddUniform("u_view", Shader::UniformType::Matrix4)
 			->Complete();
 		ShaderProgram fs_program(fs_vert, fs_frag);
-		Texture::Texture tex("space.dds");
+		Texture tex("space.dds");
 
 		Core::IApplication* application = Core::Engine::Get().GetParameters()->Application;
 		application->InitializeRenderData();

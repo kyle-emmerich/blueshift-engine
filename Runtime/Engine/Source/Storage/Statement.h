@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Core.h"
-#include "Storage/sqlite3/sqlite3.h"
+#include "sqlite3/sqlite3.h"
 #include <unordered_map>
 
 namespace Blueshift {

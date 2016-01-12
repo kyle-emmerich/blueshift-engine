@@ -27,8 +27,8 @@ namespace Blueshift {
 				Vector4() = default;
 				/*! \brief Creates a Vector4 using a 128-bit SIMD struct. */
 				inline Vector4(__m128 vec) : mm(vec) {}
-				/*! \brief Creates a Vector4 from 0 to 4 floats; by default produces 0,0,0,1. */
-				inline Vector4(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f)
+				/*! \brief Creates a Vector4 from 1 to 4 floats; by default produces 0,0,0,1. */
+				inline Vector4(float x, float y = 0.0f, float z = 0.0f, float w = 1.0f)
 					: X(x), Y(y), Z(z), W(w) {}
 
 				/*! \brief Wraps up the data for easy access and conversion from SIMD struct and back. */

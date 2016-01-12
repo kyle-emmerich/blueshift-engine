@@ -1,9 +1,9 @@
 #include "Core/GameClient.h"
 #include "Core/Engine.h"
-#include "Graphics/RenderSystem.h"
 #include "Graphics/RenderWindow.h"
 #include "Input/InputSystem.h"
 #include "Storage/FileSystem.h"
+#include "Graphics/RenderSystem.h"
 
 using namespace Blueshift;
 using namespace Core;

@@ -1,7 +1,7 @@
 #pragma once
 #include "Graphics/RenderableComponent.h"
 #include "Graphics/Model/IMeshData.h"
-#include "Graphics/Texture/Texture.h"
+#include "Graphics/Texture.h"
 #include <vector>
 
 namespace Blueshift {
@@ -12,9 +12,9 @@ namespace Blueshift {
 			Model::MeshDataSection* mesh = nullptr;
 			ShaderProgram* program = nullptr;
 
-			Texture::Texture* albedo = nullptr;
-			Texture::Texture* material = nullptr;
-			Texture::Texture* normal = nullptr;
+			Texture* albedo = nullptr;
+			Texture* material = nullptr;
+			Texture* normal = nullptr;
 			
 
 			friend class RenderSystem;
@@ -28,13 +28,13 @@ namespace Blueshift {
 			inline virtual void SetProgram(ShaderProgram* Program) {
 				program = Program;
 			}
-			inline virtual void SetAlbedoTexture(Texture::Texture* texture) {
+			inline virtual void SetAlbedoTexture(Texture* texture) {
 				albedo = texture;
 			}
-			inline virtual void SetMaterialTexture(Texture::Texture* texture) {
+			inline virtual void SetMaterialTexture(Texture* texture) {
 				material = texture;
 			}
-			inline virtual void SetNormalTexture(Texture::Texture* texture) {
+			inline virtual void SetNormalTexture(Texture* texture) {
 				normal = texture;
 			}
 

@@ -38,7 +38,6 @@
     <ClCompile Include="Source\Platform\Windows\DisplayInfo_WIN.cpp" />
     <ClCompile Include="Source\Platform\Windows\Window_WIN.cpp" />
     <ClCompile Include="Source\Graphics\CameraComponent.cpp" />
-    <ClCompile Include="Source\Storage\sqlite3\sqlite3.c" />
     <ClCompile Include="Source\Storage\Statement.cpp" />
     <ClCompile Include="Source\Input\InputSystem.cpp" />
     <ClCompile Include="Source\Graphics\Texture.cpp" />
@@ -123,8 +122,6 @@
     <ClInclude Include="Source\Storage\IAsset.h" />
     <ClInclude Include="Source\Storage\ILoader.h" />
     <ClInclude Include="Source\Storage\Statement.h" />
-    <ClInclude Include="Source\Storage\sqlite3\sqlite3.h" />
-    <ClInclude Include="Source\Storage\sqlite3\sqlite3ext.h" />
     <ClInclude Include="Source\Input\InputSystem.h" />
     <ClInclude Include="Source\Core\EventQueue.h" />
     <ClInclude Include="Source\Graphics\Texture.h" />

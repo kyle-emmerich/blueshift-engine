@@ -6,14 +6,14 @@ namespace Blueshift {
 
 		class ISubsystem {
 		public:
-			ISubsystem() {}//: Type(typeid(ISubsystem)) {}
+			ISubsystem() : Type(typeid(ISubsystem)) {}
 			virtual ~ISubsystem() {}
 
-		//	virtual std::type_index GetTypeID() {
-		//		return Type;
-		//	}
+			virtual std::type_index GetTypeID() {
+				return Type;
+			}
 
-			//std::type_index Type;
+			std::type_index Type;
 		};
 	}
 }

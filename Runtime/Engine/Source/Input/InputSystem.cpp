@@ -20,7 +20,7 @@ void InputSystem::PollDevices() {
 	KeyboardEvent* kb;
 	MouseEvent* ms;
 
-	while ((kb = KeyboardEvents.Read()) != nullptr) {
+	while ((kb = KeyboardEvents.Pop()) != nullptr) {
 		//Translate the keyboard event into something usable
 		if (kb->is_down) {
 			Core::Engine::Get().Log(Core::LogLevel::Notice, Formatter() << "Pressed key " << kb->name);
@@ -29,8 +29,9 @@ void InputSystem::PollDevices() {
 		}
 	}
 
-	while ((ms = MouseEvents.Read()) != nullptr) {
+	while ((ms = MouseEvents.Pop()) != nullptr) {
 		//Translate the mouse event into something usable
-
+		if (ms->type == MouseEvent::Type::StateUpdate)
+			Core::Engine::Get().Log(Core::LogLevel::Notice, Formatter() << "Mouse moved by " << ms->x << ", " << ms->y);
 	}
 }

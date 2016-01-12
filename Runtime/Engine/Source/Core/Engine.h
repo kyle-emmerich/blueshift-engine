@@ -111,7 +111,7 @@ namespace Blueshift {
 			template<typename T>
 			inline T* CreateSystem() {
 				T* system = new T(this);
-				system->Type = typeid(T);
+			//	system->Type = typeid(T);
 				subsystems[typeid(T)] = dynamic_cast<ISubsystem*>(system);
 				return system;
 			}

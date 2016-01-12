@@ -68,11 +68,12 @@ void Window::setup_platform() {
 	RAWINPUTDEVICE device;
 	device.usUsagePage = 0x01;  //standard PC controls
 	device.usUsage = 0x06;		//keyboard
-	device.dwFlags = RIDEV_NOLEGACY; //no legacy messages like WM_KEYDOWN
+	device.dwFlags = 0; //no legacy messages like WM_KEYDOWN
 	device.hwndTarget = this->handle;
 	RegisterRawInputDevices(&device, 1, sizeof(device));
 
 	device.usUsage = 0x02; //mouse
+	device.dwFlags = RIDEV_NOLEGACY | RIDEV_INPUTSINK;
 	RegisterRawInputDevices(&device, 1, sizeof(device));
 }
 
@@ -279,20 +280,23 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 			break;
 		case WM_MOUSEMOVE:
 		{
-			Input::MouseEvent* ev = inputsystem->MouseEvents.Next();
+			Input::MouseEvent* ev = inputsystem->MouseEvents.Request();
 			ev->type = Input::MouseEvent::Type::MoveTo;
 			ev->x = GET_X_LPARAM(lParam);
 			ev->y = GET_Y_LPARAM(lParam);
 			break;
 		}
 		case WM_CHAR:
-			
-			break;
+		{
+			char code = (char)wParam;
+			Core::Engine::Get().Log(Core::LogLevel::Notice, Formatter() << "Text input: " << code);
+			return 0;
+		}
 		case WM_INPUT:
 		{
 			//Make sure we have focus; we don't want to be grabbing input and doing stuff
 			//if the user isn't looking. Kinda creepy if we do.
-			if (GetFocus() != handle) {
+			if (GetFocus() != handle && GetForegroundWindow() != handle) {
 				break;
 			}
 			RAWINPUT input;
@@ -420,7 +424,7 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 				if (window->key_state[(size_t)key] == true && down) {
 					break;
 				} else {
-					Input::KeyboardEvent* ev = inputsystem->KeyboardEvents.Next();
+					Input::KeyboardEvent* ev = inputsystem->KeyboardEvents.Request();
 					ev->is_down = down;
 					UINT key_scancode = (scancode << 16) | (E0 << 24);
 					GetKeyNameText((LONG)key_scancode, ev->name, 16);
@@ -431,15 +435,11 @@ LRESULT CALLBACK Window::WindowCallback(HWND handle, UINT msg, WPARAM wParam, LP
 
 			} else if (input.header.dwType == RIM_TYPEMOUSE) {
 				RAWMOUSE& ms = input.data.mouse;
-				Input::MouseEvent* ev = inputsystem->MouseEvents.Next();
+				Input::MouseEvent* ev = inputsystem->MouseEvents.Request();
 				ev->type = Input::MouseEvent::Type::StateUpdate;
 
-				ev->x = 0;
-				ev->y = 0;
-				if ((ms.usFlags & MOUSE_MOVE_RELATIVE) != 0) {
-					ev->x = ms.lLastX;
-					ev->y = ms.lLastY;
-				}
+				ev->x = ms.lLastX;
+				ev->y = ms.lLastY;
 
 				ev->buttons[0] = false;
 				if ((ms.usFlags & MOUSE_ATTRIBUTES_CHANGED) != 0) {
