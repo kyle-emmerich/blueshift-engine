@@ -61,13 +61,14 @@ namespace Blueshift {
 
 		class InputSystem : public Core::ISubsystem {
 		private:
-
+			Core::EventQueue<KeyboardEvent> keyboard_events;
+			Core::EventQueue<MouseEvent> mouse_events;
 		public:
-			Core::EventQueue<KeyboardEvent> KeyboardEvents;
-			Core::EventQueue<MouseEvent> MouseEvents;
-
 			 InputSystem(Core::Engine*);
 			~InputSystem();
+
+			void ReportKeyboardEvent(KeyboardEvent&&);
+			void ReportMouseEvent(MouseEvent&&);
 
 			void PollDevices();
 		};

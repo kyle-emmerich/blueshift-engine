@@ -87,6 +87,9 @@ void RenderSystem::render_thread_func() {
 		InitializeVertexDeclarations();
 		bgfx::setDebug(BGFX_DEBUG_TEXT);
 
+		const bgfx::Caps* caps = bgfx::getCaps();
+		
+
 		//Create a fullscreen quad
 		Vector4 fs_verts[4] = {
 			Vector4(-1.0f, -1.0f),

@@ -22,9 +22,11 @@ namespace Blueshift {
 			T* read_ptr;
 			T* write_ptr;
 
+			size_t buffer_size;
+
 			//std::vector<std::function<T*>> listeners;
 
-			std::mutex request_mtx;
+			std::mutex mtx;
 		public:
 			/*!	\brief Initialize a queue with a set capacity for elements of type T.
 
@@ -33,6 +35,7 @@ namespace Blueshift {
 			inline EventQueue(size_t BufferSize = 1024) {
 				buffer = new T[BufferSize];
 				buffer_end = buffer + BufferSize;
+				buffer_size = BufferSize;
 				write_ptr = buffer;
 				read_ptr = buffer;
 			}
@@ -45,14 +48,14 @@ namespace Blueshift {
 				\returns A pointer to the next slot in the queue, wrapping to the beginning if out of space.
 			*/
 			T* Request() {
-				request_mtx.lock();
+				mtx.lock();
 				T* next = write_ptr;
 
 				++write_ptr;
 				if (write_ptr == buffer_end) {
 					write_ptr = buffer;
 				}
-				request_mtx.unlock();
+				mtx.unlock();
 				return next;
 			}
 
@@ -84,6 +87,11 @@ namespace Blueshift {
 
 				T* data = read_ptr;
 				return data;
+			}
+
+			void Resize(size_t new_size) {
+				T* new_buffer = new T[new_size];
+
 			}
 		};
 

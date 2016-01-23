@@ -9,14 +9,14 @@ using namespace Blueshift::Graphics;
 
 
 
-RenderWindow::RenderWindow(uint32_t Width, uint32_t Height, Scene::SceneGraph* scene)
-	: Window(Width, Height, true), view_width(Width), view_height(Height), graph(scene) { 
+RenderWindow::RenderWindow(uint32_t Width, uint32_t Height)
+	: Window(Width, Height, true), view_width(Width), view_height(Height) { 
 	Graphics::RenderSystem* rendering = Engine::Get().GetSystem<RenderSystem>();
 	
 	this->view_id = static_cast<uint8_t>(rendering->GetRenderWindows().size());
 	if (Engine::Get().GetSystem<RenderSystem>()->GetRenderWindows().size() == 0) {
 		this->is_primary = true;
-		this->setup_platform();
+		this->setup_platform(); //! \todo Windows need to be handled better
 	}
 }
 
@@ -46,9 +46,6 @@ void RenderWindow::PreRender() {
 	}
 	bgfx::setViewClear(this->view_id, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
 	bgfx::setViewRect(this->view_id, 0, 0, this->view_width, this->view_height);
-	
-	CameraComponent* cam_component = (CameraComponent*)this->camera;
-	bgfx::setViewTransform(this->view_id, cam_component->GetViewTransform().data, cam_component->GetProjection().data);
 	
 	bgfx::touch(this->view_id);
 
