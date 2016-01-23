@@ -59,5 +59,37 @@
 	starved of finished frames, a serious problem has occurred and the engine will be considered to be
 	in a state of lag.
 
+	\section el_sec3 Game State
+	Since Blueshift uses an entity-component system to represent the game state, it is very easy to 
+	encapsulate all the data since it needs no transformation to use it. Components of a given type
+	are simply stored in a list and processed by the relevant systems.
+
+	However, making sure that the scene can select a certain subset of game objects to process and
+	getting them into a form usable by the engine is a big challenge. Therefore, components must be
+	stored in many lists. The granularity of the lists depends on the scene division technique. For
+	Blueshift's purposes, this will be an octree. Each leaf node will contain the components that exist
+	within it spatially, so there is no copying involved in selecting subsets of data to process. The
+	scene system simply reports a list of octree leaves to process.
+
+	This presents another challenge: how to determine the location of a component. It must be based on
+	both the visual representation of the entity the component belongs to, and on the physical representation.
+	Incorrectly placing an entity within an octree leaf is unacceptable behavior because it could result in
+	physical interactions being missed or objects disappearing when a leaf is considered out of view. Some
+	game objects might also need to be processed even when not visible, such as AI or other complex 
+	systems that run all of the time.
+	
+	In order to solve this, we can keep two octrees! One for visual systems, and one for logical systems.
+	The visual octree will use the object's visual representation, and the logical system will use the
+	object's sphere of influence. Octrees are incredibly useful for this purpose and provide a simple
+	and understandable way to keep track of when objects are relevant. When the scene system determines
+	a leaf node is relevant, it must also determine that all of its parent nodes are relevant. That does
+	not imply that all of the sibling nodes are relevant. This means that an object that always needs to be
+	processed can simply stipulate that it must exist on the root node!
+
+	The major drawback of this approach is that objects must be copied around to different nodes when moving.
+	The scene system must evaluate that all objects are in the correct node at the beginning of a frame, which
+	may end up being an unacceptable cost. However, this is a very simple operation, assuming that axis-aligned
+	bounding boxes are used to determine the spatial location of an object. It may end up being desirable
+	to simply treat component lists as linked lists.
 
 */
