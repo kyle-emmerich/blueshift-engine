@@ -1,16 +1,15 @@
-#include "Core/Math/BindQuaternion.h"
+#include "Math/BindQuaternion.h"
 
 using namespace Blueshift;
-using namespace Core;
 using namespace Math;
 
-Quaternion* Blueshift::Core::Math::CheckQuaternion(lua_State* L, int n) {
+Quaternion* Blueshift::Math::CheckQuaternion(lua_State* L, int n) {
 	const void* ud = lua_topointer(L, n);
 	luaL_argcheck(L, ud != nullptr, n, "'Quaternion' expected");
 	return (Quaternion*)ud;
 }
 
-Quaternion* Blueshift::Core::Math::PushQuaternion(lua_State* L) {
+Quaternion* Blueshift::Math::PushQuaternion(lua_State* L) {
 	Quaternion* q = new Quaternion;
 	lua_pushlightuserdata(L, q);
 	return q;
@@ -43,7 +42,7 @@ static int __set(lua_State* L) {
 	return 0;
 }
 
-void Blueshift::Core::Math::BindQuaternion(Scripting::LuaState* State) {
+void Blueshift::Math::BindQuaternion(Scripting::LuaState* State) {
 	lua_State* L = State->GetState();
 
 	luaL_Reg Quaternion_meta[] = {

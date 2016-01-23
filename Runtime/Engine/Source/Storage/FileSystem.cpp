@@ -4,16 +4,17 @@
 using namespace Blueshift;
 using namespace Storage;
 
-FileSystem::FileSystem(Core::Engine* engine) {
-	const std::string& BasePath = engine->GetArgs().at(0);
+FileSystem::FileSystem() {
+	//! \todo Get the filesystem back in shape
+	/*const std::string& BasePath = engine->GetArgs().at(0);
 	const std::string& Identity = engine->GetParameters()->ApplicationIdentity;
 	const std::vector<std::string>& SearchPaths = engine->GetParameters()->SearchPaths;
-
+	
 	int success = PHYSFS_init(BasePath.c_str());
 	if (success == 0) {
 		throw FileSystemNotInitiatedError(PHYSFS_getLastError());
 	}
-
+	
 	//We only allow writing to a specific directory via this interface.
 	std::string write_dir = PHYSFS_getUserDir();
 	if (0 == PHYSFS_setWriteDir(write_dir.c_str())) {
@@ -41,7 +42,7 @@ FileSystem::FileSystem(Core::Engine* engine) {
 	//Now mount everything the application asked for
 	for (auto path : SearchPaths) {
 		MountPackage(path);
-	}
+	}*/
 }
 
 FileSystem::~FileSystem() {

@@ -1,7 +1,6 @@
-#include "Core/Math/Matrix4.h"
+#include "Math/Matrix4.h"
 
 using namespace Blueshift;
-using namespace Core;
 using namespace Math;
 
 const Matrix4 Matrix4::Identity = {

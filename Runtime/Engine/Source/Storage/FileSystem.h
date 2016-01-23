@@ -3,11 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "Core/Engine.h"
 #include "Storage/File.h"
-#include "Storage/AssetSystem.h"
-
-#include "Core/ISubsystem.h"
 
 namespace Blueshift {
 	namespace Storage {
@@ -33,7 +29,7 @@ namespace Blueshift {
 
 			The subsystem has two built-in read paths: Assets and Scripts.
 		*/
-		class FileSystem : public Core::ISubsystem {
+		class FileSystem {
 		protected:
 			//TODO: make dangling list thread-safe
 			std::vector<File*> dangling;
@@ -43,7 +39,7 @@ namespace Blueshift {
 
 			friend class File;
 		public:
-			FileSystem(Core::Engine* engine);
+			FileSystem();
 			~FileSystem();
 
 			/*! \brief Mounts a directory or .zip archive to the read search path.

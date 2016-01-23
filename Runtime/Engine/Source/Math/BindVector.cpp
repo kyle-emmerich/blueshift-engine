@@ -1,16 +1,15 @@
-#include "Core/Math/BindVector.h"
+#include "Math/BindVector.h"
 
 using namespace Blueshift;
-using namespace Core;
 using namespace Math;
 
-Core::Math::Vector4* Blueshift::Core::Math::CheckVector4(lua_State* L, int n) {
+Math::Vector4* Blueshift::Math::CheckVector4(lua_State* L, int n) {
 	const void* ud = lua_topointer(L, n);
 	luaL_argcheck(L, ud != nullptr, n, "'Vector4' expected");
 	return (Vector4*)ud;
 }
 
-Vector4* Blueshift::Core::Math::PushVector4(lua_State* L) {
+Vector4* Blueshift::Math::PushVector4(lua_State* L) {
 	Vector4* v = new Vector4;
 	lua_pushlightuserdata(L, v);
 	return v;
@@ -159,7 +158,7 @@ static int Vector4_LengthSq(lua_State* L) {
 	return 1;
 }
 
-void Blueshift::Core::Math::BindVector4(Scripting::LuaState* State) {
+void Blueshift::Math::BindVector4(Scripting::LuaState* State) {
 	lua_State* L = State->GetState();
 
 	luaL_Reg Vector4_meta[] = {

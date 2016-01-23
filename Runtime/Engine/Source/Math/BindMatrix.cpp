@@ -1,17 +1,16 @@
-#include "Core/Math/BindMatrix.h"
-#include "Core/Math/BindVector.h"
+#include "Math/BindMatrix.h"
+#include "Math/BindVector.h"
 
 using namespace Blueshift;
-using namespace Core;
 using namespace Math;
 
-Core::Math::Matrix4* Blueshift::Core::Math::CheckMatrix4(lua_State* L, int n) {
+Math::Matrix4* Blueshift::Math::CheckMatrix4(lua_State* L, int n) {
 	const void* ud = lua_topointer(L, n);
 	luaL_argcheck(L, ud != nullptr, n, "'Matrix4' expected");
 	return (Matrix4*)ud;
 }
 
-void* Blueshift::Core::Math::CheckMatrix4OrVector4(lua_State* L, int n, bool& is_matrix) {
+void* Blueshift::Math::CheckMatrix4OrVector4(lua_State* L, int n, bool& is_matrix) {
 	void* ud = lua_touserdata(L, n);
 	if (lua_getmetatable(L, n)) {
 		lua_getfield(L, LUA_REGISTRYINDEX, "Vector4");
@@ -30,7 +29,7 @@ void* Blueshift::Core::Math::CheckMatrix4OrVector4(lua_State* L, int n, bool& is
 	return nullptr;
 }
 
-Matrix4* Blueshift::Core::Math::PushMatrix4(lua_State* L) {
+Matrix4* Blueshift::Math::PushMatrix4(lua_State* L) {
 	Matrix4* m = new Matrix4;
 	lua_pushlightuserdata(L, m);
 	return m;
@@ -96,7 +95,7 @@ static int Matrix4_FromAxisAngle(lua_State* L) {
 	return 1;
 }
 
-void Blueshift::Core::Math::BindMatrix4(Scripting::LuaState* State) {
+void Blueshift::Math::BindMatrix4(Scripting::LuaState* State) {
 	lua_State* L = State->GetState();
 
 	luaL_Reg Matrix4_meta[] = {
