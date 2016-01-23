@@ -10,7 +10,7 @@
 
 	As a game engine, Blueshift must maintain two things in its core execution step:
 
-	* **Speed:** Each frame must be executed in 1/framerate seconds or less.
+	* **Speed:** Each frame must be executed in 1/framerate seconds or less.  
 	* **Consistency:** The deviation from the average frame throughput cannot be too high; it is better to be
 					   consistently slow than to be fast but choppy.
 	
@@ -31,9 +31,7 @@
 	Rendering can be decoupled. We can render the state as it appears at a given time. If there is
 	no change in the state as it exists in memory, we may use portions of the state to infer the state
 	at a given subinterval: for example, using the velocity of an object to infer its position in between
-	two logical frames.
-
-	To encapsulate this, we have Core::Frame. This object contains the game state at a given point in time
+	two logical frames. To encapsulate this, we have Core::Frame. This object contains the game state at a given point in time
 	as it is processed. If objects exist outside of the simulation range, they do not need to be referenced
 	in the frame. The rendering system can take a frame when it is ready and work on executing render
 	commands as necessary.
