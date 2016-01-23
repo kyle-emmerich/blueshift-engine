@@ -11,6 +11,7 @@
 	As a game engine, Blueshift must maintain two things in its core execution step:
 
 	* **Speed:** Each frame must be executed in 1/framerate seconds or less.  
+
 	* **Consistency:** The deviation from the average frame throughput cannot be too high; it is better to be
 					   consistently slow than to be fast but choppy.
 	
