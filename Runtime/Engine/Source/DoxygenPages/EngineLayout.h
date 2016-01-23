@@ -37,4 +37,27 @@
 	in the frame. The rendering system can take a frame when it is ready and work on executing render
 	commands as necessary.
 
+	\section el_sec2 Frames
+	In order to understand how Blueshift represents the game world, one must imagine two timelines.
+	First, we have real physical time; it flows constantly and linearly (for our purposes) and does
+	not stop and wait for the game to do its thing. Second, we have Blueshift time. This timeline is
+	much more important and has a few distinctions from real-time. Most importantly, it occurs in discrete
+	steps called Frames, represented by Core::Frame. We will attempt to schedule a frame for a given
+	point in real-time, so the frame must be ready by then. If it is not, the engine is in a state of
+	"lag" and this is undesirable. The engine must somehow compensate to eliminate lag, either by
+	reducing the set of game objects included in a frame or by adjusting the expected time to process
+	a frame. The synchronization of real-time and Blueshift-time is very important, or the player who
+	lives in real-time might become extremely confused or frustrated.
+
+	The engine can be thought of as a collection of systems working together to produce a frame in
+	the least amount of time possible. The scene system must submit only as many objects as it determines
+	the engine to be capable of processing, the input system must have the input state ready, and the
+	logic system must take the input and decide what to tell the physics system. Individually, these
+	are serial operations, but can be parallel across frames. The physics system can process as many
+	frames as the logic system has produced. The rendering system does not care about any of the others
+	and can simply interpolate between finished logical frames. If the rendering system becomes
+	starved of finished frames, a serious problem has occurred and the engine will be considered to be
+	in a state of lag.
+
+
 */
